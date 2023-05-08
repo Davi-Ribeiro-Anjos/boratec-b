@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone
 
+from filiais.models import Filiais
+from usuarios.models import Usuarios
 from service.choices import (
     DEPARTAMENTO_CHOICES,
     FORMA_PGT_CHOICES,
@@ -43,31 +45,31 @@ class SolicitacoesCompras(models.Model):
     anexo = models.FileField(upload_to="cpr/%Y/%m/%d", blank=True, null=True)
 
     filial = models.ForeignKey(
-        "filiais.Filiais",
+        Filiais,
         on_delete=models.PROTECT,
         related_name="solicitacoes_compras",
         null=True,
     )
     solicitante = models.ForeignKey(
-        "usuarios.Usuarios",
+        Usuarios,
         on_delete=models.PROTECT,
         related_name="compras_solicitante",
         null=True,
     )
     responsavel = models.ForeignKey(
-        "usuarios.Usuarios",
+        Usuarios,
         on_delete=models.PROTECT,
         related_name="compras_responsavel",
         null=True,
     )
     autor = models.ForeignKey(
-        "usuarios.Usuarios",
+        Usuarios,
         on_delete=models.PROTECT,
         related_name="compras_autor",
         null=True,
     )
     ultima_atualizacao = models.ForeignKey(
-        "usuarios.Usuarios",
+        Usuarios,
         on_delete=models.PROTECT,
         related_name="compras_ultima_att",
         null=True,
@@ -77,7 +79,7 @@ class SolicitacoesCompras(models.Model):
         return f"<Solicitação Compra {self.numero_solicitacao} - {self.status}>"
 
     def __str__(self):
-        return str(self.placa)
+        return f"<Solicitação Compra {self.numero_solicitacao} - {self.status}>"
 
     class Meta:
         verbose_name = "SolicitacaoCompra"

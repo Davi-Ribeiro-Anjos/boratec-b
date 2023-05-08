@@ -8,5 +8,8 @@ class Usuarios(AbstractUser):
         db_table = "usuarios"
         app_label = "usuarios"
 
+    def __repr__(self) -> str:
+        return f"<Usuario {self.pk} - {self.username}>"
+
     def __str__(self):
-        return str(self.username)
+        return f"<Usuario {self.pk} - {self.username}>"

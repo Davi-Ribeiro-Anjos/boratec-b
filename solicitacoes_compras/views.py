@@ -1,4 +1,8 @@
 from rest_framework.views import APIView, Response, Request, status
+from django.shortcuts import get_object_or_404
+
+from usuarios.models import Usuarios
+from filiais.models import Filiais
 
 from .models import SolicitacoesCompras
 from .serializers import SolicitacoesComprasSerializer
