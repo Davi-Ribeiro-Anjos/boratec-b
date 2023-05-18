@@ -1,5 +1,5 @@
-from pathlib import Path
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -41,10 +41,10 @@ THIRD_PARTY_APPS = [
     "corsheaders",
 ]
 
-MY_APPS = ["solicitacoes_compras", "usuarios", "filiais"]
+MY_APPS = ["solicitacoes_compras", "filiais"]
 
 DJANGO_APPS = [
-    # "django.contrib.admin",
+    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -107,6 +107,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
+DATETIME_FORMAT = "d/m/Y H:i"
+
+DATE_FORMAT = "d/m/Y"
 
 LANGUAGE_CODE = "pt-br"
 
@@ -122,11 +125,13 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = "/static/"
+STATIC_URL = os.environ.get("STATIC_URL")
+STATIC_ROOT = os.environ.get("STATIC_ROOT")
+
+MEDIA_URL = os.environ.get("MEDIA_URL")
+MEDIA_ROOT = os.environ.get("MEDIA_ROOT")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-AUTH_USER_MODEL = "usuarios.Usuarios"

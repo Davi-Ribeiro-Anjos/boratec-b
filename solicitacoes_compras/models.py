@@ -2,7 +2,9 @@ from django.db import models
 from django.utils import timezone
 
 from filiais.models import Filiais
-from usuarios.models import Usuarios
+
+# from usuarios.models import Usuarios
+from django.contrib.auth.models import User
 from service.choices import (
     DEPARTAMENTO_CHOICES,
     FORMA_PGT_CHOICES,
@@ -14,7 +16,6 @@ from service.choices import (
 class SolicitacoesCompras(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
     numero_solicitacao = models.IntegerField(unique=True)
-    data_solicitacao_pra = models.DateField()
     data_solicitacao_bo = models.DateTimeField(default=timezone.now)
     data_vencimento_boleto = models.DateField(null=True, blank=True)
     data_conclusao_pedido = models.DateField(null=True, blank=True)
@@ -48,31 +49,28 @@ class SolicitacoesCompras(models.Model):
         Filiais,
         on_delete=models.PROTECT,
         related_name="solicitacoes_compras",
-        null=True,
     )
     solicitante = models.ForeignKey(
-        Usuarios,
+        User,
         on_delete=models.PROTECT,
         related_name="compras_solicitante",
         null=True,
     )
     responsavel = models.ForeignKey(
-        Usuarios,
+        User,
         on_delete=models.PROTECT,
         related_name="compras_responsavel",
         null=True,
     )
     autor = models.ForeignKey(
-        Usuarios,
+        User,
         on_delete=models.PROTECT,
         related_name="compras_autor",
-        null=True,
     )
     ultima_atualizacao = models.ForeignKey(
-        Usuarios,
+        User,
         on_delete=models.PROTECT,
         related_name="compras_ultima_att",
-        null=True,
     )
 
     def __repr__(self) -> str:
