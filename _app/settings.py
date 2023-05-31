@@ -41,7 +41,7 @@ THIRD_PARTY_APPS = [
     "corsheaders",
 ]
 
-MY_APPS = ["solicitacoes_compras", "filiais"]
+MY_APPS = ["solicitacoes_compras", "solicitacoes_entradas", "usuarios", "filiais"]
 
 DJANGO_APPS = [
     "django.contrib.admin",
@@ -53,6 +53,8 @@ DJANGO_APPS = [
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + MY_APPS
+
+APPEND_SLASH = False
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

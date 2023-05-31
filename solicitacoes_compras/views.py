@@ -2,7 +2,7 @@ from rest_framework.views import APIView, Response, Request, status
 from django.shortcuts import get_object_or_404
 
 from filiais.models import Filiais
-from service.choices import (
+from _service.choices import (
     STATUS_CHOICES,
     CATEGORIA_CHOICES,
     DEPARTAMENTO_CHOICES,
@@ -36,9 +36,23 @@ class SolicitacoesComprasView(APIView):
 class SolicitacoesComprasDetailView(APIView):
     def get(self, request: Request, id: int) -> Response:
         solicitacao = get_object_or_404(SolicitacoesCompras, id=id)
-        sereliazer = SolicitacoesComprasReponseSerializer(solicitacao)
+        serializer = SolicitacoesComprasReponseSerializer(solicitacao)
 
-        return Response(sereliazer.data, status.HTTP_200_OK)
+        return Response(serializer.data, status.HTTP_200_OK)
+
+    def patch(self, request: Request, id: int) -> Response:
+        solicitacao = get_object_or_404(SolicitacoesCompras, id=id)
+        serializer = SolicitacoesComprasSerializer(data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+
+        for key, value in serializer.validated_data.items():
+            setattr(solicitacao, key, value)
+
+        solicitacao.save()
+
+        serializer = SolicitacoesComprasReponseSerializer(solicitacao)
+
+        return Response(serializer.data, status.HTTP_201_CREATED)
 
 
 class SolicitacoesComprasChoicesView(APIView):

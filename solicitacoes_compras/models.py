@@ -1,11 +1,11 @@
 from django.db import models
-from django.utils import timezone
+from datetime import datetime
 
 from filiais.models import Filiais
 
 # from usuarios.models import Usuarios
 from django.contrib.auth.models import User
-from service.choices import (
+from _service.choices import (
     DEPARTAMENTO_CHOICES,
     FORMA_PGT_CHOICES,
     STATUS_CHOICES,
@@ -16,7 +16,7 @@ from service.choices import (
 class SolicitacoesCompras(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
     numero_solicitacao = models.IntegerField(unique=True)
-    data_solicitacao_bo = models.DateTimeField(default=timezone.now)
+    data_solicitacao_bo = models.DateTimeField(default=datetime.now())
     data_vencimento_boleto = models.DateField(null=True, blank=True)
     data_conclusao_pedido = models.DateField(null=True, blank=True)
     status = models.CharField(max_length=30, choices=STATUS_CHOICES.choices)
@@ -43,7 +43,7 @@ class SolicitacoesCompras(models.Model):
     )
     pago = models.BooleanField(default=False)
     observacao = models.TextField(null=True, blank=True)
-    anexo = models.FileField(upload_to="cpr/%Y/%m/%d", blank=True, null=True)
+    anexo = models.FileField(upload_to="compras/%Y/%m/%d", blank=True, null=True)
 
     filial = models.ForeignKey(
         Filiais,
@@ -64,12 +64,12 @@ class SolicitacoesCompras(models.Model):
     )
     autor = models.ForeignKey(
         User,
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         related_name="compras_autor",
     )
     ultima_atualizacao = models.ForeignKey(
         User,
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         related_name="compras_ultima_att",
     )
 
