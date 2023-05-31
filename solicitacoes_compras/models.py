@@ -1,7 +1,11 @@
 from django.db import models
-from django.utils import timezone
+from datetime import datetime
 
-from service.choices import (
+from filiais.models import Filiais
+
+# from usuarios.models import Usuarios
+from django.contrib.auth.models import User
+from _service.choices import (
     DEPARTAMENTO_CHOICES,
     FORMA_PGT_CHOICES,
     STATUS_CHOICES,
@@ -12,8 +16,7 @@ from service.choices import (
 class SolicitacoesCompras(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
     numero_solicitacao = models.IntegerField(unique=True)
-    data_solicitacao_pra = models.DateField()
-    data_solicitacao_bo = models.DateTimeField(default=timezone.now)
+    data_solicitacao_bo = models.DateTimeField(default=datetime.now())
     data_vencimento_boleto = models.DateField(null=True, blank=True)
     data_conclusao_pedido = models.DateField(null=True, blank=True)
     status = models.CharField(max_length=30, choices=STATUS_CHOICES.choices)
@@ -40,44 +43,41 @@ class SolicitacoesCompras(models.Model):
     )
     pago = models.BooleanField(default=False)
     observacao = models.TextField(null=True, blank=True)
-    anexo = models.FileField(upload_to="cpr/%Y/%m/%d", blank=True, null=True)
+    anexo = models.FileField(upload_to="compras/%Y/%m/%d", blank=True, null=True)
 
     filial = models.ForeignKey(
-        "filiais.Filiais",
+        Filiais,
         on_delete=models.PROTECT,
         related_name="solicitacoes_compras",
-        null=True,
     )
     solicitante = models.ForeignKey(
-        "usuarios.Usuarios",
+        User,
         on_delete=models.PROTECT,
         related_name="compras_solicitante",
         null=True,
     )
     responsavel = models.ForeignKey(
-        "usuarios.Usuarios",
+        User,
         on_delete=models.PROTECT,
         related_name="compras_responsavel",
         null=True,
     )
     autor = models.ForeignKey(
-        "usuarios.Usuarios",
-        on_delete=models.PROTECT,
+        User,
+        on_delete=models.CASCADE,
         related_name="compras_autor",
-        null=True,
     )
     ultima_atualizacao = models.ForeignKey(
-        "usuarios.Usuarios",
-        on_delete=models.PROTECT,
+        User,
+        on_delete=models.CASCADE,
         related_name="compras_ultima_att",
-        null=True,
     )
 
     def __repr__(self) -> str:
         return f"<Solicitação Compra {self.numero_solicitacao} - {self.status}>"
 
     def __str__(self):
-        return str(self.placa)
+        return f"<Solicitação Compra {self.numero_solicitacao} - {self.status}>"
 
     class Meta:
         verbose_name = "SolicitacaoCompra"

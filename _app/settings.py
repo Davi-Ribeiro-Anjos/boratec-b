@@ -1,5 +1,5 @@
-from pathlib import Path
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -29,14 +29,22 @@ if dev:
         }
     }
 
+    CORS_ORIGIN_ALLOW_ALL = True
+    CORS_ORIGIN_WHITELIST = [
+        "http://localhost:3000",
+    ]
+
 # Application definition
 
-THIRD_PARTY_APPS = ["rest_framework"]
+THIRD_PARTY_APPS = [
+    "rest_framework",
+    "corsheaders",
+]
 
-MY_APPS = ["solicitacoes_compras", "usuarios", "filiais"]
+MY_APPS = ["solicitacoes_compras", "solicitacoes_entradas", "usuarios", "filiais"]
 
 DJANGO_APPS = [
-    # "django.contrib.admin",
+    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -46,6 +54,8 @@ DJANGO_APPS = [
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + MY_APPS
 
+APPEND_SLASH = False
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -54,6 +64,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
 ]
 
 ROOT_URLCONF = "_app.urls"
@@ -97,6 +109,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
+DATETIME_FORMAT = "d/m/Y H:i"
+
+DATE_FORMAT = "d/m/Y"
 
 LANGUAGE_CODE = "pt-br"
 
@@ -112,11 +127,13 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = "/static/"
+STATIC_URL = os.environ.get("STATIC_URL")
+STATIC_ROOT = os.environ.get("STATIC_ROOT")
+
+MEDIA_URL = os.environ.get("MEDIA_URL")
+MEDIA_ROOT = os.environ.get("MEDIA_ROOT")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-AUTH_USER_MODEL = "usuarios.Usuarios"

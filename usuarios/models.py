@@ -1,12 +1,15 @@
-from django.contrib.auth.models import AbstractUser
+from django.db import models
 
 
-class Usuarios(AbstractUser):
+class Usuarios(models.Model):
     class Meta:
         verbose_name = "Usuario"
         verbose_name_plural = "Usuarios"
         db_table = "usuarios"
         app_label = "usuarios"
 
+    def __repr__(self) -> str:
+        return f"<Usuario {self.pk} - {self.username}>"
+
     def __str__(self):
-        return str(self.username)
+        return f"<Usuario {self.pk} - {self.username}>"
