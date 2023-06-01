@@ -7,7 +7,7 @@ from solicitacoes_compras.models import SolicitacoesCompras
 
 class SolicitacoesEntradas(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
-    obs = models.TextField()
+    observacao = models.TextField()
     arquivo_1 = models.FileField(upload_to="compras/%Y/%m/%d", blank=True, null=True)
     arquivo_2 = models.FileField(upload_to="compras/%Y/%m/%d", blank=True, null=True)
     arquivo_3 = models.FileField(upload_to="compras/%Y/%m/%d", blank=True, null=True)

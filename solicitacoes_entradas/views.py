@@ -27,8 +27,10 @@ class SolicitacoesEntradasView(APIView):
 
 class SolicitacoesEntradasDetailView(APIView):
     def get(self, request: Request, id: int) -> Response:
-        solicitacao = get_object_or_404(SolicitacoesEntradas, id=id)
-        serializer = SolicitacoesEntradasReponseSerializer(solicitacao)
+        solicitacao = SolicitacoesEntradas.objects.filter(solicitacao__id=id).order_by(
+            "id"
+        )
+        serializer = SolicitacoesEntradasReponseSerializer(solicitacao, many=True)
 
         return Response(serializer.data, status.HTTP_200_OK)
 

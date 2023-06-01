@@ -11,7 +11,7 @@ class SolicitacoesEntradasSerializer(serializers.ModelSerializer):
         model = SolicitacoesEntradas
         fields = (
             "id",
-            "obs",
+            "observacao",
             "arquivo_1",
             "arquivo_2",
             "arquivo_3",
@@ -28,7 +28,7 @@ class SolicitacoesEntradasReponseSerializer(serializers.ModelSerializer):
         model = SolicitacoesEntradas
         fields = (
             "id",
-            "obs",
+            "observacao",
             "arquivo_1",
             "arquivo_2",
             "arquivo_3",

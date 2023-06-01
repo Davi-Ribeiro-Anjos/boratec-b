@@ -1,4 +1,6 @@
+import ipdb
 from rest_framework.views import APIView, Response, Request, status
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 
 from filiais.models import Filiais
@@ -18,7 +20,15 @@ from .serializers import (
 
 class SolicitacoesComprasView(APIView):
     def get(self, request: Request) -> Response:
-        solicitacoes = SolicitacoesCompras.objects.all().order_by("id")
+        if len(request.GET) > 0:
+            solicitacoes = SolicitacoesCompras.objects.filter(
+                **request.GET.dict()
+            ).order_by("data_solicitacao_bo")
+        else:
+            solicitacoes = SolicitacoesCompras.objects.filter(
+                Q(status="ABERTO") | Q(status="ANDAMENTO")
+            ).order_by("data_solicitacao_bo")
+
         serializer = SolicitacoesComprasReponseSerializer(solicitacoes, many=True)
 
         return Response(serializer.data, status.HTTP_200_OK)
