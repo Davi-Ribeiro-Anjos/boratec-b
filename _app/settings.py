@@ -41,7 +41,12 @@ THIRD_PARTY_APPS = [
     "corsheaders",
 ]
 
-MY_APPS = ["solicitacoes_compras", "solicitacoes_entradas", "usuarios", "filiais"]
+MY_APPS = [
+    "solicitacoes_compras",
+    "solicitacoes_entradas",
+    "usuarios_complementos",
+    "filiais",
+]
 
 DJANGO_APPS = [
     "django.contrib.admin",

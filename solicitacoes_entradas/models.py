@@ -15,6 +15,12 @@ class SolicitacoesEntradas(models.Model):
     solicitacao = models.ForeignKey(SolicitacoesCompras, on_delete=models.CASCADE)
     autor = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
 
+    class Meta:
+        verbose_name = "SolicitacaoEntrada"
+        verbose_name_plural = "SolicitacoesEntradas"
+        db_table = "solicitacoes_entradas"
+        app_label = "solicitacoes_entradas"
+
     def __repr__(self) -> str:
         return (
             f"<Solicitação Entrada {self.id} - {self.solicitacao.numero_solicitacao}>"
@@ -24,9 +30,3 @@ class SolicitacoesEntradas(models.Model):
         return (
             f"<Solicitação Entrada {self.id} - {self.solicitacao.numero_solicitacao}>"
         )
-
-    class Meta:
-        verbose_name = "SolicitacaoEntrada"
-        verbose_name_plural = "SolicitacoesEntradas"
-        db_table = "solicitacoes_entradas"
-        app_label = "solicitacoes_entradas"

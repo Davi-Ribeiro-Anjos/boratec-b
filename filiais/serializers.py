@@ -16,3 +16,13 @@ class FiliaisSerializer(serializers.ModelSerializer):
             "uf",
             "cnpj",
         ]
+
+
+class FiliaisSimplesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Filiais
+        fields = [
+            "id",
+            "id_garagem",
+            "sigla",
+        ]

@@ -1,9 +1,11 @@
+from datetime import datetime
+
 from rest_framework.test import APITestCase
 from rest_framework.views import status
-from django.urls import reverse
 
-# from usuarios.models import Usuarios
+from django.urls import reverse
 from django.contrib.auth.models import User
+
 from filiais.models import Filiais
 
 from .models import SolicitacoesCompras
@@ -17,7 +19,7 @@ class SolicitacoesComprasTestCase(APITestCase):
     url = reverse("solicitacoes-compras")
     solicitacao1 = {
         "numero_solicitacao": 45691124,
-        "data_solicitacao_bo": "2023-05-01 09:15:32",
+        "data_solicitacao_bo": datetime.now(),
         "status": "ANDAMENTO",
         "filial": None,
         "autor": None,
@@ -25,7 +27,7 @@ class SolicitacoesComprasTestCase(APITestCase):
     }
     solicitacao2 = {
         "numero_solicitacao": 45631242,
-        "data_solicitacao_bo": "2023-05-05 09:30:32",
+        "data_solicitacao_bo": datetime.now(),
         "status": "ABERTO",
         "filial": None,
         "autor": None,
@@ -88,6 +90,25 @@ class SolicitacoesComprasTestCase(APITestCase):
 
         solicitacoes = SolicitacoesCompras.objects.all().order_by("id")
         serializer = SolicitacoesComprasReponseSerializer(solicitacoes, many=True)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK, "status_code != 200")
+        self.assertEqual(res.data, serializer.data, "os retornos são diferentes")
+        self.assertEqual(len(res.data), 2, "os tamanho é diferente")
+
+    def test_solic_compras_get_by_id(self):
+        User.objects.create_user(**self.usuario)
+        Filiais.objects.create(**self.filial)
+
+        self.solicitacao1["filial"] = 1
+        self.solicitacao1["autor"] = 1
+        self.solicitacao1["ultima_atualizacao"] = 1
+
+        self.client.post(self.url, self.solicitacao1)
+
+        res = self.client.get(self.url + "1/")
+
+        solicitacoes = SolicitacoesCompras.objects.filter(id=1).first()
+        serializer = SolicitacoesComprasReponseSerializer(solicitacoes)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK, "status_code != 200")
         self.assertEqual(res.data, serializer.data, "os retornos são diferentes")

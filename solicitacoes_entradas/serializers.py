@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from solicitacoes_compras.serializers import SolicitacoesComprasReponseSerializer
-from usuarios.serializers import UsuariosSerializer
+from solicitacoes_compras.serializers import SolicitacoesComprasSimplesSerializer
+from usuarios_complementos.serializers import UsuariosSimplesSerializer
 
 from .models import SolicitacoesEntradas
 
@@ -22,7 +22,8 @@ class SolicitacoesEntradasSerializer(serializers.ModelSerializer):
 
 
 class SolicitacoesEntradasReponseSerializer(serializers.ModelSerializer):
-    autor = UsuariosSerializer()
+    autor = UsuariosSimplesSerializer()
+    solicitacao = SolicitacoesComprasSimplesSerializer()
 
     class Meta:
         model = SolicitacoesEntradas

@@ -1,9 +1,9 @@
 import ipdb
 from rest_framework.views import APIView, Response, Request, status
 from django.db.models import Q
+from django.core.exceptions import FieldError
 from django.shortcuts import get_object_or_404
 
-from filiais.models import Filiais
 from _service.choices import (
     STATUS_CHOICES,
     CATEGORIA_CHOICES,
@@ -12,22 +12,56 @@ from _service.choices import (
 )
 
 from .models import SolicitacoesCompras
-from .serializers import (
-    SolicitacoesComprasSerializer,
-    SolicitacoesComprasReponseSerializer,
-)
+from .serializers import *
 
 
 class SolicitacoesComprasView(APIView):
     def get(self, request: Request) -> Response:
-        if len(request.GET) > 0:
-            solicitacoes = SolicitacoesCompras.objects.filter(
-                **request.GET.dict()
-            ).order_by("data_solicitacao_bo")
-        else:
-            solicitacoes = SolicitacoesCompras.objects.filter(
-                Q(status="ABERTO") | Q(status="ANDAMENTO")
-            ).order_by("data_solicitacao_bo")
+        params = request.GET.dict()
+        lista_params = [
+            "numero_solicitacao",
+            "data_solicitacao_bo",
+            "data_solicitacao_bo__gte",
+            "data_solicitacao_bo__lte",
+            "solicitante",
+            "solicitante__username",
+            "status",
+            "filial",
+        ]
+
+        params_errados = [param for param in params if not param in lista_params]
+        if len(params_errados) > 0:
+            raise FieldError()
+
+        try:
+            if len(request.GET) > 0:
+                if not "status" in params:
+                    params["status__in"] = ["ABERTO", "ANDAMENTO"]
+                    solicitacoes = SolicitacoesCompras.objects.filter(
+                        **params
+                    ).order_by("data_solicitacao_bo")
+
+                solicitacoes = SolicitacoesCompras.objects.filter(**params).order_by(
+                    "data_solicitacao_bo"
+                )
+            else:
+                solicitacoes = SolicitacoesCompras.objects.filter(
+                    Q(status="ABERTO") | Q(status="ANDAMENTO")
+                ).order_by("data_solicitacao_bo")
+        except FieldError:
+            return Response(
+                {
+                    "mensagem": "Parâmetros incorrretos",
+                    "parametros_aceitos": [
+                        "numero_solicitacao",
+                        "data_solicitacao_bo",
+                        "status",
+                        "solicitante",
+                        "filial",
+                    ],
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         serializer = SolicitacoesComprasReponseSerializer(solicitacoes, many=True)
 
@@ -62,7 +96,7 @@ class SolicitacoesComprasDetailView(APIView):
 
         serializer = SolicitacoesComprasReponseSerializer(solicitacao)
 
-        return Response(serializer.data, status.HTTP_201_CREATED)
+        return Response(serializer.data, status.HTTP_204_NO_CONTENT)
 
 
 class SolicitacoesComprasChoicesView(APIView):
