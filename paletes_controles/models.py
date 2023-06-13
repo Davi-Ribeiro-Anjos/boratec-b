@@ -1,16 +1,21 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from _service.choices import DEPARTAMENTO_CHOICES
 
-from filiais.models import Filiais
+class TIPO_PALETE_CHOICES(models.TextChoices):
+    PBR = "PBR"
+    CHEP = "CHEP"
 
 
 class PaletesControles(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
-    localizacao_atual = models.CharField(max_length=3, null=True, blank=True)
-    localizacao_destinatario = models.CharField(max_length=3, null=True, blank=True)
-    autor = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True)
+    localizacao_atual = models.CharField(max_length=3)
+    movimento_atual = models.CharField(max_length=25, null=True, blank=True)
+    tipo_palete = models.CharField(
+        max_length=4,
+        choices=TIPO_PALETE_CHOICES.choices,
+    )
+    autor = models.ForeignKey(User, on_delete=models.PROTECT)
 
     class Meta:
         verbose_name = "PaleteControle"

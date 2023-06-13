@@ -21,7 +21,7 @@ class SolicitacoesEntradasSerializer(serializers.ModelSerializer):
         )
 
 
-class SolicitacoesEntradasReponseSerializer(serializers.ModelSerializer):
+class SolicitacoesEntradasResponseSerializer(serializers.ModelSerializer):
     autor = UsuariosSimplesSerializer()
     solicitacao = SolicitacoesComprasSimplesSerializer()
 

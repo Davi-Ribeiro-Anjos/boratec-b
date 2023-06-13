@@ -44,7 +44,7 @@ class SolicitacoesComprasSimplesSerializer(serializers.ModelSerializer):
         )
 
 
-class SolicitacoesComprasReponseSerializer(serializers.ModelSerializer):
+class SolicitacoesComprasResponseSerializer(serializers.ModelSerializer):
     filial = FiliaisSimplesSerializer()
     solicitante = UsuariosSimplesSerializer()
     responsavel = UsuariosSimplesSerializer()

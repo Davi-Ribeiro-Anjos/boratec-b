@@ -1,46 +1,32 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User
 
-from .models import ComplementosUsuarios
+from usuarios_complementos.serializers import UsuariosSimplesSerializer
+
+from .models import PaletesControles
 
 
-class ComplementosUsuariosSerializer(serializers.ModelSerializer):
+class PaletesControlesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ComplementosUsuarios
+        model = PaletesControles
         fields = [
             "id",
-            "cpf_cnpj",
-            "ramal",
-            "departamento",
-            "usuario",
-            "filial",
+            "localizacao_atual",
+            "tipo_palete",
+            "movimento_atual",
+            "autor",
         ]
 
 
-class UsuariosSerializer(serializers.ModelSerializer):
-    complemento = ComplementosUsuariosSerializer()
+class PaletesControlesResponseSerializer(serializers.ModelSerializer):
+    autor = UsuariosSimplesSerializer()
 
     class Meta:
-        model = User
+        model = PaletesControles
         fields = [
             "id",
-            "username",
-            "first_name",
-            "last_name",
-            "email",
-            "is_staff",
-            "is_superuser",
-            "is_active",
-            "complemento",
+            "localizacao_atual",
+            "tipo_palete",
+            "movimento_atual",
+            "autor",
         ]
         delth = 1
-
-
-class UsuariosSimplesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = [
-            "id",
-            "username",
-            "email",
-        ]

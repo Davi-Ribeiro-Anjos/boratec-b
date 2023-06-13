@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import datetime
+from django.utils import timezone
 
 from filiais.models import Filiais
 
@@ -16,7 +16,7 @@ from _service.choices import (
 class SolicitacoesCompras(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
     numero_solicitacao = models.IntegerField(unique=True)
-    data_solicitacao_bo = models.DateTimeField(default=datetime.now())
+    data_solicitacao_bo = models.DateTimeField(default=timezone.now)
     data_vencimento_boleto = models.DateField(null=True, blank=True)
     data_conclusao_pedido = models.DateField(null=True, blank=True)
     status = models.CharField(

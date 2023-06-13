@@ -1,5 +1,7 @@
 import ipdb
+
 from rest_framework.views import APIView, Response, Request, status
+
 from django.db.models import Q
 from django.core.exceptions import FieldError
 from django.shortcuts import get_object_or_404
@@ -63,7 +65,7 @@ class SolicitacoesComprasView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        serializer = SolicitacoesComprasReponseSerializer(solicitacoes, many=True)
+        serializer = SolicitacoesComprasResponseSerializer(solicitacoes, many=True)
 
         return Response(serializer.data, status.HTTP_200_OK)
 
@@ -72,7 +74,7 @@ class SolicitacoesComprasView(APIView):
         serializer.is_valid(raise_exception=True)
         solicitacao = SolicitacoesCompras.objects.create(**serializer.validated_data)
 
-        serializer = SolicitacoesComprasReponseSerializer(solicitacao)
+        serializer = SolicitacoesComprasResponseSerializer(solicitacao)
 
         return Response(serializer.data, status.HTTP_201_CREATED)
 
@@ -80,7 +82,7 @@ class SolicitacoesComprasView(APIView):
 class SolicitacoesComprasDetailView(APIView):
     def get(self, request: Request, id: int) -> Response:
         solicitacao = get_object_or_404(SolicitacoesCompras, id=id)
-        serializer = SolicitacoesComprasReponseSerializer(solicitacao)
+        serializer = SolicitacoesComprasResponseSerializer(solicitacao)
 
         return Response(serializer.data, status.HTTP_200_OK)
 
@@ -94,7 +96,7 @@ class SolicitacoesComprasDetailView(APIView):
 
         solicitacao.save()
 
-        serializer = SolicitacoesComprasReponseSerializer(solicitacao)
+        serializer = SolicitacoesComprasResponseSerializer(solicitacao)
 
         return Response(serializer.data, status.HTTP_204_NO_CONTENT)
 
