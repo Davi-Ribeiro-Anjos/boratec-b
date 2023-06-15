@@ -7,7 +7,6 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -41,7 +40,14 @@ THIRD_PARTY_APPS = [
     "corsheaders",
 ]
 
-MY_APPS = ["solicitacoes_compras", "solicitacoes_entradas", "usuarios", "filiais"]
+MY_APPS = [
+    "filiais",
+    "paletes_controles",
+    "paletes_movimentos",
+    "solicitacoes_compras",
+    "solicitacoes_entradas",
+    "usuarios_complementos",
+]
 
 DJANGO_APPS = [
     "django.contrib.admin",

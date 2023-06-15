@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from solicitacoes_compras.serializers import SolicitacoesComprasReponseSerializer
-from usuarios.serializers import UsuariosSerializer
+from solicitacoes_compras.serializers import SolicitacoesComprasSimplesSerializer
+from usuarios_complementos.serializers import UsuariosSimplesSerializer
 
 from .models import SolicitacoesEntradas
 
@@ -11,7 +11,7 @@ class SolicitacoesEntradasSerializer(serializers.ModelSerializer):
         model = SolicitacoesEntradas
         fields = (
             "id",
-            "obs",
+            "observacao",
             "arquivo_1",
             "arquivo_2",
             "arquivo_3",
@@ -21,14 +21,15 @@ class SolicitacoesEntradasSerializer(serializers.ModelSerializer):
         )
 
 
-class SolicitacoesEntradasReponseSerializer(serializers.ModelSerializer):
-    autor = UsuariosSerializer()
+class SolicitacoesEntradasResponseSerializer(serializers.ModelSerializer):
+    autor = UsuariosSimplesSerializer()
+    solicitacao = SolicitacoesComprasSimplesSerializer()
 
     class Meta:
         model = SolicitacoesEntradas
         fields = (
             "id",
-            "obs",
+            "observacao",
             "arquivo_1",
             "arquivo_2",
             "arquivo_3",

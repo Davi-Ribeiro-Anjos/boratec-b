@@ -1,9 +1,8 @@
 from django.db import models
-from datetime import datetime
+from django.utils import timezone
 
 from filiais.models import Filiais
 
-# from usuarios.models import Usuarios
 from django.contrib.auth.models import User
 from _service.choices import (
     DEPARTAMENTO_CHOICES,
@@ -16,10 +15,12 @@ from _service.choices import (
 class SolicitacoesCompras(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
     numero_solicitacao = models.IntegerField(unique=True)
-    data_solicitacao_bo = models.DateTimeField(default=datetime.now())
+    data_solicitacao_bo = models.DateTimeField(default=timezone.now)
     data_vencimento_boleto = models.DateField(null=True, blank=True)
     data_conclusao_pedido = models.DateField(null=True, blank=True)
-    status = models.CharField(max_length=30, choices=STATUS_CHOICES.choices)
+    status = models.CharField(
+        max_length=30, choices=STATUS_CHOICES.choices, default="ABERTO"
+    )
     departamento = models.CharField(
         max_length=30,
         default=DEPARTAMENTO_CHOICES.DEFAULT,
@@ -73,14 +74,14 @@ class SolicitacoesCompras(models.Model):
         related_name="compras_ultima_att",
     )
 
-    def __repr__(self) -> str:
-        return f"<Solicitação Compra {self.numero_solicitacao} - {self.status}>"
-
-    def __str__(self):
-        return f"<Solicitação Compra {self.numero_solicitacao} - {self.status}>"
-
     class Meta:
         verbose_name = "SolicitacaoCompra"
         verbose_name_plural = "SolicitacoesCompras"
         db_table = "solicitacoes_compras"
         app_label = "solicitacoes_compras"
+
+    def __repr__(self) -> str:
+        return f"<Solicitação Compra {self.numero_solicitacao} - {self.status}>"
+
+    def __str__(self):
+        return f"<Solicitação Compra {self.numero_solicitacao} - {self.status}>"

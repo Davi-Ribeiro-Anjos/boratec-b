@@ -4,14 +4,14 @@ from django.shortcuts import get_object_or_404
 from .models import SolicitacoesEntradas
 from .serializers import (
     SolicitacoesEntradasSerializer,
-    SolicitacoesEntradasReponseSerializer,
+    SolicitacoesEntradasResponseSerializer,
 )
 
 
 class SolicitacoesEntradasView(APIView):
     def get(self, request: Request) -> Response:
         solicitacoes = SolicitacoesEntradas.objects.all().order_by("id")
-        serializer = SolicitacoesEntradasReponseSerializer(solicitacoes, many=True)
+        serializer = SolicitacoesEntradasResponseSerializer(solicitacoes, many=True)
 
         return Response(serializer.data, status.HTTP_200_OK)
 
@@ -20,15 +20,17 @@ class SolicitacoesEntradasView(APIView):
         serializer.is_valid(raise_exception=True)
         solicitacao = SolicitacoesEntradas.objects.create(**serializer.validated_data)
 
-        serializer = SolicitacoesEntradasReponseSerializer(solicitacao)
+        serializer = SolicitacoesEntradasResponseSerializer(solicitacao)
 
         return Response(serializer.data, status.HTTP_201_CREATED)
 
 
 class SolicitacoesEntradasDetailView(APIView):
     def get(self, request: Request, id: int) -> Response:
-        solicitacao = get_object_or_404(SolicitacoesEntradas, id=id)
-        serializer = SolicitacoesEntradasReponseSerializer(solicitacao)
+        solicitacao = SolicitacoesEntradas.objects.filter(solicitacao__id=id).order_by(
+            "id"
+        )
+        serializer = SolicitacoesEntradasResponseSerializer(solicitacao, many=True)
 
         return Response(serializer.data, status.HTTP_200_OK)
 
@@ -42,6 +44,6 @@ class SolicitacoesEntradasDetailView(APIView):
 
         solicitacao.save()
 
-        serializer = SolicitacoesEntradasReponseSerializer(solicitacao)
+        serializer = SolicitacoesEntradasResponseSerializer(solicitacao)
 
         return Response(serializer.data, status.HTTP_201_CREATED)

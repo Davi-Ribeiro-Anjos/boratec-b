@@ -1,9 +1,8 @@
 from rest_framework.views import APIView, Response, Request, status
+
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
-import ipdb
 
-# from .models import Usuarios
 from .serializers import UsuariosSerializer
 
 
