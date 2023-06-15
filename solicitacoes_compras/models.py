@@ -3,7 +3,6 @@ from django.utils import timezone
 
 from filiais.models import Filiais
 
-# from usuarios.models import Usuarios
 from django.contrib.auth.models import User
 from _service.choices import (
     DEPARTAMENTO_CHOICES,

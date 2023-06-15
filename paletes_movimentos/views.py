@@ -1,8 +1,11 @@
-from datetime import datetime
 from rest_framework.views import APIView, Response, Request, status
 
 from django.contrib.auth.models import User
+from django.core.exceptions import FieldError
 from django.shortcuts import get_object_or_404
+
+import ipdb
+from datetime import datetime
 
 from filiais.models import Filiais
 from paletes_controles.models import PaletesControles
@@ -13,10 +16,61 @@ from .serializers import *
 
 class PaletesMovimentosView(APIView):
     def get(self, request: Request) -> Response:
-        movimentos = PaletesMovimentos.objects.all().order_by("id")
-        serializer = PaletesMovimentosResponseSerializer(movimentos, many=True)
+        params = request.GET.dict()
 
-        return Response(serializer.data, status.HTTP_200_OK)
+        print(params)
+
+        lista_params = [
+            "origem",
+            "destino",
+            "placa_veiculo",
+            "placa_veiculo__contains",
+            "autor",
+            "autor__username",
+            "recebido",
+        ]
+
+        params_errados = [param for param in params if not param in lista_params]
+        if len(params_errados) > 0:
+            raise FieldError()
+
+        if "recebido" in params:
+            if params["recebido"] == "false":
+                params["recebido"] = False
+            elif params["recebido"] == "true":
+                params["recebido"] = True
+
+        try:
+            if params:
+                movimentos = PaletesMovimentos.objects.filter(**params).order_by(
+                    "data_solicitacao"
+                )
+                serializer = PaletesMovimentosResponseSerializer(movimentos, many=True)
+
+                return Response(serializer.data, status.HTTP_200_OK)
+            else:
+                movimentos = PaletesMovimentos.objects.all().order_by(
+                    "data_solicitacao"
+                )
+                serializer = PaletesMovimentosResponseSerializer(movimentos, many=True)
+
+                return Response(serializer.data, status.HTTP_200_OK)
+        except FieldError:
+            return Response(
+                {
+                    "mensagem": "Parâmetros incorrretos",
+                    "parametros_aceitos": [
+                        "numero_solicitacao",
+                        "data_solicitacao_bo",
+                        "status",
+                        "solicitante",
+                        "filial",
+                    ],
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        except Exception as e:
+            return Response({"error": e}, status.HTTP_400_BAD_REQUEST)
 
     def post(self, request: Request) -> Response:
         try:
@@ -54,24 +108,27 @@ class PaletesMovimentosView(APIView):
                 **serializer.validated_data
             )
 
-            serializer: PaletesMovimentosResponseSerializer = (
-                PaletesMovimentosResponseSerializer(movimento)
-            )
-
             for _ in range(0, int(data["quantidade_paletes"])):
                 palete = PaletesControles.objects.filter(
-                    localizacao_atual=filial.sigla, movimento_atual__isnull=True
+                    localizacao_atual=filial.sigla,
+                    movimento_atual__isnull=True,
+                    tipo_palete=data["tipo_palete"],
                 ).first()
 
                 item = {
                     "movimento_atual": movimento.solicitacao,
                     "localizacao_atual": "MOV",
+                    "destino": movimento.destino.sigla,
                 }
 
                 for key, value in item.items():
                     setattr(palete, key, value)
 
                 palete.save()
+
+            serializer: PaletesMovimentosResponseSerializer = (
+                PaletesMovimentosResponseSerializer(movimento)
+            )
 
             return Response(
                 serializer.data,
@@ -84,14 +141,6 @@ class PaletesMovimentosView(APIView):
 
 
 class PaletesMovimentosDetailView(APIView):
-    def get(self, request: Request, id: int) -> Response:
-        solicitacao = PaletesMovimentos.objects.filter(solicitacao__id=id).order_by(
-            "id"
-        )
-        serializer = PaletesMovimentosResponseSerializer(solicitacao, many=True)
-
-        return Response(serializer.data, status.HTTP_200_OK)
-
     def patch(self, request: Request, id: int) -> Response:
         solicitacao = get_object_or_404(PaletesMovimentos, id=id)
         serializer = PaletesMovimentosSerializer(data=request.data, partial=True)
@@ -99,6 +148,22 @@ class PaletesMovimentosDetailView(APIView):
 
         for key, value in serializer.validated_data.items():
             setattr(solicitacao, key, value)
+
+        try:
+            paletes = PaletesControles.objects.filter(
+                movimento_atual=solicitacao.solicitacao,
+                destino=solicitacao.destino.sigla,
+            )
+
+            for palete in paletes:
+                palete.localizacao_atual = palete.destino
+                palete.destino = None
+                palete.movimento_atual = None
+
+                palete.save()
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
         solicitacao.save()
 

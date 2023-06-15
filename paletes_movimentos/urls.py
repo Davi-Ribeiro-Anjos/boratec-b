@@ -9,8 +9,8 @@ urlpatterns = [
         name="paletes-movimentos",
     ),
     path(
-        "paletes-movimentos/<int:id>/",
+        "paletes-movimentos/confirmar/<int:id>/",
         views.PaletesMovimentosDetailView.as_view(),
-        name="paletes-movimentos-id",
+        name="paletes-movimentos-confirmar-id",
     ),
 ]

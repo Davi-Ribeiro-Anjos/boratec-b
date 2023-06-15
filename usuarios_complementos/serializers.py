@@ -18,7 +18,7 @@ class ComplementosUsuariosSerializer(serializers.ModelSerializer):
 
 
 class UsuariosSerializer(serializers.ModelSerializer):
-    complemento = ComplementosUsuariosSerializer()
+    # complemento = ComplementosUsuariosSerializer()
 
     class Meta:
         model = User
@@ -31,7 +31,7 @@ class UsuariosSerializer(serializers.ModelSerializer):
             "is_staff",
             "is_superuser",
             "is_active",
-            "complemento",
+            # "complemento",
         ]
         delth = 1
 

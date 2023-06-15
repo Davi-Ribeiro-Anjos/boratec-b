@@ -10,6 +10,7 @@ class TIPO_PALETE_CHOICES(models.TextChoices):
 class PaletesControles(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
     localizacao_atual = models.CharField(max_length=3)
+    destino = models.CharField(max_length=3, null=True, blank=True)
     movimento_atual = models.CharField(max_length=25, null=True, blank=True)
     tipo_palete = models.CharField(
         max_length=4,
