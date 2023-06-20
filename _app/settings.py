@@ -41,6 +41,7 @@ THIRD_PARTY_APPS = [
 ]
 
 MY_APPS = [
+    "clientes",
     "filiais",
     "paletes_controles",
     "paletes_movimentos",

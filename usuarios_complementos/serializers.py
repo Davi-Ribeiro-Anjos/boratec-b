@@ -1,12 +1,12 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
-from .models import ComplementosUsuarios
+from .models import UsuariosComplementos
 
 
-class ComplementosUsuariosSerializer(serializers.ModelSerializer):
+class UsuariosComplementosSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ComplementosUsuarios
+        model = UsuariosComplementos
         fields = [
             "id",
             "cpf_cnpj",
@@ -18,7 +18,7 @@ class ComplementosUsuariosSerializer(serializers.ModelSerializer):
 
 
 class UsuariosSerializer(serializers.ModelSerializer):
-    # complemento = ComplementosUsuariosSerializer()
+    # complemento = UsuariosComplementosSerializer()
 
     class Meta:
         model = User

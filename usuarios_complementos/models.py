@@ -14,7 +14,7 @@ def only_int(value):
         raise ValidationError("Valor digitado não é um número")
 
 
-class ComplementosUsuarios(models.Model):
+class UsuariosComplementos(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
     cpf_cnpj = models.CharField(max_length=14, validators=[only_int])
     ramal = models.CharField(max_length=3, validators=[only_int])

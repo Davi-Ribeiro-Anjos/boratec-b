@@ -1,11 +1,20 @@
-from rest_framework.views import APIView, Response, Request, status
-
-from django.contrib.auth.models import User
-from django.core.exceptions import FieldError
-from django.shortcuts import get_object_or_404
-
+import os
 import ipdb
 from datetime import datetime
+
+from fpdf import FPDF
+import barcode
+from barcode import Code39
+from barcode.writer import ImageWriter
+
+from rest_framework.views import APIView, Response, Request, status
+
+from django.db.models import Count
+from django.contrib.auth.models import User
+from django.core.exceptions import FieldError
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+
 
 from filiais.models import Filiais
 from paletes_controles.models import PaletesControles
@@ -17,8 +26,6 @@ from .serializers import *
 class PaletesMovimentosView(APIView):
     def get(self, request: Request) -> Response:
         params = request.GET.dict()
-
-        print(params)
 
         lista_params = [
             "origem",
@@ -170,3 +177,56 @@ class PaletesMovimentosDetailView(APIView):
         serializer = PaletesMovimentosResponseSerializer(solicitacao)
 
         return Response(serializer.data, status.HTTP_201_CREATED)
+
+
+class DocumentoView(APIView):
+    def get(self, request: Request, id: int) -> Response:
+        movimento = PaletesMovimentos.objects.filter(id=id).first()
+
+        data = {
+            "ID Solicitação": movimento.solicitacao,
+            "Origem": movimento.origem.sigla,
+            "Destino": movimento.destino.sigla,
+            "Placa do Veículo": movimento.placa_veiculo.upper(),
+            "Data Solicitação": datetime.strftime(
+                movimento.data_solicitacao, "%d/%m/%Y %H:%m"
+            ),
+            "Quantidade": movimento.quantidade_paletes,
+            "Autor": movimento.autor.username.upper(),
+            "Motorista": movimento.motorista,
+            "Conferente": movimento.conferente,
+        }
+
+        # Gerar código de barras
+        pdf = FPDF(orientation="P", unit="mm", format=(210, 297))
+        pdf.add_page()
+        pdf.ln()
+
+        EAN = barcode.get_barcode_class("ean13")
+        my_ean = EAN(data["ID Solicitação"], writer=ImageWriter())
+        my_ean.save("barcode")
+
+        pdf.image(
+            "./barcode.png", x=48, y=150, w=120, h=30
+        )  # Posição(x, y) Tamanho(w, h)
+        pdf.image("_static/images/logo.png", x=160, y=10, w=35, h=17.5)
+        pdf.ln()
+        pdf.set_font("Arial", size=20)
+        pdf.cell(w=190, h=25, txt="Solicitação de Transferência", border=0, align="C")
+        pdf.ln(30)
+        pdf.set_font("Arial", size=12, style="B")
+
+        line_height = pdf.font_size * 2.5
+        for k, v in data.items():
+            pdf.set_font("Arial", size=12, style="B")
+            pdf.cell(60, line_height, k, border=1)  # com barcode = 35 e 65
+            pdf.set_font("Arial", size=12)
+            pdf.cell(130, line_height, str(v), border=1, ln=1)
+        pdf.output("GFG.pdf")
+        with open("GFG.pdf", "rb") as f:
+            response = HttpResponse(f.read(), content_type="application/pdf")
+        f.close()
+        os.remove("GFG.pdf")
+        # os.remove("barcode.png")
+        response["Content-Disposition"] = "filename=some_file.pdf"
+        return response
