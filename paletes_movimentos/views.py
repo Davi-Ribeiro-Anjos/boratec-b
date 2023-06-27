@@ -227,6 +227,6 @@ class DocumentoView(APIView):
             response = HttpResponse(f.read(), content_type="application/pdf")
         f.close()
         os.remove("GFG.pdf")
-        # os.remove("barcode.png")
+        os.remove("barcode.png")
         response["Content-Disposition"] = "filename=some_file.pdf"
         return response

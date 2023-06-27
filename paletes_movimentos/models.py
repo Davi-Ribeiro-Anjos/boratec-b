@@ -15,6 +15,7 @@ class PaletesMovimentos(models.Model):
     conferente = models.CharField(max_length=35)
     recebido = models.BooleanField(default=False)
     quantidade_paletes = models.IntegerField()
+
     origem = models.ForeignKey(
         Filiais, on_delete=models.CASCADE, related_name="palete_movimento_origem"
     )

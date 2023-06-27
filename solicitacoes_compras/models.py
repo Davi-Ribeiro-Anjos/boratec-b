@@ -1,15 +1,58 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 from filiais.models import Filiais
 
-from django.contrib.auth.models import User
-from _service.choices import (
-    DEPARTAMENTO_CHOICES,
-    FORMA_PGT_CHOICES,
-    STATUS_CHOICES,
-    CATEGORIA_CHOICES,
-)
+
+class STATUS_CHOICES(models.TextChoices):
+    ABERTO = "ABERTO"
+    ANDAMENTO = "ANDAMENTO"
+    CONCLUIDO = "CONCLUIDO"
+    CANCELADO = "CANCELADO"
+
+
+class DEPARTAMENTO_CHOICES(models.TextChoices):
+    DEFAULT = "NÃO INFORMADO"
+    DIRETORIA = "DIRETORIA"
+    FATURAMENTO = "FATURAMENTO"
+    FINANCEIRO = "FINANCEIRO"
+    RH = "RH"
+    FISCAL = "FISCAL"
+    MONITORAMENTO = "MONITORAMENTO"
+    OPERACIONAL = "OPERACIONAL"
+    FROTA = "FROTA"
+    EXPEDICAO = "EXPEDICAO"
+    COMERCIAL = "COMERCIAL"
+    JURIDICO = "JURIDICO"
+    DESENVOLVIMENTO = "DESENVOLVIMENTO"
+    TI = "TI"
+    FILIAIS = "FILIAIS"
+    COMPRAS = "COMPRAS"
+
+
+class FORMA_PGT_CHOICES(models.TextChoices):
+    DEFAULT = "NÃO INFORMADO"
+    A_VISTA = "A VISTA"
+    PARCELADO_1X = "PARCELADO 1X"
+    PARCELADO_2X = "PARCELADO 2X"
+    PARCELADO_3X = "PARCELADO 3X"
+    PARCELADO_4X = "PARCELADO 4X"
+    PARCELADO_5X = "PARCELADO 5X"
+    PARCELADO_6X = "PARCELADO 6X"
+    PARCELADO_7X = "PARCELADO 7X"
+    PARCELADO_8X = "PARCELADO 8X"
+    PARCELADO_9X = "PARCELADO 9X"
+    PARCELADO_10X = "PARCELADO 10X"
+    PARCELADO_11X = "PARCELADO 11X"
+    PARCELADO_12X = "PARCELADO 12X"
+
+
+class CATEGORIA_CHOICES(models.TextChoices):
+    DEFAULT = "NÃO INFORMADO"
+    ALMOXARIFADO = "ALMOXARIFADO"
+    COTACAO = "COTACAO"
+    NOTA_FISCAL = "NOTA FISCAL"
 
 
 class SolicitacoesCompras(models.Model):

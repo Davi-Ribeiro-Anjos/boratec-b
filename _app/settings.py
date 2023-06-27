@@ -43,11 +43,16 @@ THIRD_PARTY_APPS = [
 MY_APPS = [
     "clientes",
     "filiais",
+    "funcionarios",
     "paletes_controles",
     "paletes_movimentos",
+    "pj_bonus",
+    "pj_complementos",
+    "pj_decimos_terceiros",
+    "pj_emails",
+    # "pj_ferias",
     "solicitacoes_compras",
     "solicitacoes_entradas",
-    "usuarios_complementos",
 ]
 
 DJANGO_APPS = [

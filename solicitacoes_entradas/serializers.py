@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from solicitacoes_compras.serializers import SolicitacoesComprasSimplesSerializer
-from usuarios_complementos.serializers import UsuariosSimplesSerializer
+from usuarios.serializers import UsuariosSimplesSerializer
 
 from .models import SolicitacoesEntradas
 

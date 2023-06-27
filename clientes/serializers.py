@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from usuarios_complementos.serializers import UsuariosSimplesSerializer
+from usuarios.serializers import UsuariosSimplesSerializer
 from filiais.serializers import FiliaisSimplesSerializer
 
 from .models import Clientes, ClientesFiliais
