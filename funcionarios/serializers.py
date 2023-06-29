@@ -4,7 +4,7 @@ from django.db.models import F
 from rest_framework import serializers
 
 from filiais.serializers import FiliaisSimplesSerializer
-from pj_complementos.serializers import PJComplementosSimplesResponseSerializer
+from pj_complementos.serializers import PJComplementosResponseSerializer
 from usuarios.serializers import UsuariosSimplesSerializer
 
 from .models import Funcionarios
@@ -62,14 +62,14 @@ class FuncionariosSerializer(serializers.ModelSerializer):
             "data_admissao",
             "ativo",
             "filial",
-            "complemento",
+            "complemento_funcionario",
             "user",
         )
 
 
 class FuncionariosResponseSerializer(serializers.ModelSerializer):
     filial = FiliaisSimplesSerializer()
-    complemento_funcionario = PJComplementosSimplesResponseSerializer()
+    complemento_funcionario = PJComplementosResponseSerializer()
     user = UsuariosSimplesSerializer()
     cpf = CPFFormattedField()
     cnpj = CNPJFormattedField()

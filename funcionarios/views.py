@@ -2,6 +2,8 @@ from rest_framework.views import APIView, Response, Request, status
 
 from django.shortcuts import get_object_or_404
 
+from pj_complementos.models import PJComplementos
+
 from .models import Funcionarios
 from .serializers import FuncionariosSerializer, FuncionariosResponseSerializer
 
@@ -12,6 +14,28 @@ class FuncionariosView(APIView):
         serializer = FuncionariosResponseSerializer(funcionarios, many=True)
 
         return Response(serializer.data, status.HTTP_200_OK)
+
+    def post(self, request: Request) -> Response:
+        try:
+            data = request.data.dict()
+        except:
+            data = request.data
+
+        # data["complemento_funcionario"] = PJComplementos.objects.filter(
+        #     id=data["complemento_funcionario"]
+        # ).first()
+
+        serializer = FuncionariosSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+
+        funcionario = Funcionarios.objects.create(**serializer.validated_data)
+
+        serializer = FuncionariosResponseSerializer(funcionario)
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+        )
 
 
 class FuncionariosDetailView(APIView):

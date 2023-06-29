@@ -17,3 +17,15 @@ class PJBonus(models.Model):
 
     funcionario = models.ForeignKey(Funcionarios, on_delete=models.CASCADE)
     autor = models.ForeignKey(User, on_delete=models.PROTECT)
+
+    class Meta:
+        verbose_name = "PJBonus"
+        verbose_name_plural = "PJBonus"
+        db_table = "pj_bonus"
+        app_label = "pj_bonus"
+
+    def __repr__(self) -> str:
+        return f"<PJ Bônus {self.id} - {self.funcionario.nome}>"
+
+    def __str__(self):
+        return f"<PJ Bônus {self.id} - {self.funcionario.nome}>"

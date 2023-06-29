@@ -26,7 +26,7 @@ class PJComplementos(models.Model):
         app_label = "pj_complementos"
 
     def __repr__(self) -> str:
-        return f"<PJ Complementos {self.id} - {self.nome}>"
+        return f"<PJ Complementos {self.id}>"
 
     def __str__(self):
-        return f"<PJ Complementos {self.id} - {self.nome}>"
+        return f"<PJ Complementos {self.id}>"

@@ -15,9 +15,9 @@ class GENERO_CHOICES(models.TextChoices):
 class EMPRESA_CHOICES(models.TextChoices):
     BORA = "BORA"
     BORBON = "BORBON"
+    JC = "JC"
     JSR = "JSR"
     TRANSFOOD = "TRANSFOOD"
-    JC = "JC"
 
 
 class TIPO_CONTRATO_CHOICES(models.TextChoices):
@@ -35,10 +35,10 @@ def only_int(value):
 class Funcionarios(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
     nome = models.CharField(max_length=40, unique=True)
-    genero = models.CharField(max_length=15, choices=GENERO_CHOICES.choices)
-    data_nascimento = models.DateField()
-    rg = models.CharField(max_length=8, validators=[only_int], unique=True)
-    cpf = models.CharField(max_length=11, validators=[only_int], unique=True)
+    genero = models.CharField(max_length=15, choices=GENERO_CHOICES.choices, null=True)
+    data_nascimento = models.DateField(null=True)
+    rg = models.CharField(max_length=8, validators=[only_int], unique=True, null=True)
+    cpf = models.CharField(max_length=11, validators=[only_int], unique=True, null=True)
     cnpj = models.CharField(
         max_length=14, validators=[only_int], unique=True, null=True
     )
@@ -47,17 +47,18 @@ class Funcionarios(models.Model):
         max_length=3, choices=TIPO_CONTRATO_CHOICES.choices
     )
     cargo = models.CharField(max_length=40)
-    rua = models.CharField(max_length=100)
-    numero = models.CharField(max_length=7, validators=[only_int])
+    rua = models.CharField(max_length=100, null=True)
+    numero = models.CharField(max_length=7, validators=[only_int], null=True)
     complemento = models.CharField(max_length=75, null=True, blank=True)
-    cep = models.CharField(max_length=8, validators=[only_int])
-    bairro = models.CharField(max_length=50)
-    cidade = models.CharField(max_length=30)
-    uf = models.CharField(max_length=2)
-    banco = models.CharField(max_length=3, validators=[only_int])
-    agencia = models.CharField(max_length=5, validators=[only_int])
-    conta = models.CharField(max_length=15, validators=[only_int])
-    pix = models.CharField(max_length=30)
+    cep = models.CharField(max_length=8, validators=[only_int], null=True)
+    bairro = models.CharField(max_length=50, null=True)
+    cidade = models.CharField(max_length=30, null=True)
+    uf = models.CharField(max_length=2, null=True)
+    banco = models.CharField(max_length=20, null=True)
+    agencia = models.CharField(max_length=5, validators=[only_int], null=True)
+    conta = models.CharField(max_length=15, validators=[only_int], null=True)
+    operacao = models.IntegerField(null=True)
+    pix = models.CharField(max_length=30, null=True)
     data_admissao = models.DateField()
     ativo = models.BooleanField(default=True)
 
@@ -65,10 +66,17 @@ class Funcionarios(models.Model):
         Filiais, on_delete=models.CASCADE, related_name="funcionarios"
     )
     complemento_funcionario = models.OneToOneField(
-        PJComplementos, on_delete=models.CASCADE, related_name="funcionario"
+        PJComplementos,
+        on_delete=models.CASCADE,
+        related_name="funcionario",
+        unique=True,
     )
     user = models.OneToOneField(
-        User, on_delete=models.CASCADE, related_name="funcionario", null=True
+        User,
+        on_delete=models.CASCADE,
+        related_name="funcionario",
+        null=True,
+        unique=True,
     )
 
     class Meta:

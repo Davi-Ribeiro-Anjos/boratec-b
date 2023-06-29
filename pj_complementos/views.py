@@ -5,8 +5,28 @@ from django.shortcuts import get_object_or_404
 from .models import PJComplementos
 from .serializers import (
     PJComplementosSerializer,
-    PJComplementosSimplesResponseSerializer,
+    PJComplementosResponseSerializer,
 )
+
+
+class PJComplementosView(APIView):
+    def post(self, request: Request) -> Response:
+        try:
+            data = request.data.dict()
+        except:
+            data = request.data
+
+        serializer = PJComplementosSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+
+        pj_complemento = PJComplementos.objects.create(**serializer.validated_data)
+
+        serializer = PJComplementosResponseSerializer(pj_complemento)
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+        )
 
 
 class PJComplementosDetailView(APIView):
@@ -20,6 +40,6 @@ class PJComplementosDetailView(APIView):
 
         pj_complemento.save()
 
-        serializer = PJComplementosSimplesResponseSerializer(pj_complemento)
+        serializer = PJComplementosResponseSerializer(pj_complemento)
 
         return Response(serializer.data, status.HTTP_201_CREATED)
