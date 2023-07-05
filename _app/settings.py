@@ -44,6 +44,7 @@ MY_APPS = [
     "clientes",
     "filiais",
     "funcionarios",
+    "funcionarios_epis",
     "paletes_controles",
     "paletes_movimentos",
     "pj_bonus",

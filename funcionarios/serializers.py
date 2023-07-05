@@ -62,14 +62,14 @@ class FuncionariosSerializer(serializers.ModelSerializer):
             "data_admissao",
             "ativo",
             "filial",
-            "complemento_funcionario",
+            "pj_complementos",
             "user",
         )
 
 
 class FuncionariosResponseSerializer(serializers.ModelSerializer):
     filial = FiliaisSimplesSerializer()
-    complemento_funcionario = PJComplementosResponseSerializer()
+    pj_complementos = PJComplementosResponseSerializer()
     user = UsuariosSimplesSerializer()
     cpf = CPFFormattedField()
     cnpj = CNPJFormattedField()
@@ -91,21 +91,24 @@ class FuncionariosResponseSerializer(serializers.ModelSerializer):
             "data_admissao",
             "ativo",
             "filial",
-            "complemento_funcionario",
+            "pj_complementos",
             "total",
             "user",
         )
         depth = 1
 
     def get_total(self, obj):
-        return (
-            obj.complemento_funcionario.salario
-            + obj.complemento_funcionario.ajuda_custo
-            + obj.complemento_funcionario.faculdade
-            + obj.complemento_funcionario.credito_convenio
-            + obj.complemento_funcionario.outros_creditos
-            + obj.complemento_funcionario.auxilio_moradia
-            - obj.complemento_funcionario.adiantamento
-            - obj.complemento_funcionario.desconto_convenio
-            - obj.complemento_funcionario.outros_descontos
-        )
+        if obj.pj_complementos:
+            return (
+                obj.pj_complementos.salario
+                + obj.pj_complementos.ajuda_custo
+                + obj.pj_complementos.faculdade
+                + obj.pj_complementos.credito_convenio
+                + obj.pj_complementos.outros_creditos
+                + obj.pj_complementos.auxilio_moradia
+                - obj.pj_complementos.adiantamento
+                - obj.pj_complementos.desconto_convenio
+                - obj.pj_complementos.outros_descontos
+            )
+        else:
+            return 0

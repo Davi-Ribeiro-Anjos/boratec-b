@@ -7,10 +7,18 @@ from pj_complementos.models import PJComplementos
 from .models import Funcionarios
 from .serializers import FuncionariosSerializer, FuncionariosResponseSerializer
 
+import ipdb
+
 
 class FuncionariosView(APIView):
     def get(self, request: Request) -> Response:
-        funcionarios = Funcionarios.objects.all()
+        filter = request.GET.dict()
+
+        try:
+            funcionarios = Funcionarios.objects.filter(**filter).order_by("nome")
+        except Exception:
+            funcionarios = Funcionarios.objects.all().order_by("nome")
+
         serializer = FuncionariosResponseSerializer(funcionarios, many=True)
 
         return Response(serializer.data, status.HTTP_200_OK)
@@ -21,8 +29,8 @@ class FuncionariosView(APIView):
         except:
             data = request.data
 
-        # data["complemento_funcionario"] = PJComplementos.objects.filter(
-        #     id=data["complemento_funcionario"]
+        # data["pj_complementos"] = PJComplementos.objects.filter(
+        #     id=data["pj_complementos"]
         # ).first()
 
         serializer = FuncionariosSerializer(data=data)

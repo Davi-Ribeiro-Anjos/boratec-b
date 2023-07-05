@@ -4,12 +4,16 @@ from django.contrib.auth.models import User
 
 from filiais.models import Filiais
 from pj_complementos.models import PJComplementos
+from funcionarios_epis.models import FuncionariosEPIs
 
 
 class GENERO_CHOICES(models.TextChoices):
-    CISGENERO = "CISGÊNERO"
-    TRANSGENERO = "TRANSGÊNERO"
+    HOMEM_CISGENERO = "HOMEM CISGÊNERO"
+    HOMEM_TRANSGENERO = "HOMEM TRANSGÊNERO"
+    MULHER_CISGENERO = "MULHER CISGÊNERO"
+    MULHER_TRANSGENERO = "MULHER TRANSGÊNERO"
     NAO_BINARIO = "NÃO BINÁRIO"
+    NAO_QUERO_INFORMAR = "NÃO QUERO INFORMAR"
 
 
 class EMPRESA_CHOICES(models.TextChoices):
@@ -35,7 +39,7 @@ def only_int(value):
 class Funcionarios(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
     nome = models.CharField(max_length=40, unique=True)
-    genero = models.CharField(max_length=15, choices=GENERO_CHOICES.choices, null=True)
+    genero = models.CharField(max_length=25, choices=GENERO_CHOICES.choices, null=True)
     data_nascimento = models.DateField(null=True)
     rg = models.CharField(max_length=8, validators=[only_int], unique=True, null=True)
     cpf = models.CharField(max_length=11, validators=[only_int], unique=True, null=True)
@@ -65,10 +69,18 @@ class Funcionarios(models.Model):
     filial = models.ForeignKey(
         Filiais, on_delete=models.CASCADE, related_name="funcionarios"
     )
-    complemento_funcionario = models.OneToOneField(
+    epi = models.OneToOneField(
+        FuncionariosEPIs,
+        on_delete=models.CASCADE,
+        related_name="funcionario",
+        null=True,
+        unique=True,
+    )
+    pj_complementos = models.OneToOneField(
         PJComplementos,
         on_delete=models.CASCADE,
         related_name="funcionario",
+        null=True,
         unique=True,
     )
     user = models.OneToOneField(
