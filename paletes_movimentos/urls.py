@@ -13,4 +13,9 @@ urlpatterns = [
         views.PaletesMovimentosDetailView.as_view(),
         name="paletes-movimentos-confirmar-id",
     ),
+    path(
+        "paletes-movimentos/documento/<int:id>/",
+        views.DocumentoView.as_view(),
+        name="paletes-movimentos-documento-id",
+    ),
 ]

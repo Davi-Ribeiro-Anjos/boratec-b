@@ -6,14 +6,13 @@ from django.db.models import Q
 from django.core.exceptions import FieldError
 from django.shortcuts import get_object_or_404
 
-from _service.choices import (
+from .models import (
+    SolicitacoesCompras,
     STATUS_CHOICES,
     CATEGORIA_CHOICES,
     DEPARTAMENTO_CHOICES,
     FORMA_PGT_CHOICES,
 )
-
-from .models import SolicitacoesCompras
 from .serializers import *
 
 

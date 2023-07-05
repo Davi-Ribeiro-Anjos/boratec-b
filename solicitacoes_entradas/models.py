@@ -11,7 +11,7 @@ class SolicitacoesEntradas(models.Model):
     arquivo_1 = models.FileField(upload_to="compras/%Y/%m/%d", blank=True, null=True)
     arquivo_2 = models.FileField(upload_to="compras/%Y/%m/%d", blank=True, null=True)
     arquivo_3 = models.FileField(upload_to="compras/%Y/%m/%d", blank=True, null=True)
-    data_criacao = models.DateField(default=timezone.now)
+    data_criacao = models.DateField(default=timezone.now().date())
     solicitacao = models.ForeignKey(SolicitacoesCompras, on_delete=models.CASCADE)
     autor = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
 
