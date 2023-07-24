@@ -10,6 +10,7 @@ class Filiais(models.Model):
     nome = models.CharField(max_length=50, unique=True)
     uf = models.CharField(max_length=2)
     cnpj = models.CharField(max_length=14, unique=True)
+    empresa = models.CharField(max_length=20)
 
     class Meta:
         verbose_name = "Filial"

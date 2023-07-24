@@ -65,8 +65,5 @@ class FuncionariosDetailView(APIView):
 class FuncionariosChoicesView(APIView):
     def get(self, request: Request) -> Response:
         funcionarios = Funcionarios.objects.all().values("id", "nome")
-        choices = [
-            {"funcionarios": funcionarios},
-        ]
 
-        return Response(choices, status.HTTP_200_OK)
+        return Response(funcionarios, status.HTTP_200_OK)
