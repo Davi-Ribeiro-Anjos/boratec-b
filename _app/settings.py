@@ -49,6 +49,7 @@ MY_APPS = [
     "paletes_movimentos",
     "pj_bonus",
     "pj_complementos",
+    "pj_contratos",
     "pj_decimos_terceiros",
     "pj_emails",
     # "pj_ferias",

@@ -8,10 +8,6 @@ from django.shortcuts import get_object_or_404
 
 from .models import (
     SolicitacoesCompras,
-    STATUS_CHOICES,
-    CATEGORIA_CHOICES,
-    DEPARTAMENTO_CHOICES,
-    FORMA_PGT_CHOICES,
 )
 from .serializers import *
 
@@ -98,20 +94,3 @@ class SolicitacoesComprasDetailView(APIView):
         serializer = SolicitacoesComprasResponseSerializer(solicitacao)
 
         return Response(serializer.data, status.HTTP_204_NO_CONTENT)
-
-
-class SolicitacoesComprasChoicesView(APIView):
-    def get(self, request: Request) -> Response:
-        status_choices = STATUS_CHOICES.choices
-        categorias_choices = CATEGORIA_CHOICES.choices
-        departamentos_choices = DEPARTAMENTO_CHOICES.choices
-        formas_pgt_choices = FORMA_PGT_CHOICES.choices
-
-        choices = [
-            {"status": status_choices},
-            {"categorias": categorias_choices},
-            {"departamentos": departamentos_choices},
-            {"formas_pgt": formas_pgt_choices},
-        ]
-
-        return Response(choices, status.HTTP_200_OK)
