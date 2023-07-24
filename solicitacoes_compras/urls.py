@@ -13,9 +13,4 @@ urlpatterns = [
         views.SolicitacoesComprasDetailView.as_view(),
         name="solicitacoes-compras-id",
     ),
-    path(
-        "solicitacoes-compras/choices/",
-        views.SolicitacoesComprasChoicesView.as_view(),
-        name="solicitacoes-compras-choices",
-    ),
 ]
