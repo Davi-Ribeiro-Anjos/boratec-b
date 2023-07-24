@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from usuarios.serializers import UsuariosSimplesSerializer
+from funcionarios.serializers import FuncionariosSimplesSerializer
 
 from .models import PaletesControles
 
@@ -18,7 +18,7 @@ class PaletesControlesSerializer(serializers.ModelSerializer):
 
 
 class PaletesControlesResponseSerializer(serializers.ModelSerializer):
-    autor = UsuariosSimplesSerializer()
+    autor = FuncionariosSimplesSerializer()
 
     class Meta:
         model = PaletesControles

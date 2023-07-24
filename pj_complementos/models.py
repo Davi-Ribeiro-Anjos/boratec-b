@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth.models import User
 
 
 class PJComplementos(models.Model):
@@ -16,8 +15,6 @@ class PJComplementos(models.Model):
     outros_descontos = models.FloatField(default=0)
     data_pagamento = models.DateField()
     data_emissao = models.DateTimeField(default=timezone.now)
-
-    autor = models.ForeignKey(User, on_delete=models.PROTECT)
 
     class Meta:
         verbose_name = "PJComplemento"

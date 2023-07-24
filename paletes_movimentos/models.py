@@ -1,8 +1,8 @@
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth.models import User
 
 from filiais.models import Filiais
+from funcionarios.models import Funcionarios
 
 
 class PaletesMovimentos(models.Model):
@@ -17,12 +17,14 @@ class PaletesMovimentos(models.Model):
     quantidade_paletes = models.IntegerField()
 
     origem = models.ForeignKey(
-        Filiais, on_delete=models.CASCADE, related_name="palete_movimento_origem"
+        Filiais, on_delete=models.CASCADE, related_name="paletes_movimentos_origem"
     )
     destino = models.ForeignKey(
-        Filiais, on_delete=models.CASCADE, related_name="palete_movimento_destino"
+        Filiais, on_delete=models.CASCADE, related_name="paletes_movimentos_destino"
     )
-    autor = models.ForeignKey(User, on_delete=models.PROTECT)
+    autor = models.ForeignKey(
+        Funcionarios, on_delete=models.CASCADE, related_name="paletes_movimentos"
+    )
 
     class Meta:
         verbose_name = "PaleteMovimento"

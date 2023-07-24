@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from usuarios.serializers import UsuariosSimplesSerializer
+from funcionarios.serializers import FuncionariosSimplesSerializer
 
 from .models import PJContratos
 
@@ -23,7 +23,7 @@ class PJContratosSerializer(serializers.ModelSerializer):
 
 
 class PJContratosResponseSerializer(serializers.ModelSerializer):
-    autor = UsuariosSimplesSerializer()
+    autor = FuncionariosSimplesSerializer()
     inicio_contrato = serializers.DateField(format="%d-%m-%Y")
     final_contrato = serializers.DateField(format="%d-%m-%Y")
     data_reajuste = serializers.DateField(format="%d-%m-%Y")

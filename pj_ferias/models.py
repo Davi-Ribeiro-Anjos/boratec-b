@@ -1,6 +1,5 @@
 from django.db import models
 from django.core.exceptions import ValidationError
-from django.contrib.auth.models import User
 
 from funcionarios.models import Funcionarios
 
@@ -37,11 +36,10 @@ class PJFerias(models.Model):
     observacao = models.TextField(blank=True, null=True)
 
     funcionario = models.ForeignKey(
-        Funcionarios, on_delete=models.CASCADE, related_name="ferias"
+        Funcionarios, on_delete=models.CASCADE, related_name="pj_ferias_funcionario"
     )
     autor = models.ForeignKey(
-        User,
-        on_delete=models.PROTECT,
+        Funcionarios, on_delete=models.PROTECT, related_name="pj_ferias_autor"
     )
 
     class Meta:

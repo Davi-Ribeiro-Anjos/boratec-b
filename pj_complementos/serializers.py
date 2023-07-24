@@ -1,7 +1,5 @@
 from rest_framework import serializers
 
-from usuarios.serializers import UsuariosSimplesSerializer
-
 from .models import PJComplementos
 
 
@@ -21,12 +19,10 @@ class PJComplementosSerializer(serializers.ModelSerializer):
             "outros_descontos",
             "data_pagamento",
             "data_emissao",
-            "autor",
         )
 
 
 class PJComplementosResponseSerializer(serializers.ModelSerializer):
-    autor = UsuariosSimplesSerializer()
     data_pagamento = serializers.DateField(format="%d-%m-%Y")
     data_emissao = serializers.DateTimeField(format="%d-%m-%Y")
 
@@ -45,6 +41,5 @@ class PJComplementosResponseSerializer(serializers.ModelSerializer):
             "outros_descontos",
             "data_pagamento",
             "data_emissao",
-            "autor",
         )
         depth = 1

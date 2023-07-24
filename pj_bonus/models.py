@@ -15,8 +15,12 @@ class PJBonus(models.Model):
     data_criacao = models.DateTimeField(default=timezone.now)
     data_quitacao = models.DateField(null=True)
 
-    funcionario = models.ForeignKey(Funcionarios, on_delete=models.CASCADE)
-    autor = models.ForeignKey(User, on_delete=models.PROTECT)
+    funcionario = models.ForeignKey(
+        Funcionarios, on_delete=models.CASCADE, related_name="pj_bonus_funcionario"
+    )
+    autor = models.ForeignKey(
+        Funcionarios, on_delete=models.CASCADE, related_name="pj_bonus_autor"
+    )
 
     class Meta:
         verbose_name = "PJBonus"

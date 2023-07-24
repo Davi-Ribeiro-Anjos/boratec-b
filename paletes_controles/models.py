@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
+
+from funcionarios.models import Funcionarios
 
 
 class TIPO_PALETE_CHOICES(models.TextChoices):
@@ -16,7 +17,10 @@ class PaletesControles(models.Model):
         max_length=4,
         choices=TIPO_PALETE_CHOICES.choices,
     )
-    autor = models.ForeignKey(User, on_delete=models.PROTECT)
+
+    autor = models.ForeignKey(
+        Funcionarios, on_delete=models.CASCADE, related_name="paletes_controles"
+    )
 
     class Meta:
         verbose_name = "PaleteControle"

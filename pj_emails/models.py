@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth.models import User
 
 from funcionarios.models import Funcionarios
 
@@ -12,9 +11,11 @@ class PJEmail(models.Model):
     mensagem = models.TextField()
 
     funcionario = models.ForeignKey(
-        Funcionarios, on_delete=models.CASCADE, related_name="emails"
+        Funcionarios, on_delete=models.CASCADE, related_name="pj_emails_funcionario"
     )
-    autor = models.ForeignKey(User, on_delete=models.PROTECT)
+    autor = models.ForeignKey(
+        Funcionarios, on_delete=models.PROTECT, related_name="pj_emails_autor"
+    )
 
     class Meta:
         verbose_name = "PJEmail"

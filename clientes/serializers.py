@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from usuarios.serializers import UsuariosSimplesSerializer
+from funcionarios.serializers import FuncionariosSimplesSerializer
 from filiais.serializers import FiliaisSimplesSerializer
 
 from .models import Clientes, ClientesFiliais
@@ -41,7 +41,7 @@ class ClientesSerializer(serializers.ModelSerializer):
 
 
 class ClientesResponseSerializer(serializers.ModelSerializer):
-    autor = UsuariosSimplesSerializer()
+    autor = FuncionariosSimplesSerializer()
     # filiais = ClientesFiliaisSerializer(many=True, read_only=True)
 
     class Meta:

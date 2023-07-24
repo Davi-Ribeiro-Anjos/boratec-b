@@ -12,9 +12,13 @@ class PJDecimosTerceiros(models.Model):
     parcela_2 = models.DateField(blank=True, null=True)
 
     funcionario = models.ForeignKey(
-        Funcionarios, on_delete=models.PROTECT, related_name="decimo_terceiro"
+        Funcionarios,
+        on_delete=models.PROTECT,
+        related_name="decimos_terceiros_funcionario",
     )
-    autor = models.ForeignKey(User, on_delete=models.PROTECT)
+    autor = models.ForeignKey(
+        Funcionarios, on_delete=models.PROTECT, related_name="decimos_terceiros_autor"
+    )
 
     class Meta:
         verbose_name = "PJDecimoTerceiro"
