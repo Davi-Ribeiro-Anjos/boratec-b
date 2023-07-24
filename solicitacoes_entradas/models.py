@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth.models import User
 
+from funcionarios.models import Funcionarios
 from solicitacoes_compras.models import SolicitacoesCompras
 
 
@@ -11,9 +11,11 @@ class SolicitacoesEntradas(models.Model):
     arquivo_1 = models.FileField(upload_to="compras/%Y/%m/%d", blank=True, null=True)
     arquivo_2 = models.FileField(upload_to="compras/%Y/%m/%d", blank=True, null=True)
     arquivo_3 = models.FileField(upload_to="compras/%Y/%m/%d", blank=True, null=True)
-    data_criacao = models.DateField(default=timezone.now().date())
+    data_criacao = models.DateTimeField(default=timezone.now)
     solicitacao = models.ForeignKey(SolicitacoesCompras, on_delete=models.CASCADE)
-    autor = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    autor = models.ForeignKey(
+        Funcionarios, on_delete=models.CASCADE, related_name="solicitacoes_entradas"
+    )
 
     class Meta:
         verbose_name = "SolicitacaoEntrada"

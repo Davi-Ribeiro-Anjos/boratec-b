@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth.models import User
 
 from funcionarios.models import Funcionarios
 
@@ -15,9 +14,11 @@ class PJContratos(models.Model):
     observacao = models.TextField(null=True)
     data_criacao = models.DateTimeField(default=timezone.now)
 
-    autor = models.ForeignKey(User, on_delete=models.PROTECT)
+    autor = models.ForeignKey(
+        Funcionarios, on_delete=models.CASCADE, related_name="pj_contratos_autor"
+    )
     funcionario = models.ForeignKey(
-        Funcionarios, on_delete=models.CASCADE, unique=True, related_name="pj_contratos"
+        Funcionarios, on_delete=models.CASCADE, related_name="pj_contratos_funcionario"
     )
 
     class Meta:

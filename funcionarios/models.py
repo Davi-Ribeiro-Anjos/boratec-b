@@ -65,6 +65,7 @@ class Funcionarios(models.Model):
     pix = models.CharField(max_length=30, null=True)
     data_admissao = models.DateField()
     ativo = models.BooleanField(default=True)
+    primeiro_acesso = models.BooleanField(default=True)
 
     filial = models.ForeignKey(
         Filiais, on_delete=models.CASCADE, related_name="funcionarios"

@@ -1,8 +1,8 @@
 from django.db import models
 from django.core.exceptions import ValidationError
-from django.contrib.auth.models import User
 
 from filiais.models import Filiais
+from funcionarios.models import Funcionarios
 
 
 class TIPO_CADASTRO_CHOICES(models.TextChoices):
@@ -30,7 +30,9 @@ class Clientes(models.Model):
     tipo_cadastro = models.CharField(
         max_length=15, choices=TIPO_CADASTRO_CHOICES.choices
     )
-    autor = models.ForeignKey(User, on_delete=models.PROTECT)
+    autor = models.ForeignKey(
+        Funcionarios, on_delete=models.CASCADE, related_name="clientes"
+    )
     filiais = models.ManyToManyField(
         Filiais,
         verbose_name=("clientes"),

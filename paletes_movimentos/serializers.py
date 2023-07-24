@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from filiais.serializers import FiliaisSimplesSerializer
-from usuarios.serializers import UsuariosSimplesSerializer
+from funcionarios.serializers import FuncionariosSimplesSerializer
 
 from .models import PaletesMovimentos
 
@@ -47,7 +47,7 @@ class PaletesMovimentosSimplesSerializer(serializers.ModelSerializer):
 class PaletesMovimentosResponseSerializer(serializers.ModelSerializer):
     origem = FiliaisSimplesSerializer()
     destino = FiliaisSimplesSerializer()
-    autor = UsuariosSimplesSerializer()
+    autor = FuncionariosSimplesSerializer()
     data_solicitacao = serializers.DateTimeField(format="%d-%m-%Y %H:%M:%S")
     data_recebimento = serializers.DateTimeField(format="%d-%m-%Y %H:%M:%S")
 

@@ -1,18 +1,16 @@
+from rest_framework import serializers
+
 from django.contrib.auth.models import User
 from django.db.models import F
 
-from rest_framework import serializers
-
 from filiais.serializers import FiliaisSimplesSerializer
 from pj_complementos.serializers import PJComplementosResponseSerializer
-from usuarios.serializers import UsuariosSimplesSerializer
 
 from .models import Funcionarios
 
 
 class CPFFormattedField(serializers.CharField):
     def to_representation(self, value):
-        # Verifica se o valor é um CPF válido
         if len(value) == 11:
             return f"{value[:3]}.{value[3:6]}.{value[6:9]}-{value[9:]}"
         return value
@@ -20,7 +18,6 @@ class CPFFormattedField(serializers.CharField):
 
 class CNPJFormattedField(serializers.CharField):
     def to_representation(self, value):
-        # Verifica se o valor é um CNPJ válido
         if len(value) == 14:
             return f"{value[:2]}.{value[2:5]}.{value[5:8]}/{value[8:12]}-{value[12:]}"
         return value
@@ -28,10 +25,15 @@ class CNPJFormattedField(serializers.CharField):
 
 class RGFormattedField(serializers.CharField):
     def to_representation(self, value):
-        # Verifica se o valor é um RG válido
         if len(value) == 9:
             return f"{value[:2]}.{value[2:5]}.{value[5:8]}-{value[8:]}"
         return value
+
+
+class UsuariosSimplesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("id", "username", "email")
 
 
 class FuncionariosSerializer(serializers.ModelSerializer):
@@ -112,3 +114,11 @@ class FuncionariosResponseSerializer(serializers.ModelSerializer):
             )
         else:
             return 0
+
+
+class FuncionariosSimplesSerializer(serializers.ModelSerializer):
+    user = UsuariosSimplesSerializer()
+
+    class Meta:
+        model = Funcionarios
+        fields = ("id", "user")

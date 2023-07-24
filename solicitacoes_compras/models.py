@@ -1,8 +1,8 @@
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth.models import User
 
 from filiais.models import Filiais
+from funcionarios.models import Funcionarios
 
 
 class STATUS_CHOICES(models.TextChoices):
@@ -95,24 +95,24 @@ class SolicitacoesCompras(models.Model):
         related_name="solicitacoes_compras",
     )
     solicitante = models.ForeignKey(
-        User,
+        Funcionarios,
         on_delete=models.PROTECT,
         related_name="compras_solicitante",
         null=True,
     )
     responsavel = models.ForeignKey(
-        User,
+        Funcionarios,
         on_delete=models.PROTECT,
         related_name="compras_responsavel",
         null=True,
     )
     autor = models.ForeignKey(
-        User,
+        Funcionarios,
         on_delete=models.CASCADE,
         related_name="compras_autor",
     )
     ultima_atualizacao = models.ForeignKey(
-        User,
+        Funcionarios,
         on_delete=models.CASCADE,
         related_name="compras_ultima_att",
     )
