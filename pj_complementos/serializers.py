@@ -29,6 +29,7 @@ class PJComplementosResponseSerializer(serializers.ModelSerializer):
     autor = UsuariosSimplesSerializer()
     data_pagamento = serializers.DateField(format="%d-%m-%Y")
     data_emissao = serializers.DateTimeField(format="%d-%m-%Y")
+    total = serializers.SerializerMethodField()
 
     class Meta:
         model = PJComplementos
@@ -46,5 +47,22 @@ class PJComplementosResponseSerializer(serializers.ModelSerializer):
             "data_pagamento",
             "data_emissao",
             "autor",
+            "total",
         )
         depth = 1
+
+        def get_total(self, obj):
+            if obj:
+                return (
+                    obj.salario
+                    + obj.ajuda_custo
+                    + obj.faculdade
+                    + obj.credito_convenio
+                    + obj.outros_creditos
+                    + obj.auxilio_moradia
+                    - obj.adiantamento
+                    - obj.desconto_convenio
+                    - obj.outros_descontos
+                )
+            else:
+                return 0

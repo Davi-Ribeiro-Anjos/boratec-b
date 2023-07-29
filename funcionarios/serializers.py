@@ -73,7 +73,6 @@ class FuncionariosResponseSerializer(serializers.ModelSerializer):
     user = UsuariosSimplesSerializer()
     cpf = CPFFormattedField()
     cnpj = CNPJFormattedField()
-    total = serializers.SerializerMethodField()
 
     class Meta:
         model = Funcionarios
@@ -92,23 +91,6 @@ class FuncionariosResponseSerializer(serializers.ModelSerializer):
             "ativo",
             "filial",
             "pj_complementos",
-            "total",
             "user",
         )
         depth = 1
-
-    def get_total(self, obj):
-        if obj.pj_complementos:
-            return (
-                obj.pj_complementos.salario
-                + obj.pj_complementos.ajuda_custo
-                + obj.pj_complementos.faculdade
-                + obj.pj_complementos.credito_convenio
-                + obj.pj_complementos.outros_creditos
-                + obj.pj_complementos.auxilio_moradia
-                - obj.pj_complementos.adiantamento
-                - obj.pj_complementos.desconto_convenio
-                - obj.pj_complementos.outros_descontos
-            )
-        else:
-            return 0
