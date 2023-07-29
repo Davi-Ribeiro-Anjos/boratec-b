@@ -34,6 +34,17 @@ class RGFormattedField(serializers.CharField):
         return value
 
 
+class UsuariosSimplesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            "id",
+            "username",
+            "email",
+            "is_active",
+        )
+
+
 class FuncionariosSerializer(serializers.ModelSerializer):
     class Meta:
         model = Funcionarios
@@ -91,6 +102,19 @@ class FuncionariosResponseSerializer(serializers.ModelSerializer):
             "ativo",
             "filial",
             "pj_complementos",
+            "user",
+        )
+        depth = 1
+
+
+class FuncionariosSimplesSerializer(serializers.ModelSerializer):
+    user = UsuariosSimplesSerializer()
+
+    class Meta:
+        model = Funcionarios
+        fields = (
+            "id",
+            "nome",
             "user",
         )
         depth = 1

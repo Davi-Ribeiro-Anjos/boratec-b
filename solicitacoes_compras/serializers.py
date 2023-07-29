@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from filiais.serializers import FiliaisSimplesSerializer
-from usuarios.serializers import UsuariosSimplesSerializer
+from funcionarios.serializers import FuncionariosSimplesSerializer
 
 from .models import SolicitacoesCompras
 
@@ -46,10 +46,10 @@ class SolicitacoesComprasSimplesSerializer(serializers.ModelSerializer):
 
 class SolicitacoesComprasResponseSerializer(serializers.ModelSerializer):
     filial = FiliaisSimplesSerializer()
-    solicitante = UsuariosSimplesSerializer()
-    responsavel = UsuariosSimplesSerializer()
-    autor = UsuariosSimplesSerializer()
-    ultima_atualizacao = UsuariosSimplesSerializer()
+    solicitante = FuncionariosSimplesSerializer()
+    responsavel = FuncionariosSimplesSerializer()
+    autor = FuncionariosSimplesSerializer()
+    ultima_atualizacao = FuncionariosSimplesSerializer()
     data_solicitacao_bo = serializers.DateTimeField(format="%d/%m/%Y")
 
     class Meta:
