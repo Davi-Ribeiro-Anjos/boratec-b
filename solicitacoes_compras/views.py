@@ -1,6 +1,7 @@
 import ipdb
 
 from rest_framework.views import APIView, Response, Request, status
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from django.db.models import Q
 from django.core.exceptions import FieldError
@@ -10,9 +11,13 @@ from .models import (
     SolicitacoesCompras,
 )
 from .serializers import *
+from .permissions import HasPermissionByGroup
 
 
 class SolicitacoesComprasView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [HasPermissionByGroup]
+
     def get(self, request: Request) -> Response:
         params = request.GET.dict()
         lista_params = [

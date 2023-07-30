@@ -27,3 +27,20 @@ class UsuariosSimplesSerializer(serializers.ModelSerializer):
             "email",
             "is_active",
         )
+
+
+class LoginSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            "username",
+            "password",
+        )
+        extra_kwargs = {
+            "username": {
+                "write_only": True,
+            },
+            "password": {
+                "write_only": True,
+            },
+        }
