@@ -13,7 +13,7 @@ class STATUS_CHOICES(models.TextChoices):
 
 
 class DEPARTAMENTO_CHOICES(models.TextChoices):
-    DEFAULT = "NÃO INFORMADO"
+    DEFAULT = "NAO INFORMADO"
     DIRETORIA = "DIRETORIA"
     FATURAMENTO = "FATURAMENTO"
     FINANCEIRO = "FINANCEIRO"
@@ -32,7 +32,7 @@ class DEPARTAMENTO_CHOICES(models.TextChoices):
 
 
 class FORMA_PGT_CHOICES(models.TextChoices):
-    DEFAULT = "NÃO INFORMADO"
+    DEFAULT = "NAO INFORMADO"
     A_VISTA = "A VISTA"
     PARCELADO_1X = "PARCELADO 1X"
     PARCELADO_2X = "PARCELADO 2X"
@@ -49,7 +49,7 @@ class FORMA_PGT_CHOICES(models.TextChoices):
 
 
 class CATEGORIA_CHOICES(models.TextChoices):
-    DEFAULT = "NÃO INFORMADO"
+    DEFAULT = "NAO INFORMADO"
     ALMOXARIFADO = "ALMOXARIFADO"
     COTACAO = "COTACAO"
     NOTA_FISCAL = "NOTA FISCAL"
@@ -98,7 +98,6 @@ class SolicitacoesCompras(models.Model):
         Funcionarios,
         on_delete=models.PROTECT,
         related_name="compras_solicitante",
-        null=True,
     )
     responsavel = models.ForeignKey(
         Funcionarios,
