@@ -1,14 +1,20 @@
 from rest_framework import permissions
 from rest_framework.views import Request, View
 
-from django.contrib.auth.models import Group, User
-from django.db.models import Q
 
-
-class HasPermissionByGroup(permissions.BasePermission):
+class BasePermission(permissions.BasePermission):
     def has_permission(self, request: Request, view: View):
-        group = Group.objects.filter(
-            Q(name="solic_compras") | Q(name="solic_compras_adm")
+        return (
+            request.user.groups.filter(name="solic_compras").exists()
+            or request.user.is_superuser
+            or request.user.is_staff
         )
 
-        return request.user.is_authenticated
+
+class AdminPermission(permissions.BasePermission):
+    def has_permission(self, request: Request, view: View):
+        return (
+            request.user.groups.filter(name="solic_compras_admin").exists()
+            or request.user.is_superuser
+            or request.user.is_staff
+        )

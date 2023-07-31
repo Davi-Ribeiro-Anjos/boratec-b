@@ -1,6 +1,7 @@
 import ipdb
 
 from rest_framework.views import APIView, Response, Request, status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from django.db.models import Q
@@ -11,12 +12,12 @@ from .models import (
     SolicitacoesCompras,
 )
 from .serializers import *
-from .permissions import HasPermissionByGroup
+from .permissions import BasePermission, AdminPermission
 
 
 class SolicitacoesComprasView(APIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [HasPermissionByGroup]
+    permission_classes = [IsAuthenticated, BasePermission]
 
     def get(self, request: Request) -> Response:
         params = request.GET.dict()
@@ -80,6 +81,9 @@ class SolicitacoesComprasView(APIView):
 
 
 class SolicitacoesComprasDetailView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, AdminPermission]
+
     def get(self, request: Request, id: int) -> Response:
         solicitacao = get_object_or_404(SolicitacoesCompras, id=id)
         serializer = SolicitacoesComprasResponseSerializer(solicitacao)

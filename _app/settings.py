@@ -1,19 +1,15 @@
 import os
+from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-# SECURITY WARNING: don't run with debug turned on in production!
 dev = True
 
 if dev:
@@ -33,7 +29,6 @@ if dev:
         "http://localhost:3000",
     ]
 
-# Application definition
 
 THIRD_PARTY_APPS = [
     "rest_framework",
@@ -102,8 +97,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "_app.wsgi.application"
 
-# Password validation
-# https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -121,10 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/3.2/topics/i18n/
 DATETIME_FORMAT = "d/m/Y H:i"
-
 DATE_FORMAT = "d/m/Y"
 
 LANGUAGE_CODE = "pt-br"
@@ -132,14 +122,9 @@ LANGUAGE_CODE = "pt-br"
 TIME_ZONE = "America/Sao_Paulo"
 
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = False
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = os.environ.get("STATIC_URL")
 STATIC_ROOT = os.environ.get("STATIC_ROOT")
@@ -147,7 +132,10 @@ STATIC_ROOT = os.environ.get("STATIC_ROOT")
 MEDIA_URL = os.environ.get("MEDIA_URL")
 MEDIA_ROOT = os.environ.get("MEDIA_ROOT")
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+}
+
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
