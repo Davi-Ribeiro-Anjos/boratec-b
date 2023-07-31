@@ -121,4 +121,4 @@ class FuncionariosSimplesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Funcionarios
-        fields = ("id", "user")
+        fields = ("id", "nome", "user")
