@@ -7,28 +7,28 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 
 from filiais.models import Filiais
+from funcionarios.models import Funcionarios
 
 from .models import SolicitacoesCompras
-from .serializers import (
-    SolicitacoesComprasSerializer,
-    SolicitacoesComprasReponseSerializer,
-)
+from .serializers import SolicitacoesComprasResponseSerializer
 
 
 class SolicitacoesComprasTestCase(APITestCase):
     url = reverse("solicitacoes-compras")
     solicitacao1 = {
-        "numero_solicitacao": 45691124,
+        "numero_solicitacao": 1,
         "data_solicitacao_bo": datetime.now(),
         "status": "ANDAMENTO",
+        "solicitante": None,
         "filial": None,
         "autor": None,
         "ultima_atualizacao": None,
     }
     solicitacao2 = {
-        "numero_solicitacao": 45631242,
+        "numero_solicitacao": 2,
         "data_solicitacao_bo": datetime.now(),
         "status": "ABERTO",
+        "solicitante": None,
         "filial": None,
         "autor": None,
         "solicitante": None,
@@ -42,6 +42,15 @@ class SolicitacoesComprasTestCase(APITestCase):
         "is_staff": False,
         "is_superuser": False,
     }
+    funcionario = {
+        "nome": "DAVI RIBEIRO",
+        "empresa": "BORA",
+        "tipo_contrato": "CLT",
+        "cargo": "DESENVOLVEDOR",
+        "data_admissao": "2023-04-04",
+        "filial": None,
+        "user": None,
+    }
     filial = {
         "id": 1,
         "id_empresa": 1,
@@ -54,18 +63,20 @@ class SolicitacoesComprasTestCase(APITestCase):
     }
 
     def test_solic_compras_post(self):
-        User.objects.create_user(**self.usuario)
+        user = User.objects.create_user(**self.usuario)
+        Funcionarios.objects.create(**self.funcionario, user=user)
         Filiais.objects.create(**self.filial)
 
         self.solicitacao1["filial"] = 1
         self.solicitacao1["autor"] = 1
+        self.solicitacao1["solicitante"] = 1
         self.solicitacao1["ultima_atualizacao"] = 1
 
         res_post = self.client.post(self.url, self.solicitacao1)
 
-        existe = SolicitacoesCompras.objects.filter(id=1).exists()
+        exists = SolicitacoesCompras.objects.filter(id=1).exists()
 
-        self.assertTrue(existe)
+        self.assertTrue(exists)
         self.assertEqual(
             res_post.status_code, status.HTTP_201_CREATED, "status_code != 201"
         )
@@ -89,7 +100,7 @@ class SolicitacoesComprasTestCase(APITestCase):
         res = self.client.get(self.url)
 
         solicitacoes = SolicitacoesCompras.objects.all().order_by("id")
-        serializer = SolicitacoesComprasReponseSerializer(solicitacoes, many=True)
+        serializer = SolicitacoesComprasResponseSerializer(solicitacoes, many=True)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK, "status_code != 200")
         self.assertEqual(res.data, serializer.data, "os retornos são diferentes")
@@ -108,7 +119,7 @@ class SolicitacoesComprasTestCase(APITestCase):
         res = self.client.get(self.url + "1/")
 
         solicitacoes = SolicitacoesCompras.objects.filter(id=1).first()
-        serializer = SolicitacoesComprasReponseSerializer(solicitacoes)
+        serializer = SolicitacoesComprasResponseSerializer(solicitacoes)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK, "status_code != 200")
         self.assertEqual(res.data, serializer.data, "os retornos são diferentes")
