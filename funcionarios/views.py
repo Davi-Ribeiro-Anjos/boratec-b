@@ -1,4 +1,6 @@
 from rest_framework.views import APIView, Response, Request, status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from django.shortcuts import get_object_or_404
 
@@ -63,6 +65,9 @@ class FuncionariosDetailView(APIView):
 
 
 class FuncionariosChoicesView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def get(self, request: Request) -> Response:
         funcionarios = Funcionarios.objects.all().values("id", "nome")
 

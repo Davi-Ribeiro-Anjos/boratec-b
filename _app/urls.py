@@ -14,6 +14,7 @@ urlpatterns = [
     path("api/", include("pj_contratos.urls")),
     path("api/", include("solicitacoes_compras.urls")),
     path("api/", include("solicitacoes_entradas.urls")),
+    path("api/", include("usuarios.urls")),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
