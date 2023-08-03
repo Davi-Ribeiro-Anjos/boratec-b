@@ -69,8 +69,19 @@ class PaletesControlesView(APIView):
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+        paletes = (
+            PaletesControles.objects.filter(localizacao_atual=data["localizacao_atual"])
+            .values("localizacao_atual")
+            .annotate(
+                PBR=Count("id", filter=Q(tipo_palete="PBR")),
+                CHEP=Count("id", filter=Q(tipo_palete="CHEP")),
+            )
+            .annotate(TOTAL=ExpressionWrapper(Count("id"), output_field=IntegerField()))
+            .exclude(Q(localizacao_atual="MOV"))
+        )
+
         return Response(
-            {"success": "Paletes criados com sucesso"},
+            paletes[0],
             status=status.HTTP_201_CREATED,
         )
 

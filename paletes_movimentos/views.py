@@ -81,70 +81,81 @@ class PaletesMovimentosView(APIView):
 
     def post(self, request: Request) -> Response:
         try:
-            data = request.data.dict()
+            data_list = request.data.dict()
         except:
-            data = request.data
+            data_list = request.data
 
-        tempo = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        solicitacao = (
-            str(tempo).replace(":", "").replace(" ", "").replace("-", "")
-            + data["placa_veiculo"][5:]
-        )
+        time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        data = {"solicitacao": solicitacao, **data}
+        if type(data_list) is list and len(data_list) > 0:
+            list_response = []
 
-        serializer = PaletesMovimentosSerializer(data=data)
-        serializer.is_valid(raise_exception=True)
+            for item in data_list:
+                solicitation = (
+                    str(time).replace(":", "").replace(" ", "").replace("-", "")
+                    + item["placa_veiculo"][5:]
+                )
 
-        filial = Filiais.objects.get(id=data["origem"])
+                data = {"solicitacao": solicitation, **item}
 
-        paletes = PaletesControles.objects.filter(
-            localizacao_atual=filial.sigla, movimento_atual__isnull=True
-        )
+                serializer = PaletesMovimentosSerializer(data=data)
+                serializer.is_valid(raise_exception=True)
 
-        if paletes.count() < int(data["quantidade_paletes"]):
+                branch = Filiais.objects.get(id=data["origem"])
+
+                pallets = PaletesControles.objects.filter(
+                    localizacao_atual=branch.sigla, movimento_atual__isnull=True
+                )
+
+                if pallets.count() < int(data["quantidade_paletes"]):
+                    return Response(
+                        {
+                            "mensagem": f"A filial {branch.sigla} não tem essa quantidade de paletes disponível"
+                        },
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+
+                try:
+                    movement: PaletesMovimentos = PaletesMovimentos.objects.create(
+                        **serializer.validated_data
+                    )
+
+                    for _ in range(0, int(data["quantidade_paletes"])):
+                        pallet = PaletesControles.objects.filter(
+                            localizacao_atual=branch.sigla,
+                            movimento_atual__isnull=True,
+                            tipo_palete=data["tipo_palete"],
+                        ).first()
+
+                        item = {
+                            "movimento_atual": movement.solicitacao,
+                            "localizacao_atual": "MOV",
+                            "destino": movement.destino.sigla,
+                        }
+
+                        for key, value in item.items():
+                            setattr(pallet, key, value)
+
+                        pallet.save()
+
+                    serializer = PaletesMovimentosResponseSerializer(movement)
+
+                    list_response.append(serializer.data)
+
+                except Exception as e:
+                    return Response(
+                        {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                    )
+            print(list_response)
             return Response(
-                {
-                    "mensagem": f"A filial {filial.sigla} não tem essa quantidade de paletes disponível"
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        try:
-            movimento: PaletesMovimentos = PaletesMovimentos.objects.create(
-                **serializer.validated_data
-            )
-
-            for _ in range(0, int(data["quantidade_paletes"])):
-                palete = PaletesControles.objects.filter(
-                    localizacao_atual=filial.sigla,
-                    movimento_atual__isnull=True,
-                    tipo_palete=data["tipo_palete"],
-                ).first()
-
-                item = {
-                    "movimento_atual": movimento.solicitacao,
-                    "localizacao_atual": "MOV",
-                    "destino": movimento.destino.sigla,
-                }
-
-                for key, value in item.items():
-                    setattr(palete, key, value)
-
-                palete.save()
-
-            serializer: PaletesMovimentosResponseSerializer = (
-                PaletesMovimentosResponseSerializer(movimento)
-            )
-
-            return Response(
-                serializer.data,
+                list_response,
                 status=status.HTTP_201_CREATED,
             )
-        except Exception as e:
-            return Response(
-                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+
+        return Response(
+            {"error": "O json deve ser uma lista preenchida"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 class PaletesMovimentosDetailView(APIView):
@@ -192,7 +203,7 @@ class DocumentoView(APIView):
                 movimento.data_solicitacao, "%d/%m/%Y %H:%m"
             ),
             "Quantidade": movimento.quantidade_paletes,
-            "Autor": movimento.autor.username.upper(),
+            "Autor": movimento.autor.nome.upper(),
             "Motorista": movimento.motorista,
             "Conferente": movimento.conferente,
         }
