@@ -137,8 +137,4 @@ class ClientesChoicesView(APIView):
     def get(self, request: Request) -> Response:
         clientes = Clientes.objects.all().values("id", "razao_social_motorista")
 
-        choices = [
-            {"clientes": clientes},
-        ]
-
-        return Response(choices, status.HTTP_200_OK)
+        return Response(clientes, status.HTTP_200_OK)
