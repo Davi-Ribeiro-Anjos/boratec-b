@@ -19,12 +19,10 @@ class PJComplementosView(APIView):
         serializer = PJComplementosSerializer(data=data)
         serializer.is_valid(raise_exception=True)
 
-        pj_complemento = PJComplementos.objects.create(**serializer.validated_data)
-
-        serializer = PJComplementosResponseSerializer(pj_complemento)
+        PJComplementos.objects.create(**serializer.validated_data)
 
         return Response(
-            serializer.data,
+            {"message": "ok, create"},
             status=status.HTTP_201_CREATED,
         )
 

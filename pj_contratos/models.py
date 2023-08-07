@@ -9,7 +9,7 @@ class PJContratos(models.Model):
     inicio_contrato = models.DateField()
     final_contrato = models.DateField()
     data_reajuste = models.DateField()
-    valor_reajuste = models.IntegerField(null=True)
+    valor_reajuste = models.IntegerField()
     anexo = models.FileField(upload_to="contratos/%Y/%m/%d", null=True)
     observacao = models.TextField(null=True)
     data_criacao = models.DateTimeField(default=timezone.now)

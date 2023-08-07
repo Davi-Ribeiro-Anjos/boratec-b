@@ -16,10 +16,7 @@ class FuncionariosView(APIView):
     def get(self, request: Request) -> Response:
         filter = request.GET.dict()
 
-        try:
-            funcionarios = Funcionarios.objects.filter(**filter).order_by("nome")
-        except Exception:
-            funcionarios = Funcionarios.objects.all().order_by("nome")
+        funcionarios = Funcionarios.objects.filter(**filter).order_by("nome")
 
         serializer = FuncionariosResponseSerializer(funcionarios, many=True)
 

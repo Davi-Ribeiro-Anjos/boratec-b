@@ -23,11 +23,12 @@ class PJContratosSerializer(serializers.ModelSerializer):
 
 
 class PJContratosResponseSerializer(serializers.ModelSerializer):
-    autor = FuncionariosSimplesSerializer()
     inicio_contrato = serializers.DateField(format="%d-%m-%Y")
     final_contrato = serializers.DateField(format="%d-%m-%Y")
     data_reajuste = serializers.DateField(format="%d-%m-%Y")
     data_criacao = serializers.DateTimeField(format="%d-%m-%Y")
+    autor = FuncionariosSimplesSerializer()
+    funcionario = FuncionariosSimplesSerializer()
 
     class Meta:
         model = PJContratos
