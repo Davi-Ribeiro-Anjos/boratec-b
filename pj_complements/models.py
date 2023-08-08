@@ -9,7 +9,7 @@ class PJComplements(models.Model):
     college = models.FloatField(default=0)
     housing_allowance = models.FloatField(default=0)
     covenant_credit = models.FloatField(default=0)
-    other_credits = models.FloatField(default=0)
+    others_credits = models.FloatField(default=0)
     advance_money = models.FloatField(default=0)
     covenant_discount = models.FloatField(default=0)
     others_discounts = models.FloatField(default=0)

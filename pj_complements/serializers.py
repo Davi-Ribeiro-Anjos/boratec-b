@@ -13,7 +13,7 @@ class PJComplementsSerializer(serializers.ModelSerializer):
             "college",
             "covenant_credit",
             "housing_allowance",
-            "other_credits",
+            "others_credits",
             "advance_money",
             "covenant_discount",
             "others_discounts",
@@ -36,7 +36,7 @@ class PJComplementsResponseSerializer(serializers.ModelSerializer):
             "allowance",
             "covenant_credit",
             "housing_allowance",
-            "other_credits",
+            "others_credits",
             "advance_money",
             "covenant_discount",
             "others_discounts",
@@ -52,7 +52,7 @@ class PJComplementsResponseSerializer(serializers.ModelSerializer):
                 + obj.allowance
                 + obj.college
                 + obj.covenant_credit
-                + obj.other_credits
+                + obj.others_credits
                 + obj.housing_allowance
                 - obj.advance_money
                 - obj.covenant_discount
