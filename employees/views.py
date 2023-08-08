@@ -66,6 +66,6 @@ class EmployeesChoicesView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request: Request) -> Response:
-        employees = Employees.objects.all().values("id", "nome")
+        employees = Employees.objects.all().values("id", "name")
 
         return Response(employees, status.HTTP_200_OK)
