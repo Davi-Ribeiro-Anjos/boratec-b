@@ -60,7 +60,7 @@ class Funcionarios(models.Model):
     uf = models.CharField(max_length=2, null=True)
     banco = models.CharField(max_length=20, null=True)
     agencia = models.CharField(max_length=5, validators=[only_int], null=True)
-    conta = models.CharField(max_length=15, validators=[only_int], null=True)
+    conta = models.CharField(max_length=25, validators=[only_int], null=True)
     operacao = models.IntegerField(null=True)
     pix = models.CharField(max_length=30, null=True)
     data_admissao = models.DateField()
