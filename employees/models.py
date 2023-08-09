@@ -29,6 +29,12 @@ class TYPE_CONTRACT_CHOICES(models.TextChoices):
     PJ = "PJ"
 
 
+class STATUS_CHOICES(models.TextChoices):
+    ATIVO = "ATIVO"
+    DEMITIDO = "DEMITIDO"
+    AFASTADO = "AFASTADO"
+
+
 def only_int(value):
     try:
         int(value)
@@ -38,14 +44,12 @@ def only_int(value):
 
 class Employees(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
-    name = models.CharField(max_length=40, unique=True)
+    name = models.CharField(max_length=40)
     gender = models.CharField(max_length=25, choices=GENDER_CHOICES.choices, null=True)
     date_birth = models.DateField(null=True)
-    rg = models.CharField(max_length=8, validators=[only_int], unique=True, null=True)
-    cpf = models.CharField(max_length=11, validators=[only_int], unique=True, null=True)
-    cnpj = models.CharField(
-        max_length=14, validators=[only_int], unique=True, null=True
-    )
+    rg = models.CharField(max_length=8, validators=[only_int], null=True)
+    cpf = models.CharField(max_length=11, validators=[only_int], null=True)
+    cnpj = models.CharField(max_length=14, validators=[only_int], null=True)
     company = models.CharField(max_length=15, choices=COMPANY_CHOICES.choices)
     type_contract = models.CharField(
         max_length=3, choices=TYPE_CONTRACT_CHOICES.choices
@@ -64,7 +68,9 @@ class Employees(models.Model):
     operation = models.IntegerField(null=True)
     pix = models.CharField(max_length=30, null=True)
     date_admission = models.DateField()
-    active = models.BooleanField(default=True)
+    status = models.CharField(
+        max_length=10, choices=STATUS_CHOICES.choices, default="ATIVO"
+    )
     first_access = models.BooleanField(default=True)
 
     branch = models.ForeignKey(
