@@ -6,10 +6,12 @@ class EmployeesEPIs(models.Model):
     phone_model = models.CharField(
         max_length=50,
         null=True,
+        blank=True,
     )
-    phone_code = models.IntegerField(null=True, unique=True)
-    notebook_model = models.CharField(max_length=50, null=True)
-    notebook_code = models.IntegerField(null=True, unique=True)
+    phone_code = models.IntegerField(null=True, blank=True)
+    notebook_model = models.CharField(max_length=50, null=True, blank=True)
+    notebook_code = models.IntegerField(null=True, blank=True)
+    observation = models.TextField(null=True, blank=True)
 
     class Meta:
         verbose_name = "EmployeeEPI"

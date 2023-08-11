@@ -62,21 +62,66 @@ class EmployeesSerializer(serializers.ModelSerializer):
 
 
 class EmployeesResponseSerializer(serializers.ModelSerializer):
-    branch = BranchesSimpleSerializer()
-    pj_complements = PJComplementsResponseSerializer()
     user = UserSimpleSerializer()
+    date_birth = serializers.DateField(format="%d-%m-%Y")
+    rg = RGFormattedField()
     cpf = CPFFormattedField()
     cnpj = CNPJFormattedField()
+    date_admission = serializers.DateField(format="%d-%m-%Y")
+    branch = BranchesSimpleSerializer()
+    pj_complements = PJComplementsResponseSerializer()
 
     class Meta:
         model = Employees
         fields = (
             "id",
             "name",
+            "date_birth",
+            "rg",
             "cpf",
+            "cnpj",
+            "rg",
+            "company",
+            "type_contract",
+            "role",
+            "street",
+            "number",
+            "complement",
+            "cep",
+            "district",
+            "city",
+            "uf",
+            "bank",
+            "agency",
+            "account",
+            "operation",
+            "pix",
+            "date_admission",
+            "status",
+            "branch",
+            "pj_complements",
+            "user",
+        )
+        depth = 1
+
+
+class EmployeesResponsePJSerializer(serializers.ModelSerializer):
+    branch = BranchesSimpleSerializer()
+    pj_complements = PJComplementsResponseSerializer()
+    user = UserSimpleSerializer()
+    cnpj = CNPJFormattedField()
+    rg = RGFormattedField()
+    date_admission = serializers.DateField(format="%d-%m-%Y")
+
+    class Meta:
+        model = Employees
+        fields = (
+            "id",
+            "name",
             "cnpj",
             "type_contract",
             "role",
+            "company",
             "bank",
             "agency",
             "account",

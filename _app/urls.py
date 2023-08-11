@@ -8,6 +8,7 @@ urlpatterns = [
     path("api/", include("clients.urls")),
     path("api/", include("branches.urls")),
     path("api/", include("employees.urls")),
+    path("api/", include("employees_epis.urls")),
     path("api/", include("pallets_controls.urls")),
     path("api/", include("pallets_movements.urls")),
     path("api/", include("pj_complements.urls")),

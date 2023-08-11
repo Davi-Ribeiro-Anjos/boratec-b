@@ -67,7 +67,11 @@ class EmployeesChoicesView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request: Request) -> Response:
-        employees = Employees.objects.filter(status="ATIVO").values("id", "name")
+        employees = (
+            Employees.objects.filter(status="ATIVO")
+            .values("id", "name")
+            .order_by("name")
+        )
 
         return Response(employees, status.HTTP_200_OK)
 
@@ -159,7 +163,9 @@ WHERE
 
         count_create = 0
         for employee in data:
+            employee["type_contract"] = "CLT"
             employee["number"] = employee["num"]
+
             del employee["num"]
 
             try:
@@ -178,7 +184,6 @@ WHERE
                 emp.save()
             except Exception:
                 count_create += 1
-                employee["type_contract"] = "CLT"
                 Employees.objects.create(**employee)
 
         return Response(
