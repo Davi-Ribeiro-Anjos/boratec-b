@@ -10,7 +10,7 @@ urlpatterns = [
     ),
     path(
         "employees/<int:id>/",
-        views.EmployeesDetailView.as_view(),
+        views.EmployeesDetailsView.as_view(),
         name="employees-id",
     ),
     path(

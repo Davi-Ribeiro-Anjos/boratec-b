@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
 from branches.models import Branches
+from employees_dismissals.models import EmployeesDismissals
 from pj_complements.models import PJComplements
 from employees_epis.models import EmployeesEPIs
 
@@ -92,6 +93,13 @@ class Employees(models.Model):
     )
     user = models.OneToOneField(
         User,
+        on_delete=models.CASCADE,
+        related_name="employee",
+        null=True,
+        unique=True,
+    )
+    dismissal = models.ForeignKey(
+        EmployeesDismissals,
         on_delete=models.CASCADE,
         related_name="employee",
         null=True,

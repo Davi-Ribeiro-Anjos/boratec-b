@@ -39,6 +39,7 @@ MY_APPS = [
     "branches",
     "clients",
     "employees",
+    "employees_dismissals",
     "employees_epis",
     "pallets_controls",
     "pallets_movements",
