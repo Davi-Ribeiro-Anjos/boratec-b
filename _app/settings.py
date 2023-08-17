@@ -38,6 +38,7 @@ THIRD_PARTY_APPS = [
 MY_APPS = [
     "branches",
     "clients",
+    "deliveries_histories",
     "employees",
     "employees_dismissals",
     "employees_epis",
