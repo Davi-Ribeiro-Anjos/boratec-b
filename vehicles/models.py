@@ -30,12 +30,16 @@ def only_int(value):
 
 class Vehicles(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
-    type_vehicle = models.CharField(max_length=20, choices=TYPE_VEHICLE_CHOICES.choices)
+    type_vehicle = models.CharField(
+        max_length=20,
+        choices=TYPE_VEHICLE_CHOICES.choices,
+        null=True,  # APÓS TESTE TIRAR NULL
+    )
     vehicle_plate = models.CharField(max_length=7, unique=True)
     vehicle_mileage = models.IntegerField()
     renavam = models.CharField(max_length=11, validators=[only_int])
     model_vehicle = models.CharField(max_length=20)
-    observation = models.CharField(max_length=30, blank=True, null=True)
+    observation = models.CharField(max_length=50, blank=True, null=True)
     last_movement = models.IntegerField(null=True)
     active = models.BooleanField(default=True)
 

@@ -4,8 +4,8 @@ from . import views
 
 urlpatterns = [
     path(
-        "fleets_availabilities/",
+        "fleets-availabilities/",
         views.FleetsAvailabilitiesView.as_view(),
-        name="fleets_availabilities",
+        name="fleets-availabilities",
     ),
 ]
