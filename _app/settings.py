@@ -42,11 +42,13 @@ MY_APPS = [
     "employees",
     "employees_dismissals",
     "employees_epis",
+    "fleets_availabilities",
     "pallets_controls",
     "pallets_movements",
     "pj_complements",
     "purchases_entries",
     "purchases_requests",
+    "vehicles",
 ]
 
 DJANGO_APPS = [
