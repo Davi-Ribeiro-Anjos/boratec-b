@@ -9,5 +9,4 @@ def custom_payload_handler(token):
     user = User.objects.get(id=user_id)
 
     token["groups"] = user.groups.all()
-    print(token, "\n\n")
     return jwt.encode(token, SECRET_KEY, algorithm="HS256")
