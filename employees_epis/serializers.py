@@ -3,7 +3,7 @@ from rest_framework import serializers
 from .models import EmployeesEPIs
 
 
-class EmployeesEpisResponseSerializer(serializers.ModelSerializer):
+class EmployeesEPIsSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmployeesEPIs
         fields = (
@@ -12,4 +12,5 @@ class EmployeesEpisResponseSerializer(serializers.ModelSerializer):
             "phone_code",
             "notebook_model",
             "notebook_code",
+            "observation",
         )
