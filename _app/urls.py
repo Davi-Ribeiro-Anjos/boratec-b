@@ -11,12 +11,14 @@ urlpatterns = [
     path("api/", include("employees.urls")),
     path("api/", include("employees_dismissals.urls")),
     path("api/", include("employees_epis.urls")),
+    path("api/", include("fleets_availabilities.urls")),
     path("api/", include("pallets_controls.urls")),
     path("api/", include("pallets_movements.urls")),
     path("api/", include("pj_complements.urls")),
     path("api/", include("purchases_entries.urls")),
     path("api/", include("purchases_requests.urls")),
     path("api/", include("users.urls")),
+    path("api/", include("vehicles.urls")),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
