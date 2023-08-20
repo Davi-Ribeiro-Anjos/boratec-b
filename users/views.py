@@ -2,6 +2,8 @@ import jwt
 from _app.settings import SECRET_KEY
 
 from rest_framework.views import APIView, Response, Request, status
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.tokens import AccessToken
 
@@ -15,6 +17,9 @@ from .serializers import UserSimpleSerializer
 
 
 class UsersView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
     def get(self, request: Request) -> Response:
         users = User.objects.all()
         serializer = UserSimpleSerializer(users, many=True)
@@ -34,6 +39,9 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
 
 class CustomTokenRefreshView(TokenRefreshView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
         if response.status_code == 200:

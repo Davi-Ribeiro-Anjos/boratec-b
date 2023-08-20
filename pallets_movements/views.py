@@ -8,6 +8,8 @@ from barcode import Code39
 from barcode.writer import ImageWriter
 
 from rest_framework.views import APIView, Response, Request, status
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from django.db.models import Count
 from django.contrib.auth.models import User
@@ -21,9 +23,13 @@ from pallets_controls.models import PalletsControls
 
 from .models import PalletsMovements
 from .serializers import *
+from .permissions import BasePermission, AdminPermission
 
 
 class PalletsMovementsView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, BasePermission]
+
     def get(self, request: Request) -> Response:
         params = request.GET.dict()
 
@@ -157,6 +163,9 @@ class PalletsMovementsView(APIView):
 
 
 class PalletsMovementsDetailView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, AdminPermission]
+
     def patch(self, request: Request, id: int) -> Response:
         request = get_object_or_404(PalletsMovements, id=id)
 
@@ -190,6 +199,9 @@ class PalletsMovementsDetailView(APIView):
 
 
 class DocumentView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, BasePermission]
+
     def get(self, request: Request, id: int) -> Response:
         movement = PalletsMovements.objects.filter(id=id).first()
 

@@ -13,9 +13,13 @@ from _service.oracle_db import connect_db, dict_fetchall
 
 # from .models import Employees
 # from .serializers import EmployeesSerializer, EmployeesResponseSerializer
+from .permissions import BasePermission
 
 
 class DeliveriesHistoriesQueriesNFView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, BasePermission]
+
     def get(self, request: Request, nf: str) -> Response:
         if nf:
             while len(nf) < 10:
