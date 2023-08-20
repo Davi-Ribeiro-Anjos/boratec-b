@@ -38,7 +38,6 @@ class UserLoginSerializer(serializers.ModelSerializer):
             "email",
             "is_staff",
             "is_superuser",
-            "is_active",
         )
         depth = 1
 
