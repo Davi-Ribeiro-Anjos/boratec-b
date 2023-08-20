@@ -14,17 +14,16 @@ class BasePermission(permissions.BasePermission):
         )
 
 
-class AdminPermission(permissions.BasePermission):
+class DetailsPermission(permissions.BasePermission):
     def has_permission(self, request: Request, view: View):
-        if request.GET:
-            return (
-                request.user.groups.filter(name="purchase_request").exists()
-                or request.user.is_superuser
-                or request.user.is_staff
-            )
-
         return (
-            request.user.groups.filter(name="purchase_request_admin").exists()
+            request.user.groups.filter(name="purchase_request").exists()
             or request.user.is_superuser
             or request.user.is_staff
         )
+
+        # return (
+        #     request.user.groups.filter(name="purchase_request_admin").exists()
+        #     or request.user.is_superuser
+        #     or request.user.is_staff
+        # )

@@ -1,4 +1,6 @@
 from rest_framework.views import APIView, Response, Request, status
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
@@ -10,10 +12,13 @@ from .models import EmployeesDismissals
 from .serializers import (
     EmployeesDismissalsSerializer,
 )
-import ipdb
+from .permissions import AdminPermission
 
 
 class EmployeesDismissalsCheckView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, AdminPermission]
+
     def get(self, request: Request, identity: int) -> Response:
         try:
             employee = Employees.objects.filter(
@@ -35,13 +40,16 @@ class EmployeesDismissalsCheckView(APIView):
 
 
 class EmployeesDismissalsDetailsView(APIView):
-    def post(self, request: Request, id: int) -> Response:
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, AdminPermission]
+
+    def post(self, request: Request, employee_id: int) -> Response:
         try:
             data = request.data.dict()
         except:
             data = request.data
 
-        employee = get_object_or_404(Employees, id=id)
+        employee = get_object_or_404(Employees, id=employee_id)
 
         serializer = EmployeesDismissalsSerializer(data=data)
         serializer.is_valid(raise_exception=True)
