@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 
 
 from _service.jwt import custom_payload_handler
+from employees.models import Employees
 from .serializers import UserSimpleSerializer
 
 
@@ -25,11 +26,10 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
         if response.status_code == 200:
-            pass
-            # token = response.data["access"]
-            # token_dict = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
-            # print(token_dict, "\n\n")
-            # response.data["access"] = custom_payload_handler(token_dict)
+            token = response.data["access"]
+            token_dict = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+
+            response.data["access"] = custom_payload_handler(token_dict)
         return response
 
 
