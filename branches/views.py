@@ -4,11 +4,12 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from .models import Branches
 from .serializers import BranchesSerializer
+from .permissions import BasePermission
 
 
 class BranchesView(APIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, BasePermission]
 
     def get(self, request: Request) -> Response:
         branches = Branches.objects.all()

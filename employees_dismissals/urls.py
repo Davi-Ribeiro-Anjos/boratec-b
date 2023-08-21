@@ -9,8 +9,8 @@ urlpatterns = [
         name="employees-dismissals-check-identity",
     ),
     path(
-        "employees-dismissals/<int:id>/",
+        "employees-dismissals/<int:employee_id>/",
         views.EmployeesDismissalsDetailsView.as_view(),
-        name="employees-dismissals-id",
+        name="employees-dismissals-employee_id",
     ),
 ]

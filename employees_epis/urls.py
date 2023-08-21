@@ -9,8 +9,8 @@ urlpatterns = [
     #     name="employees-epis",
     # ),
     path(
-        "employees-epis/<int:id>/",
+        "employees-epis/<int:employee_id>/",
         views.EmployeesEPIsDetailView.as_view(),
-        name="employees-epis-id",
+        name="employees-epis-employee_id",
     ),
 ]
