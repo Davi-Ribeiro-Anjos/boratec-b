@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from branches.serializers import BranchesSimpleSerializer
 from pj_complements.serializers import PJComplementsResponseSerializer
-from users.serializers import UserSimpleSerializer
+from users.serializers import UserSimpleSerializer, UserLoginSerializer
 
 from .models import Employees
 
@@ -143,6 +143,21 @@ class EmployeesSimpleSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "name",
+            "user",
+        )
+        depth = 1
+
+
+class EmployeesLoginSerializer(serializers.ModelSerializer):
+    user = UserLoginSerializer()
+    branch = BranchesSimpleSerializer()
+
+    class Meta:
+        model = Employees
+        fields = (
+            "id",
+            "name",
+            "branch",
             "user",
         )
         depth = 1
