@@ -1,6 +1,7 @@
 import os
 from fpdf import FPDF
 from datetime import datetime
+import ipdb
 
 
 from rest_framework.views import APIView, Response, Request, status
@@ -44,7 +45,7 @@ class ClientsView(APIView):
         except:
             data = request.data
 
-        serializer = ClientsSerializer(data)
+        serializer = ClientsSerializer(data=data)
         serializer.is_valid(raise_exception=True)
 
         try:
@@ -75,12 +76,11 @@ class ClientsView(APIView):
             filter = {
                 "client__id": data["client__id"],
                 "branch__id": data["branch__id"],
-                "type_registration": data["type_registration"],
             }
 
             client_branch = ClientsBranches.objects.filter(**filter).first()
 
-            client_branch.balance += int(data["quantidade_paletes"])
+            client_branch.balance += int(data["quantity_pallets"])
             client_branch.save()
 
             serializer = ClientsBranchesSerializer(client_branch)
@@ -91,8 +91,8 @@ class ClientsView(APIView):
 
 
 class DocumentView(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, BasePermission]
+    # authentication_classes = [JWTAuthentication]
+    # permission_classes = [IsAuthenticated, BasePermission]
 
     def get(self, request: Request, id: int) -> Response:
         client = ClientsBranches.objects.filter(id=id).first()

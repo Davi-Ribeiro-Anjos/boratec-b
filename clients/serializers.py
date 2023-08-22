@@ -23,7 +23,7 @@ class ClientsBranchesSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClientsBranches
         fields = ("id", "branch", "client", "balance", "type_pallet")
-        delth = 1
+        depth = 1
 
 
 class ClientsSerializer(serializers.ModelSerializer):
@@ -55,4 +55,4 @@ class ClientsResponseSerializer(serializers.ModelSerializer):
             "author",
             "branches",
         )
-        delth = 1
+        depth = 1

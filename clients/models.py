@@ -40,7 +40,7 @@ class Clients(models.Model):
     )
 
     class Meta:
-        verbose_name = "Cliente"
+        verbose_name = "Client"
         verbose_name_plural = "Clients"
         db_table = "clients"
         app_label = "clients"
