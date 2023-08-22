@@ -7,7 +7,7 @@ class BasePermission(permissions.BasePermission):
     def has_permission(self, request: Request, view: View):
         return (
             request.user.groups.filter(
-                Q(name="client") | Q(name="client_admin")
+                Q(name="pallet_client") | Q(name="pallet_client_admin")
             ).exists()
             or request.user.is_superuser
             or request.user.is_staff
@@ -18,13 +18,13 @@ class AdminPermission(permissions.BasePermission):
     def has_permission(self, request: Request, view: View):
         if request.method == "POST":
             return (
-                request.user.groups.filter(name="client_admin").exists()
+                request.user.groups.filter(name="pallet_client_admin").exists()
                 or request.user.is_superuser
                 or request.user.is_staff
             )
 
         return (
-            request.user.groups.filter(name="client").exists()
+            request.user.groups.filter(name="pallet_client").exists()
             or request.user.is_superuser
             or request.user.is_staff
         )
