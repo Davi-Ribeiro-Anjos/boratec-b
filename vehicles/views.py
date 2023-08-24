@@ -8,7 +8,15 @@ class VehiclesView(APIView):
     def get(self, request: Request) -> Response:
         filter = request.GET.dict()
 
-        vehicles = Vehicles.objects.filter(**filter)
+        vehicles = Vehicles.objects.filter(**filter).order_by("vehicle_plate")
         serializer = VehiclesResponseSerializer(vehicles, many=True)
 
-        return Response(serializer.data, status.HTTP_200_OK)
+        total_vehicles = vehicles.count()  # Contagem total de objetos após o filtro
+
+        serializer = VehiclesResponseSerializer(vehicles, many=True)
+        response_data = {
+            "total": total_vehicles,  # Adiciona o campo 'total' ao dicionário de resposta
+            "data": serializer.data,
+        }
+
+        return Response(response_data, status.HTTP_200_OK)
