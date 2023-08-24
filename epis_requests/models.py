@@ -2,8 +2,6 @@ from django.db import models
 
 from branches.models import Branches
 from employees.models import Employees
-from epis_requests.models import EPIsRequests
-from epis_sizes.models import EPIsSizes
 
 
 class EPIsRequests(models.Model):
