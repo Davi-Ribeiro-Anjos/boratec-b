@@ -13,10 +13,10 @@ class EPIsCarts(models.Model):
         EPIsSizes, on_delete=models.CASCADE, related_name="epis_carts"
     )
     request = models.ForeignKey(
-        EPIsRequests, on_delete=models.CASCADE, related_name="epis_sizes"
+        EPIsRequests, on_delete=models.CASCADE, related_name="epis_carts"
     )
     author = models.ForeignKey(
-        Employees, on_delete=models.CASCADE, related_name="epis_sizes"
+        Employees, on_delete=models.CASCADE, related_name="epis_carts"
     )
 
     class Meta:
