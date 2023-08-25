@@ -24,6 +24,7 @@ class EPIsItemsResponseSerializer(serializers.ModelSerializer):
 
 class EPIsItemsSimpleSerializer(serializers.ModelSerializer):
     epis_sizes = serializers.SerializerMethodField()
+    validity = serializers.DateField(format="%d/%m/%Y")
 
     class Meta:
         model = EPIsItems
