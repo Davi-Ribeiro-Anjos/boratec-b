@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
 from employees.serializers import EmployeesSimpleSerializer
+from epis_sizes.models import EPIsSizes
+from epis_sizes.serializers import EPIsSizesSimpleSerializer
 
 from .models import EPIsItems
 
@@ -21,7 +23,14 @@ class EPIsItemsResponseSerializer(serializers.ModelSerializer):
 
 
 class EPIsItemsSimpleSerializer(serializers.ModelSerializer):
+    epis_sizes = serializers.SerializerMethodField()
+
     class Meta:
         model = EPIsItems
         fields = ("id", "description", "validity", "ca", "epis_sizes")
         depth = 1
+
+    def get_epis_sizes(self, obj):
+        epis_sizes = EPIsSizes.objects.filter(item=obj)
+        serializer = EPIsSizesSimpleSerializer(epis_sizes, many=True)
+        return serializer.data

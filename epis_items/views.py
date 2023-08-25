@@ -1,17 +1,14 @@
-from datetime import date
-
 from rest_framework.views import APIView, Response, Request, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
-
-from vehicles.models import Vehicles
 
 from .models import EPIsItems
 from .serializers import (
     EPIsItemsSerializer,
     EPIsItemsResponseSerializer,
 )
-from .permissions import BasePermission
+
+# from .permissions import BasePermission
 
 
 class EPIsItemsView(APIView):

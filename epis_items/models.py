@@ -6,7 +6,7 @@ from epis_groups.models import EPIsGroups
 
 class EPIsItems(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
-    description = models.CharField(max_length=50, default="UNICO")
+    description = models.CharField(max_length=50)
     validity = models.DateField()
     ca = models.CharField(max_length=15, null=True)
 
