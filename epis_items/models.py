@@ -6,9 +6,9 @@ from epis_groups.models import EPIsGroups
 
 class EPIsItems(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
-    description = models.CharField(max_length=5, default="UNICO")
+    description = models.CharField(max_length=50, default="UNICO")
     validity = models.DateField()
-    ca = models.CharField(max_length=50, null=True)
+    ca = models.CharField(max_length=15, null=True)
 
     group = models.ForeignKey(
         EPIsGroups, on_delete=models.CASCADE, related_name="epis_items"

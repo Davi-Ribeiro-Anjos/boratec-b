@@ -11,6 +11,8 @@ urlpatterns = [
     path("api/", include("employees.urls")),
     path("api/", include("employees_dismissals.urls")),
     path("api/", include("employees_epis.urls")),
+    path("api/", include("epis_groups.urls")),
+    path("api/", include("epis_items.urls")),
     path("api/", include("fleets_availabilities.urls")),
     path("api/", include("pallets_controls.urls")),
     path("api/", include("pallets_movements.urls")),
