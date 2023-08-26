@@ -82,7 +82,7 @@ class PurchasesRequestsView(APIView):
 
 class PurchasesRequestsDetailView(APIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, AdminPermission]
+    permission_classes = [IsAuthenticated, BasePermission]
 
     def get(self, request: Request, id: int) -> Response:
         solicitation = get_object_or_404(PurchasesRequests, id=id)

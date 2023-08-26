@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -16,6 +16,30 @@ class UserSerializer(serializers.ModelSerializer):
             "is_superuser",
             "is_active",
         )
+
+
+class GroupsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ("name",)
+
+
+class UserLoginSerializer(serializers.ModelSerializer):
+    groups = GroupsSerializer(many=True)
+
+    class Meta:
+        model = User
+        fields = (
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "groups",
+            "email",
+            "is_staff",
+            "is_superuser",
+        )
+        depth = 1
 
 
 class UserSimpleSerializer(serializers.ModelSerializer):

@@ -98,7 +98,7 @@ class Employees(models.Model):
         null=True,
         unique=True,
     )
-    dismissal = models.ForeignKey(
+    dismissal = models.OneToOneField(
         EmployeesDismissals,
         on_delete=models.CASCADE,
         related_name="employee",

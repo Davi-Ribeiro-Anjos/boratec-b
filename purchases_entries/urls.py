@@ -10,7 +10,7 @@ urlpatterns = [
     ),
     path(
         "purchases-entries/<int:id>/",
-        views.PurchasesEntriesDetailView.as_view(),
+        views.PurchasesEntriesDetailsView.as_view(),
         name="purchases-entries-id",
     ),
 ]

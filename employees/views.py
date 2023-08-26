@@ -4,7 +4,7 @@ from fpdf import FPDF
 
 from rest_framework import serializers
 from rest_framework.views import APIView, Response, Request, status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from django.shortcuts import get_object_or_404
@@ -13,9 +13,13 @@ from _service.oracle_db import connect_db, dict_fetchall
 
 from .models import Employees
 from .serializers import EmployeesSerializer, EmployeesResponseSerializer
+from .permissions import BasePermission, AdminPermission
 
 
 class EmployeesView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, AdminPermission]
+
     def get(self, request: Request) -> Response:
         filter = request.GET.dict()
 
@@ -45,6 +49,9 @@ class EmployeesView(APIView):
 
 
 class EmployeesDetailsView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, AdminPermission]
+
     def patch(self, request: Request, id: int) -> Response:
         employee = get_object_or_404(Employees, id=id)
         serializer = EmployeesSerializer(data=request.data, partial=True)
@@ -75,6 +82,9 @@ class EmployeesChoicesView(APIView):
 
 
 class EmployeesDocumentsView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, BasePermission]
+
     def get(self, request: Request, id: int) -> Response:
         employee = get_object_or_404(Employees, id=id)
 
@@ -164,6 +174,9 @@ class EmployeesDocumentsView(APIView):
 
 
 class EmployeesOracleView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
     def post(self, request: Request) -> Response:
         conn = connect_db()
         cur = conn.cursor()

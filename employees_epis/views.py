@@ -1,4 +1,7 @@
 from rest_framework.views import APIView, Response, Request, status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
 from django.shortcuts import get_object_or_404
 
 from employees.models import Employees
@@ -7,12 +10,15 @@ from .models import EmployeesEPIs
 from .serializers import (
     EmployeesEPIsSerializer,
 )
-import ipdb
+from .permissions import AdminPermission
 
 
 class EmployeesEPIsDetailView(APIView):
-    def get(self, request: Request, id: int) -> Response:
-        employee = get_object_or_404(Employees, id=id)
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, AdminPermission]
+
+    def get(self, request: Request, employee_id: int) -> Response:
+        employee = get_object_or_404(Employees, id=employee_id)
 
         epi = employee.epi
 
@@ -20,13 +26,13 @@ class EmployeesEPIsDetailView(APIView):
 
         return Response(serializer.data, status.HTTP_200_OK)
 
-    def post(self, request: Request, id: int) -> Response:
+    def post(self, request: Request, employee_id: int) -> Response:
         try:
             data = request.data.dict()
         except:
             data = request.data
 
-        employee = get_object_or_404(Employees, id=id)
+        employee = get_object_or_404(Employees, id=employee_id)
 
         try:
             if employee.epi is None:

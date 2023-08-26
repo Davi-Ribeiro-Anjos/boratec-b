@@ -1,4 +1,6 @@
 from rest_framework.views import APIView, Response, Request, status
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from django.contrib.auth.models import User
 from django.db.models import Count, Q, ExpressionWrapper, IntegerField
@@ -8,9 +10,13 @@ from branches.models import Branches
 
 from .models import PalletsControls
 from .serializers import *
+from .permissions import BasePermission, AdminPermission
 
 
 class PalletsControlsView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, AdminPermission]
+
     def get(self, request: Request) -> Response:
         filter = request.GET.dict()
 

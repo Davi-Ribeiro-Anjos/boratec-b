@@ -1,9 +1,12 @@
 import os
 from fpdf import FPDF
 from datetime import datetime
+import ipdb
 
 
 from rest_framework.views import APIView, Response, Request, status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from django.db.models import Q
 from django.http import HttpResponse
@@ -17,9 +20,13 @@ from .serializers import (
     ClientsResponseSerializer,
     ClientsBranchesSerializer,
 )
+from .permissions import BasePermission, AdminPermission
 
 
 class ClientsView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, AdminPermission]
+
     def get(self, request: Request) -> Response:
         filter = request.GET.dict()
 
@@ -38,12 +45,12 @@ class ClientsView(APIView):
         except:
             data = request.data
 
-        serializer = ClientsSerializer(data)
+        serializer = ClientsSerializer(data=data)
         serializer.is_valid(raise_exception=True)
 
         try:
             client: Clients = Clients.objects.create(**serializer.validated_data)
-            branches = Branches.objects.all()
+            branches = Branches.objects.all().exclude(id_garage=99)
             for branch in branches:
                 client.branches.add(branch)
 
@@ -69,12 +76,11 @@ class ClientsView(APIView):
             filter = {
                 "client__id": data["client__id"],
                 "branch__id": data["branch__id"],
-                "type_registration": data["type_registration"],
             }
 
             client_branch = ClientsBranches.objects.filter(**filter).first()
 
-            client_branch.balance += int(data["quantidade_paletes"])
+            client_branch.balance += int(data["quantity_pallets"])
             client_branch.save()
 
             serializer = ClientsBranchesSerializer(client_branch)
@@ -85,6 +91,9 @@ class ClientsView(APIView):
 
 
 class DocumentView(APIView):
+    # authentication_classes = [JWTAuthentication]
+    # permission_classes = [IsAuthenticated, BasePermission]
+
     def get(self, request: Request, id: int) -> Response:
         client = ClientsBranches.objects.filter(id=id).first()
 
@@ -129,6 +138,9 @@ class DocumentView(APIView):
 
 
 class ClientsChoicesView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, BasePermission]
+
     def get(self, request: Request) -> Response:
         clients = Clients.objects.all().values("id", "name")
 
