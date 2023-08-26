@@ -6,22 +6,22 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from vehicles.models import Vehicles
 
-from .models import FleetsAvailabilities
+from .models import EPIsGroups
 from .serializers import (
-    FleetsAvailabilitiesSerializer,
-    FleetsAvailabilitiesResponseSerializer,
+    EPIsGroupsSerializer,
+    EPIsGroupsResponseSerializer,
 )
 from .permissions import BasePermission
 
 
-class FleetsAvailabilitiesView(APIView):
+class EPIsGroupsView(APIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, BasePermission]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request: Request) -> Response:
-        fleet = FleetsAvailabilities.objects.all()
+        groups = EPIsGroups.objects.all()
 
-        serializer = FleetsAvailabilitiesResponseSerializer(fleet, many=True)
+        serializer = EPIsGroupsResponseSerializer(groups, many=True)
 
         return Response(serializer.data, status.HTTP_200_OK)
 
@@ -31,16 +31,11 @@ class FleetsAvailabilitiesView(APIView):
         except:
             data = request.data
 
-        serializer = FleetsAvailabilitiesSerializer(data=data)
+        serializer = EPIsGroupsSerializer(data=data)
         serializer.is_valid(raise_exception=True)
 
-        vehicle = Vehicles.objects.get(id=data["vehicle"])
+        group = EPIsGroups.objects.create(**serializer.validated_data)
 
-        vehicle.last_movement = date.today()
-        vehicle.save()
-
-        solicitation = FleetsAvailabilities.objects.create(**serializer.validated_data)
-
-        serializer = FleetsAvailabilitiesResponseSerializer(solicitation)
+        serializer = EPIsGroupsResponseSerializer(group)
 
         return Response(serializer.data, status.HTTP_201_CREATED)

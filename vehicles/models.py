@@ -40,7 +40,7 @@ class Vehicles(models.Model):
     renavam = models.CharField(max_length=11, validators=[only_int])
     model_vehicle = models.CharField(max_length=20)
     observation = models.CharField(max_length=50, blank=True, null=True)
-    last_movement = models.IntegerField(null=True)
+    last_movement = models.DateField(null=True)
     active = models.BooleanField(default=True)
 
     branch = models.ForeignKey(
