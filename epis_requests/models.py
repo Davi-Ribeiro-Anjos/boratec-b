@@ -4,6 +4,13 @@ from branches.models import Branches
 from employees.models import Employees
 
 
+class STATUS_CHOICES(models.TextChoices):
+    ABERTO = "ABERTO"
+    ANDAMENTO = "ANDAMENTO"
+    CONCLUIDO = "CONCLUIDO"
+    CANCELADO = "CANCELADO"
+
+
 class EPIsRequests(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
     date_requested = models.DateField(auto_now_add=True)
@@ -12,6 +19,9 @@ class EPIsRequests(models.Model):
     date_canceled = models.DateField(null=True)
     attachment_confirm = models.FileField(
         upload_to="epis_requests/%Y/%m/%d", blank=True, null=True
+    )
+    status = models.CharField(
+        max_length=12, choices=STATUS_CHOICES.choices, default=STATUS_CHOICES.ABERTO
     )
 
     branch = models.ForeignKey(
@@ -22,6 +32,12 @@ class EPIsRequests(models.Model):
     )
     author_create = models.ForeignKey(
         Employees, on_delete=models.CASCADE, related_name="epis_requests_create"
+    )
+    author_send = models.ForeignKey(
+        Employees,
+        on_delete=models.CASCADE,
+        related_name="epis_requests_send",
+        null=True,
     )
     author_confirm = models.ForeignKey(
         Employees,
