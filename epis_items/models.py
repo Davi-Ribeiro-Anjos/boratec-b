@@ -1,13 +1,22 @@
 from django.db import models
+from django.forms import ValidationError
 
 from employees.models import Employees
 from epis_groups.models import EPIsGroups
+
+
+def only_int(value):
+    try:
+        int(value)
+    except (ValueError, TypeError):
+        raise ValidationError("Valor digitado não é um número")
 
 
 class EPIsItems(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
     description = models.CharField(max_length=50)
     validity = models.DateField()
+    time_for_use = models.CharField(max_length=3, validators=[only_int], default=365)
     ca = models.CharField(max_length=15, null=True)
 
     group = models.ForeignKey(
