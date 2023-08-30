@@ -7,13 +7,12 @@ from .serializers import (
     EPIsSizesSerializer,
     EPIsSizesResponseSerializer,
 )
-
-# from .permissions import BasePermission
+from .permissions import BasePermission
 
 
 class EPIsSizesView(APIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, BasePermission]
 
     def get(self, request: Request) -> Response:
         sizes = EPIsSizes.objects.all()

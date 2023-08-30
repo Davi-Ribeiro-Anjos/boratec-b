@@ -13,12 +13,12 @@ from .serializers import (
     EPIsCartsResponseSerializer,
 )
 
-# from .permissions import BasePermission
+from .permissions import BasePermission
 
 
 class EPIsCartsView(APIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, BasePermission]
 
     def get(self, request: Request) -> Response:
         carts = EPIsCarts.objects.all()

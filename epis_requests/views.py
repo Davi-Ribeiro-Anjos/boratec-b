@@ -13,15 +13,12 @@ from .serializers import (
     EPIsRequestsSerializer,
     EPIsRequestsResponseSerializer,
 )
-
-import ipdb
-
-# from .permissions import BasePermission
+from .permissions import BasePermission
 
 
 class EPIsRequestsView(APIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, BasePermission]
 
     def get(self, request: Request) -> Response:
         filter = request.GET.dict()
@@ -76,7 +73,7 @@ class EPIsRequestsView(APIView):
 
 class EPIsRequestsCancelView(APIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, BasePermission]
 
     def patch(self, request: Request, id: int) -> Response:
         req = get_object_or_404(EPIsRequests, id=id)
@@ -102,7 +99,7 @@ class EPIsRequestsCancelView(APIView):
 
 class EPIsRequestsDetailsView(APIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, BasePermission]
 
     def patch(self, request: Request, id: int) -> Response:
         req = get_object_or_404(EPIsRequests, id=id)

@@ -5,9 +5,6 @@ from epis_sizes.serializers import (
     EPIsSizesRequestsSerializer,
 )
 
-# from epis_requests.serializers import EPIsRequestsSimpleSerializer
-
-
 from .models import EPIsCarts
 
 
