@@ -1,10 +1,6 @@
-from datetime import date
-
 from rest_framework.views import APIView, Response, Request, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
-
-from vehicles.models import Vehicles
 
 from .models import EPIsGroups
 from .serializers import (
@@ -16,7 +12,7 @@ from .permissions import BasePermission
 
 class EPIsGroupsView(APIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, BasePermission]
 
     def get(self, request: Request) -> Response:
         groups = EPIsGroups.objects.all()

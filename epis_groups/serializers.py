@@ -23,6 +23,7 @@ class EPIsGroupsResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = EPIsGroups
         fields = (
+            "id",
             "name",
             "epis_items",
         )

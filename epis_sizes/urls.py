@@ -8,4 +8,9 @@ urlpatterns = [
         views.EPIsSizesView.as_view(),
         name="epis-sizes",
     ),
+    path(
+        "epis/sizes/<int:id>/",
+        views.EPIsSizesDetailsView.as_view(),
+        name="epis-sizes-id",
+    ),
 ]
