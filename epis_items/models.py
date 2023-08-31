@@ -17,7 +17,7 @@ class EPIsItems(models.Model):
     description = models.CharField(max_length=50)
     validity = models.DateField()
     time_for_use = models.CharField(max_length=3, validators=[only_int], default=365)
-    ca = models.CharField(max_length=15, null=True)
+    ca = models.CharField(max_length=15, null=True, blank=True)
 
     group = models.ForeignKey(
         EPIsGroups, on_delete=models.CASCADE, related_name="epis_items"

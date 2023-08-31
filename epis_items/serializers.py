@@ -9,7 +9,15 @@ from .models import EPIsItems
 class EPIsItemsSerializer(serializers.ModelSerializer):
     class Meta:
         model = EPIsItems
-        fields = ("id", "description", "validity", "ca", "group", "author")
+        fields = (
+            "id",
+            "description",
+            "validity",
+            "time_for_use",
+            "ca",
+            "group",
+            "author",
+        )
 
 
 class EPIsItemsResponseSerializer(serializers.ModelSerializer):
@@ -17,7 +25,7 @@ class EPIsItemsResponseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EPIsItems
-        fields = ("id", "description", "validity", "ca", "author")
+        fields = ("id", "description", "validity", "time_for_use", "ca", "author")
         depth = 1
 
 
@@ -27,7 +35,7 @@ class EPIsItemsSimpleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EPIsItems
-        fields = ("id", "description", "validity", "ca", "epis_sizes")
+        fields = ("id", "description", "validity", "time_for_use", "ca", "epis_sizes")
         depth = 1
 
     def get_epis_sizes(self, obj):
@@ -44,4 +52,4 @@ class EPIsItemsRequestsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EPIsItems
-        fields = ("id", "description", "validity", "ca")
+        fields = ("id", "description", "validity", "time_for_use", "ca")
