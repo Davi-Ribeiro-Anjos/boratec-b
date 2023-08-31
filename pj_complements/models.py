@@ -13,7 +13,6 @@ class PJComplements(models.Model):
     advance_money = models.FloatField(default=0)
     covenant_discount = models.FloatField(default=0)
     others_discounts = models.FloatField(default=0)
-    date_payment = models.DateField()
     data_emission = models.DateTimeField(default=timezone.now)
 
     class Meta:

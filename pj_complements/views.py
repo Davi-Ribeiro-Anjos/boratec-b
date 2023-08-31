@@ -16,13 +16,15 @@ class PJComplementsView(APIView):
         except:
             data = request.data
 
-        serializer = PJComplementsSerializer(data)
+        serializer = PJComplementsSerializer(data=data)
         serializer.is_valid(raise_exception=True)
 
-        PJComplements.objects.create(**serializer.validated_data)
+        pj_complement = PJComplements.objects.create(**serializer.validated_data)
+
+        serializer = PJComplementsResponseSerializer(pj_complement)
 
         return Response(
-            {"message": "ok, create"},
+            serializer.data,
             status=status.HTTP_201_CREATED,
         )
 
@@ -30,6 +32,7 @@ class PJComplementsView(APIView):
 class PJComplementsDetailView(APIView):
     def patch(self, request: Request, id: int) -> Response:
         pj_complement = get_object_or_404(PJComplements, id=id)
+
         serializer = PJComplementsSerializer(data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
 

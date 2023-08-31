@@ -67,7 +67,7 @@ class EmployeesResponseSerializer(serializers.ModelSerializer):
     rg = RGFormattedField()
     cpf = CPFFormattedField()
     cnpj = CNPJFormattedField()
-    date_admission = serializers.DateField(format="%d-%m-%Y")
+    date_admission = serializers.DateField(format="%d/%m/%Y")
     branch = BranchesSimpleSerializer()
     pj_complements = PJComplementsResponseSerializer()
 
