@@ -14,6 +14,7 @@ class PJComplements(models.Model):
     covenant_discount = models.FloatField(default=0)
     others_discounts = models.FloatField(default=0)
     data_emission = models.DateTimeField(default=timezone.now)
+    observation = models.TextField(blank=True, null=True)
 
     class Meta:
         verbose_name = "PJComplement"

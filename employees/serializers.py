@@ -135,6 +135,22 @@ class EmployeesResponsePJSerializer(serializers.ModelSerializer):
         depth = 1
 
 
+class EmployeesPaymentsResponseSerializer(serializers.ModelSerializer):
+    user = UserSimpleSerializer()
+    pj_complements = PJComplementsResponseSerializer()
+
+    class Meta:
+        model = Employees
+        fields = (
+            "id",
+            "name",
+            "type_contract",
+            "pj_complements",
+            "user",
+        )
+        depth = 1
+
+
 class EmployeesSimpleSerializer(serializers.ModelSerializer):
     user = UserSimpleSerializer()
 
