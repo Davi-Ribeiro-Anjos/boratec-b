@@ -12,7 +12,11 @@ from django.http import HttpResponse
 from _service.oracle_db import connect_db, dict_fetchall
 
 from .models import Employees
-from .serializers import EmployeesSerializer, EmployeesResponseSerializer
+from .serializers import (
+    EmployeesSerializer,
+    EmployeesResponseSerializer,
+    EmployeesPaymentsResponseSerializer,
+)
 from .permissions import BasePermission, AdminPermission
 
 
@@ -65,6 +69,36 @@ class EmployeesDetailsView(APIView):
         serializer = EmployeesResponseSerializer(employee)
 
         return Response(serializer.data, status.HTTP_201_CREATED)
+
+
+class EmployeesPaymentsView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, AdminPermission]
+
+    def get(self, request: Request) -> Response:
+        employees = Employees.objects.filter(type_contract="PJ").order_by("name")
+
+        serializer = EmployeesPaymentsResponseSerializer(employees, many=True)
+
+        return Response(serializer.data, status.HTTP_200_OK)
+
+    def post(self, request: Request) -> Response:
+        try:
+            data = request.data.dict()
+        except:
+            data = request.data
+
+        serializer = EmployeesSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+
+        employee = Employees.objects.create(**serializer.validated_data)
+
+        serializer = EmployeesResponseSerializer(employee)
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+        )
 
 
 class EmployeesChoicesView(APIView):

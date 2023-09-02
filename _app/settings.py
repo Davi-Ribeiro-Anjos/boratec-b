@@ -138,6 +138,15 @@ MEDIA_URL = os.environ.get("MEDIA_URL")
 MEDIA_ROOT = os.environ.get("MEDIA_ROOT")
 
 
+EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND")
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
+EMAIL_PORT = os.environ.get("EMAIL_PORT")
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 

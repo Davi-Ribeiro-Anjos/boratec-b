@@ -67,7 +67,7 @@ class EmployeesResponseSerializer(serializers.ModelSerializer):
     rg = RGFormattedField()
     cpf = CPFFormattedField()
     cnpj = CNPJFormattedField()
-    date_admission = serializers.DateField(format="%d-%m-%Y")
+    date_admission = serializers.DateField(format="%d/%m/%Y")
     branch = BranchesSimpleSerializer()
     pj_complements = PJComplementsResponseSerializer()
 
@@ -129,6 +129,22 @@ class EmployeesResponsePJSerializer(serializers.ModelSerializer):
             "date_admission",
             "status",
             "branch",
+            "pj_complements",
+            "user",
+        )
+        depth = 1
+
+
+class EmployeesPaymentsResponseSerializer(serializers.ModelSerializer):
+    user = UserSimpleSerializer()
+    pj_complements = PJComplementsResponseSerializer()
+
+    class Meta:
+        model = Employees
+        fields = (
+            "id",
+            "name",
+            "type_contract",
             "pj_complements",
             "user",
         )

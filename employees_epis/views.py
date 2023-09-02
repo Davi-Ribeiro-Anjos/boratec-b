@@ -10,12 +10,12 @@ from .models import EmployeesEPIs
 from .serializers import (
     EmployeesEPIsSerializer,
 )
-from .permissions import AdminPermission
+from .permissions import BasePermission
 
 
 class EmployeesEPIsDetailView(APIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, AdminPermission]
+    permission_classes = [IsAuthenticated, BasePermission]
 
     def get(self, request: Request, employee_id: int) -> Response:
         employee = get_object_or_404(Employees, id=employee_id)

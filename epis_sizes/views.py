@@ -54,7 +54,6 @@ class EPIsSizesDetailsView(APIView):
             setattr(size, key, value)
 
         size.quantity_provisory = size.quantity_provisory + (size.quantity - old_size)
-        print(size.quantity_provisory)
 
         if size.quantity_provisory < 0:
             return Response(
