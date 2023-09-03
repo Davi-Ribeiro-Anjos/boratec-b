@@ -252,27 +252,27 @@ Att,
         )
 
 
-class EmployeesPaymentsXlsxView(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, AdminPermission]
+# class EmployeesPaymentsXlsxView(APIView):
+#     authentication_classes = [JWTAuthentication]
+#     permission_classes = [IsAuthenticated]
 
-    def post(self, request: Request) -> Response:
-        try:
-            data = request.data.dict()
-        except:
-            data = request.data
+#     def post(self, request: Request) -> Response:
+#         try:
+#             data = request.data.dict()
+#         except:
+#             data = request.data
 
-        serializer = EmployeesSerializer(data=data)
-        serializer.is_valid(raise_exception=True)
+#         serializer = EmployeesSerializer(data=data)
+#         serializer.is_valid(raise_exception=True)
 
-        employee = Employees.objects.create(**serializer.validated_data)
+#         employee = Employees.objects.create(**serializer.validated_data)
 
-        serializer = EmployeesResponseSerializer(employee)
+#         serializer = EmployeesResponseSerializer(employee)
 
-        return Response(
-            serializer.data,
-            status=status.HTTP_201_CREATED,
-        )
+#         return Response(
+#             serializer.data,
+#             status=status.HTTP_201_CREATED,
+#         )
 
 
 class EmployeesChoicesView(APIView):
