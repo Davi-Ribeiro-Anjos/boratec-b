@@ -14,6 +14,16 @@ urlpatterns = [
         name="employees-payments",
     ),
     path(
+        "employees/payments/emails/",
+        views.EmployeesPaymentsEmailView.as_view(),
+        name="employees-payments",
+    ),
+    path(
+        "employees/payments/xlsx/",
+        views.EmployeesPaymentsXlsxView.as_view(),
+        name="employees-payments",
+    ),
+    path(
         "employees/<int:id>/",
         views.EmployeesDetailsView.as_view(),
         name="employees-id",

@@ -51,6 +51,7 @@ MY_APPS = [
     "fleets_availabilities",
     "pallets_controls",
     "pallets_movements",
+    "payments_histories",
     "pj_complements",
     "purchases_entries",
     "purchases_requests",

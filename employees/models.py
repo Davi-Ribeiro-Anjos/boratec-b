@@ -113,7 +113,7 @@ class Employees(models.Model):
         app_label = "employees"
 
     def __repr__(self) -> str:
-        return f"<Employee {self.id} - {self.nome}>"
+        return f"<Employee {self.id} - {self.name}>"
 
     def __str__(self):
-        return f"<Employee {self.id} - {self.nome}>"
+        return f"<Employee {self.id} - {self.name}>"
