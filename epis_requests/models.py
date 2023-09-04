@@ -9,6 +9,7 @@ class STATUS_CHOICES(models.TextChoices):
     ANDAMENTO = "ANDAMENTO"
     CONCLUIDO = "CONCLUIDO"
     CANCELADO = "CANCELADO"
+    PROVISORIO = "PROVISORIO"
 
 
 class EPIsRequests(models.Model):
