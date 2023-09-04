@@ -196,7 +196,7 @@ Att,
                     from_email=settings.EMAIL_HOST_USER,
                     recipient_list=[
                         employee.user.email,
-                        # "lucas.feitosa@bora.com.br",
+                        "lucas.feitosa@bora.com.br",
                     ],
                     fail_silently=False,
                 )

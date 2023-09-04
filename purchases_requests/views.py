@@ -5,6 +5,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.db.models import Q
 from django.core.exceptions import FieldError, ValidationError
 from django.shortcuts import get_object_or_404
+from django.core.mail import send_mail
+from _app import settings
 
 from _service.limit_size import file_size
 
@@ -115,6 +117,16 @@ class PurchasesRequestsDetailView(APIView):
             setattr(solicitation, key, value)
 
         solicitation.save()
+
+        send_mail(
+            subject=f"Edição na solicitação {solicitation.number_request} de compras",
+            message="Teste",
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[
+                solicitation.author.user.email,
+            ],
+            fail_silently=False,
+        )
 
         serializer = PurchasesRequestsResponseSerializer(solicitation)
 
