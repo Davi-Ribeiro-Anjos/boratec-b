@@ -61,6 +61,7 @@ class EmployeesDetailsView(APIView):
 
     def patch(self, request: Request, id: int) -> Response:
         employee = get_object_or_404(Employees, id=id)
+
         serializer = EmployeesSerializer(data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
 
