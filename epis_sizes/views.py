@@ -1,7 +1,11 @@
 from django.shortcuts import get_object_or_404
+from django.core.mail import send_mail
+
 from rest_framework.views import APIView, Response, Request, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
+
+from _app import settings
 
 from .models import EPIsSizes
 from .serializers import (

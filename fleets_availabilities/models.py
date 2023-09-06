@@ -25,7 +25,7 @@ class FleetsAvailabilities(models.Model):
     date_forecast = models.DateTimeField(null=True)  # PREVISAO
     date_release = models.DateTimeField(null=True)  # LIBERACAO
     status = models.CharField(max_length=10, choices=STATUS_CHOICES.choices)
-    service_order = models.CharField(max_length=15, null=True)
+    service_order = models.PositiveIntegerField(null=True)
     observation = models.TextField(blank=True, null=True)
 
     author = models.ForeignKey(

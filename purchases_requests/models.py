@@ -57,7 +57,7 @@ class CATEGORY_CHOICES(models.TextChoices):
 
 class PurchasesRequests(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
-    number_request = models.IntegerField(unique=True)
+    number_request = models.IntegerField()
     date_request = models.DateTimeField(default=timezone.now)
     date_expiration = models.DateField(null=True, blank=True)
     date_completion = models.DateField(null=True, blank=True)

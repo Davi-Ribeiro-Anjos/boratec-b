@@ -17,6 +17,7 @@ class PJComplementsSerializer(serializers.ModelSerializer):
             "advance_money",
             "covenant_discount",
             "others_discounts",
+            "observation",
             "data_emission",
         )
 
@@ -39,6 +40,7 @@ class PJComplementsResponseSerializer(serializers.ModelSerializer):
             "covenant_discount",
             "others_discounts",
             "data_emission",
+            "observation",
             "total",
         )
         depth = 1

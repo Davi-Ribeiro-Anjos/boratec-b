@@ -9,12 +9,13 @@ from employees.serializers import EmployeesLoginSerializer
 
 
 def custom_payload_handler(token):
-    user_id = token.get("user_id")
+    try:
+        user_id = token.get("user_id")
 
-    employee = get_object_or_404(Employees, user_id=user_id)
+        employee = get_object_or_404(Employees, user_id=user_id)
 
-    token["employee"] = dict(EmployeesLoginSerializer(employee).data)
+        token["employee"] = dict(EmployeesLoginSerializer(employee).data)
 
-    return jwt.encode(token, SECRET_KEY, algorithm="HS256")
-    # print(token)
-    # print(jwt.encode(token, SECRET_KEY, algorithm="HS256"))
+        return jwt.encode(token, SECRET_KEY, algorithm="HS256")
+    except Exception:
+        return jwt.encode(token, SECRET_KEY, algorithm="HS256")

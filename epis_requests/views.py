@@ -122,6 +122,33 @@ class EPIsRequestsDetailsView(APIView):
 
                     size.quantity -= cart.quantity
                     size.save()
+
+                    if size.quantity < size.quantity_minimum:
+                        send_mail(
+                            subject="Informação sobre quantidade mínima de estoque",
+                            message=f"""Olá,
+Informamos que o seguinte item atingiu a quantidade de estoque mínimo:
+
+    ITEM: {size.item.description}
+    CA: {size.item.ca}
+    TAMANHO: {size.size}
+    QUANTIDADE ATUAL: {size.quantity}
+    QUANTIDADE MÍNIMA: {size.quantity_minimum}
+                
+Att,
+
+Equipe de Desenvolvimento
+""",
+                            from_email=settings.EMAIL_HOST_USER,
+                            recipient_list=[
+                                "davi.ribeirodosanjos@gmail.com",
+                                # "rosane.fernandes@bora.com.br",
+                                # "daniel.domingues@bora.com.br",
+                                # "marco.antonio@bora.bom.br",
+                                # "lucas.franco@bora.bom.br",
+                            ],
+                        )
+
             except IntegrityError:
                 return Response(
                     {

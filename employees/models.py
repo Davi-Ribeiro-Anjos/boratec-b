@@ -72,7 +72,7 @@ class Employees(models.Model):
     status = models.CharField(
         max_length=10, choices=STATUS_CHOICES.choices, default="ATIVO"
     )
-    first_access = models.BooleanField(default=True)
+    first_access = models.BooleanField(default=True, null=True)
 
     branch = models.ForeignKey(
         Branches, on_delete=models.CASCADE, related_name="employees"

@@ -6,8 +6,8 @@ from django.db.models import Q
 from django.core.exceptions import FieldError, ValidationError
 from django.shortcuts import get_object_or_404
 from django.core.mail import send_mail
-from _app import settings
 
+from _app import settings
 from _service.limit_size import file_size
 
 from .models import (
