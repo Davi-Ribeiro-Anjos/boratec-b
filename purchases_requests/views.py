@@ -82,6 +82,7 @@ class PurchasesRequestsView(APIView):
 
         serializer = PurchasesRequestsSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+
         solicitation = PurchasesRequests.objects.create(**serializer.validated_data)
 
         serializer = PurchasesRequestsResponseSerializer(solicitation)
