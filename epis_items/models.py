@@ -16,7 +16,9 @@ class EPIsItems(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
     description = models.CharField(max_length=50)
     validity = models.DateField()
-    time_for_use = models.CharField(max_length=3, validators=[only_int], default=365)
+    time_for_use = models.CharField(
+        max_length=3, validators=[only_int], default=365, null=True, blank=True
+    )
     ca = models.CharField(max_length=15, null=True, blank=True)
 
     group = models.ForeignKey(

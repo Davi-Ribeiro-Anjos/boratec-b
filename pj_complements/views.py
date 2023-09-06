@@ -2,6 +2,8 @@ from rest_framework.views import APIView, Response, Request, status
 
 from django.shortcuts import get_object_or_404
 
+from employees.models import Employees
+
 from .models import PJComplements
 from .serializers import (
     PJComplementsSerializer,
@@ -44,3 +46,23 @@ class PJComplementsDetailView(APIView):
         serializer = PJComplementsResponseSerializer(pj_complement)
 
         return Response(serializer.data, status.HTTP_201_CREATED)
+
+
+class PJComplementsAddView(APIView):
+    def post(self, request: Request) -> Response:
+        employees = Employees.objects.filter(type_contract="PJ")
+
+        for employee in employees:
+            if not employee.pj_complements:
+                data = {
+                    "salary": 0,
+                }
+
+                pj_complement = PJComplements.objects.create(**data)
+
+                employee.pj_complements = pj_complement
+                employee.save()
+
+        return Response(
+            status=status.HTTP_204_NO_CONTENT,
+        )

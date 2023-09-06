@@ -1,21 +1,22 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+
 from branches.models import Branches
 
 
 class TYPE_VEHICLE_CHOICES(models.TextChoices):
-    VAN_PASSAGEIROS = "VAN-PASSAGEIROS"
+    VAN_PASSAGEIROS = "VAN - PASSAGEIROS"
     CAMINHAO = "CAMINHAO"
     CAVALO = "CAVALO"
     CARRETA = "CARRETA"
-    VUC_MINI_CAMINHAO = "VUC-MINI CAMINHAO"
+    VUC_MINI_CAMINHAO = "VUC - MINI CAMINHAO"
     BI_TRUCK = "BI TRUCK"
     TOCO = "TOCO"
     TRES_QUARTOS = "3/4"
     TRUCK = "TRUCK"
     VEICULO_APOIO = "VEICULO APOIO"
     PASSAGEIRO = "PASSAGEIRO"
-    PASSAGEIRO_MOVEL = "PASSAGEIRO MOVEL"
+    PASSAGEIRO_AUTOMOVEL = "PASSAGEIRO AUTOMOVEL"
     VW_24_280_CRM_6X2 = "VW/24.280 CRM 6X2"
     FIORINO = "FIORINO"
     HR = "HR"
@@ -40,7 +41,6 @@ class Vehicles(models.Model):
     renavam = models.CharField(max_length=11, validators=[only_int])
     model_vehicle = models.CharField(max_length=20)
     observation = models.CharField(max_length=50, blank=True, null=True)
-    last_movement = models.DateField(null=True)
     active = models.BooleanField(default=True)
 
     branch = models.ForeignKey(

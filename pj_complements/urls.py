@@ -13,4 +13,9 @@ urlpatterns = [
         views.PJComplementsDetailView.as_view(),
         name="pj-complements-id",
     ),
+    path(
+        "pj/complements/add/",
+        views.PJComplementsAddView.as_view(),
+        name="pj-complements-add",
+    ),
 ]

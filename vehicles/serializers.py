@@ -16,7 +16,6 @@ class VehiclesSerializer(serializers.ModelSerializer):
             "renavam",
             "model_vehicle",
             "observation",
-            "last_movement",
             "active",
             "branch",
         )
@@ -24,6 +23,7 @@ class VehiclesSerializer(serializers.ModelSerializer):
 
 class VehiclesResponseSerializer(serializers.ModelSerializer):
     branch = BranchesSimpleSerializer()
+    last_movement = serializers.SerializerMethodField()
 
     class Meta:
         model = Vehicles
@@ -40,9 +40,24 @@ class VehiclesResponseSerializer(serializers.ModelSerializer):
             "branch",
         )
 
+    def get_last_movement(self, obj):
+        from fleets_availabilities.serializers import (
+            FleetsAvailabilitiesSimplesSerializer,
+        )
+
+        fleet = obj.fleets_availabilities.all().order_by("-date_occurrence").first()
+
+        if fleet:
+            serializer = FleetsAvailabilitiesSimplesSerializer(fleet)
+
+            return serializer.data
+
+        return None
+
 
 class VehiclesSimpleSerializer(serializers.ModelSerializer):
     branch = BranchesSimpleSerializer()
+    last_movement = serializers.SerializerMethodField()
 
     class Meta:
         model = Vehicles
@@ -53,3 +68,17 @@ class VehiclesSimpleSerializer(serializers.ModelSerializer):
             "active",
             "branch",
         )
+
+    def get_last_movement(self, obj):
+        from fleets_availabilities.serializers import (
+            FleetsAvailabilitiesSimplesSerializer,
+        )
+
+        fleet = obj.fleets_availabilities.all().order_by("-date_occurrence").first()
+
+        if fleet:
+            serializer = FleetsAvailabilitiesSimplesSerializer(fleet)
+
+            return serializer.data
+
+        return None
