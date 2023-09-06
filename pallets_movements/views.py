@@ -89,12 +89,12 @@ class PalletsMovementsView(APIView):
         except:
             data_list = request.data
 
-        time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
         if type(data_list) is list and len(data_list) > 0:
             list_response = []
 
             for item in data_list:
+                time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
                 solicitation = (
                     str(time).replace(":", "").replace(" ", "").replace("-", "")
                     + item["vehicle_plate"][5:]
@@ -214,7 +214,7 @@ class DocumentView(APIView):
                 movement.date_request, "%d/%m/%Y %H:%m"
             ),
             "Quantidade": movement.quantity_pallets,
-            "Autor": movement.author.nome.upper(),
+            "Autor": movement.author.name.upper(),
             "Motorista": movement.driver,
             "Conferente": movement.checker,
         }

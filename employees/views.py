@@ -290,8 +290,8 @@ class EmployeesChoicesView(APIView):
 
 
 class EmployeesDocumentsView(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, BasePermission]
+    # authentication_classes = [JWTAuthentication]
+    # permission_classes = [IsAuthenticated, BasePermission]
 
     def get(self, request: Request, id: int) -> Response:
         employee = get_object_or_404(Employees, id=id)

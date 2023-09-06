@@ -104,7 +104,7 @@ class DocumentView(APIView):
             status = "CREDOR"
 
         data = {
-            "Autor": str(request.user).upper(),
+            # "Autor": str(request.user).upper(),
             "Razão Social/ Motorista": str(client.client.name).upper(),
             "Filial": client.branch.abbreviation,
             "Data Solicitação": datetime.now().strftime("%d/%m/%Y %H:%m"),
