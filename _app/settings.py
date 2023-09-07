@@ -10,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-dev = True
+dev = False
 
 if dev:
     DEBUG = True
@@ -28,6 +28,24 @@ if dev:
     CORS_ORIGIN_WHITELIST = [
         "http://localhost:3000",
     ]
+else:
+    DEBUG = False
+
+    ALLOWED_HOSTS = [
+        "www.bora.tec.br",
+        "bora.tec.br",
+    ]
+
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": os.environ.get("DB_NAME"),
+            "USER": os.environ.get("DB_USER"),
+            "PASSWORD": os.environ.get("DB_PASS"),
+            "HOST": os.environ.get("DB_HOST"),
+            "PORT": "3306",
+        }
+    }
 
 
 THIRD_PARTY_APPS = [
@@ -118,6 +136,9 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+
+SESSION_COOKIE_AGE = 10800
 
 
 DATETIME_FORMAT = "d/m/Y H:i"
