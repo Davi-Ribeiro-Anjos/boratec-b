@@ -45,10 +45,10 @@ def only_int(value):
 
 class Employees(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
-    name = models.CharField(max_length=40)
+    name = models.CharField(max_length=70)
     gender = models.CharField(max_length=25, choices=GENDER_CHOICES.choices, null=True)
     date_birth = models.DateField(null=True)
-    rg = models.CharField(max_length=8, validators=[only_int], null=True)
+    rg = models.CharField(max_length=15, validators=[only_int], null=True)
     cpf = models.CharField(max_length=11, validators=[only_int], null=True)
     cnpj = models.CharField(max_length=14, validators=[only_int], null=True)
     company = models.CharField(max_length=15, choices=COMPANY_CHOICES.choices)
