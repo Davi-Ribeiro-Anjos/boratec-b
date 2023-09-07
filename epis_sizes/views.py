@@ -1,19 +1,23 @@
+from django.shortcuts import get_object_or_404
+from django.core.mail import send_mail
+
 from rest_framework.views import APIView, Response, Request, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
+
+from _app import settings
 
 from .models import EPIsSizes
 from .serializers import (
     EPIsSizesSerializer,
     EPIsSizesResponseSerializer,
 )
-
-# from .permissions import BasePermission
+from .permissions import BasePermission
 
 
 class EPIsSizesView(APIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, BasePermission]
 
     def get(self, request: Request) -> Response:
         sizes = EPIsSizes.objects.all()
@@ -32,6 +36,36 @@ class EPIsSizesView(APIView):
         serializer.is_valid(raise_exception=True)
 
         size = EPIsSizes.objects.create(**serializer.validated_data)
+
+        serializer = EPIsSizesResponseSerializer(size)
+
+        return Response(serializer.data, status.HTTP_201_CREATED)
+
+
+class EPIsSizesDetailsView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, BasePermission]
+
+    def patch(self, request: Request, id: int) -> Response:
+        size = get_object_or_404(EPIsSizes, id=id)
+
+        serializer = EPIsSizesSerializer(data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+
+        old_size = size.quantity
+
+        for key, value in serializer.validated_data.items():
+            setattr(size, key, value)
+
+        size.quantity_provisory = size.quantity_provisory + (size.quantity - old_size)
+
+        if size.quantity_provisory < 0:
+            return Response(
+                {"message": "Insira um valor maior em Quantidade"},
+                status.HTTP_400_BAD_REQUEST,
+            )
+
+        size.save()
 
         serializer = EPIsSizesResponseSerializer(size)
 

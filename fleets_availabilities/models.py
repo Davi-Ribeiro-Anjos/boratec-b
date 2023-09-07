@@ -9,7 +9,7 @@ from vehicles.models import Vehicles
 class STATUS_CHOICES(models.TextChoices):
     PARADO = "PARADO"
     PREVENTIVO = "PREVENTIVO"
-    LIBERADO = "LIBERADO"
+    FUNCIONANDO = "FUNCIONANDO"
 
 
 def only_int(value):
@@ -24,8 +24,8 @@ class FleetsAvailabilities(models.Model):
     date_occurrence = models.DateTimeField(auto_now=True)
     date_forecast = models.DateTimeField(null=True)  # PREVISAO
     date_release = models.DateTimeField(null=True)  # LIBERACAO
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES.choices)
-    service_order = models.CharField(max_length=15, null=True)
+    status = models.CharField(max_length=11, choices=STATUS_CHOICES.choices)
+    service_order = models.IntegerField(null=True)
     observation = models.TextField(blank=True, null=True)
 
     author = models.ForeignKey(

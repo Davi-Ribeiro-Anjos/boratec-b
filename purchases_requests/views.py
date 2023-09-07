@@ -1,12 +1,14 @@
-import ipdb
-
 from rest_framework.views import APIView, Response, Request, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from django.db.models import Q
-from django.core.exceptions import FieldError
+from django.core.exceptions import FieldError, ValidationError
 from django.shortcuts import get_object_or_404
+from django.core.mail import send_mail
+
+from _app import settings
+from _service.limit_size import file_size
 
 from .models import (
     PurchasesRequests,
@@ -71,8 +73,16 @@ class PurchasesRequestsView(APIView):
         return Response(serializer.data, status.HTTP_200_OK)
 
     def post(self, request: Request) -> Response:
+        file = request.FILES.get("attachment")
+
+        try:
+            file_size(file, 5)
+        except ValidationError as e:
+            return Response({"message": e.args[0]}, status.HTTP_400_BAD_REQUEST)
+
         serializer = PurchasesRequestsSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+
         solicitation = PurchasesRequests.objects.create(**serializer.validated_data)
 
         serializer = PurchasesRequestsResponseSerializer(solicitation)
@@ -92,6 +102,13 @@ class PurchasesRequestsDetailView(APIView):
         return Response(serializer.data, status.HTTP_200_OK)
 
     def patch(self, request: Request, id: int) -> Response:
+        file = request.FILES.get("attachment")
+
+        try:
+            file_size(file, 5)
+        except ValidationError as e:
+            return Response({"message": e.args[0]}, status.HTTP_400_BAD_REQUEST)
+
         solicitation = get_object_or_404(PurchasesRequests, id=id)
 
         serializer = PurchasesRequestsSerializer(data=request.data, partial=True)
@@ -101,6 +118,16 @@ class PurchasesRequestsDetailView(APIView):
             setattr(solicitation, key, value)
 
         solicitation.save()
+
+        send_mail(
+            subject=f"Edição na solicitação {solicitation.number_request} de compras",
+            message="Teste",
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[
+                solicitation.author.user.email,
+            ],
+            fail_silently=False,
+        )
 
         serializer = PurchasesRequestsResponseSerializer(solicitation)
 

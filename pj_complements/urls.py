@@ -4,13 +4,18 @@ from . import views
 
 urlpatterns = [
     path(
-        "pj-complements/",
+        "pj/complements/",
         views.PJComplementsView.as_view(),
         name="pj-complements",
     ),
     path(
-        "pj-complements/<int:id>/",
+        "pj/complements/<int:id>/",
         views.PJComplementsDetailView.as_view(),
         name="pj-complements-id",
+    ),
+    path(
+        "pj/complements/add/",
+        views.PJComplementsAddView.as_view(),
+        name="pj-complements-add",
     ),
 ]

@@ -2,17 +2,24 @@ import os
 from datetime import datetime
 from fpdf import FPDF
 
-from rest_framework import serializers
 from rest_framework.views import APIView, Response, Request, status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
+from django.core.mail import send_mail
+
+from _app import settings
 from _service.oracle_db import connect_db, dict_fetchall
+from payments_histories.models import PaymentsHistories
 
 from .models import Employees
-from .serializers import EmployeesSerializer, EmployeesResponseSerializer
+from .serializers import (
+    EmployeesSerializer,
+    EmployeesResponseSerializer,
+    EmployeesPaymentsResponseSerializer,
+)
 from .permissions import BasePermission, AdminPermission
 
 
@@ -54,6 +61,7 @@ class EmployeesDetailsView(APIView):
 
     def patch(self, request: Request, id: int) -> Response:
         employee = get_object_or_404(Employees, id=id)
+
         serializer = EmployeesSerializer(data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
 
@@ -65,6 +73,207 @@ class EmployeesDetailsView(APIView):
         serializer = EmployeesResponseSerializer(employee)
 
         return Response(serializer.data, status.HTTP_201_CREATED)
+
+
+class EmployeesPaymentsView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, AdminPermission]
+
+    def get(self, request: Request) -> Response:
+        employees = Employees.objects.filter(type_contract="PJ").order_by("name")
+
+        serializer = EmployeesPaymentsResponseSerializer(employees, many=True)
+
+        return Response(serializer.data, status.HTTP_200_OK)
+
+    def post(self, request: Request) -> Response:
+        try:
+            data = request.data.dict()
+        except:
+            data = request.data
+
+        serializer = EmployeesSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+
+        employee = Employees.objects.create(**serializer.validated_data)
+
+        serializer = EmployeesResponseSerializer(employee)
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+        )
+
+
+class EmployeesPaymentsEmailView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, AdminPermission]
+
+    def post(self, request: Request) -> Response:
+        try:
+            data = request.data.dict()
+        except:
+            data = request.data
+
+        try:
+            if len(data["employees"]) == 0:
+                raise ValueError()
+
+            for employee_id in data["employees"]:
+                employee = get_object_or_404(Employees, id=employee_id)
+
+                branch = employee.branch
+                complement = employee.pj_complements
+
+                total = (
+                    complement.salary
+                    + complement.allowance
+                    + complement.college
+                    + complement.covenant_credit
+                    + complement.others_credits
+                    + complement.housing_allowance
+                    - complement.advance_money
+                    - complement.covenant_discount
+                    - complement.others_discounts
+                )
+
+                if data["total"]:
+                    title = "NF"
+                    text = f"""Favor emitir a NF. de Prestação Serviços
+
+    Período de: {data["period_initial"]} à {data["period_end"]}
+
+    Valor do Serviço: R$ {complement.salary:.2f}
+    Premio: R$ {complement.college:.2f}
+    Ajuda de custo: R$ {(complement.allowance + complement.housing_allowance):.2f}
+    Crédito Convênio: R$ {complement.covenant_credit:.2f}
+    Outros Créditos: R$ {complement.others_credits:.2f}
+
+    Adiantamento: R$ {complement.advance_money:.2f}
+    Desconto Convênio: R$ {complement.covenant_discount:.2f}
+    Outros Descontos: R$ {complement.others_discounts:.2f}
+
+    Total Pagamento: R$ {total:.2f}
+    Data de pagamento: {data["date_payment"]}
+    Serviço Prestado em: {branch.abbreviation} - {branch.uf}
+    Dados Bancários: 
+        Banco : {employee.bank}
+        Ag    : {employee.agency}
+        C.c.  : {employee.account}
+    CNPJ: {employee.cnpj}
+    PIX: {employee.pix or "Não Informado"}
+
+    Observação: {complement.observation}
+
+Favor enviar a NF até {data["date_limit_nf"]}.
+
+Att,
+                """
+                else:
+                    title = "NF ADIANTAMENTO"
+                    text = f"""Prestação de Serviços 
+
+    Período de: {data["period_initial"]} à {data["period_end"]}
+    Valor do Serviço: R$ {complement.advance_money:.2f}
+    Data de pagamento: {data["date_payment"]}
+    Serviço Prestado em: {branch.abbreviation} - {branch.uf}
+    Dados Bancários: 
+        Banco : {employee.bank}
+        Ag    : {employee.agency}
+        C.c.  : {employee.account}
+    CNPJ: {employee.cnpj}
+    PIX: {employee.pix or "Não Informado"}
+
+    Observação: {complement.observation}
+
+Favor enviar a NF até {data["date_limit_nf"]}.
+
+Att,
+                """
+
+                send_mail(
+                    subject=title,
+                    message=text,
+                    from_email=settings.EMAIL_HOST_USER,
+                    recipient_list=[
+                        employee.user.email,
+                        "lucas.feitosa@bora.com.br",
+                    ],
+                    fail_silently=False,
+                )
+
+                payment = {
+                    "name": employee.name,
+                    "cnpj": employee.cnpj,
+                    "bank": employee.bank,
+                    "agency": employee.agency,
+                    "account": employee.account,
+                    "operation": employee.operation,
+                    "pix": employee.pix,
+                    "salary": complement.salary,
+                    "allowance": complement.allowance,
+                    "college": complement.college,
+                    "housing_allowance": complement.housing_allowance,
+                    "covenant_credit": complement.covenant_credit,
+                    "others_credits": complement.others_credits,
+                    "advance_money": complement.advance_money,
+                    "covenant_discount": complement.covenant_discount,
+                    "others_discounts": complement.others_discounts,
+                    "data_emission": complement.data_emission,
+                    "observation": complement.observation,
+                }
+
+                PaymentsHistories.objects.create(**payment)
+
+        except KeyError:
+            return Response(
+                {
+                    "message": {
+                        "date_limit_nf": "string",
+                        "date_payment": "string",
+                        "employees": "[int]",
+                        "period_end": "string",
+                        "period_initial": "string",
+                        "total": "bool",
+                    }
+                },
+                status.HTTP_400_BAD_REQUEST,
+            )
+        except ValueError:
+            return Response(
+                {"message": "Insira algum valor."},
+                status.HTTP_400_BAD_REQUEST,
+            )
+        except Exception as e:
+            return Response({"error": e}, status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response(
+            {},
+            status=status.HTTP_204_NO_CONTENT,
+        )
+
+
+# class EmployeesPaymentsXlsxView(APIView):
+#     authentication_classes = [JWTAuthentication]
+#     permission_classes = [IsAuthenticated]
+
+#     def post(self, request: Request) -> Response:
+#         try:
+#             data = request.data.dict()
+#         except:
+#             data = request.data
+
+#         serializer = EmployeesSerializer(data=data)
+#         serializer.is_valid(raise_exception=True)
+
+#         employee = Employees.objects.create(**serializer.validated_data)
+
+#         serializer = EmployeesResponseSerializer(employee)
+
+#         return Response(
+#             serializer.data,
+#             status=status.HTTP_201_CREATED,
+#         )
 
 
 class EmployeesChoicesView(APIView):
@@ -82,8 +291,8 @@ class EmployeesChoicesView(APIView):
 
 
 class EmployeesDocumentsView(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, BasePermission]
+    # authentication_classes = [JWTAuthentication]
+    # permission_classes = [IsAuthenticated, BasePermission]
 
     def get(self, request: Request, id: int) -> Response:
         employee = get_object_or_404(Employees, id=id)

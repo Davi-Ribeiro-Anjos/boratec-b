@@ -39,3 +39,20 @@ class FleetsAvailabilitiesResponseSerializer(serializers.ModelSerializer):
             "author",
             "vehicle",
         )
+
+
+class FleetsAvailabilitiesSimplesSerializer(serializers.ModelSerializer):
+    author = EmployeesSimpleSerializer()
+
+    class Meta:
+        model = FleetsAvailabilities
+        fields = (
+            "id",
+            "date_occurrence",
+            "date_forecast",
+            "date_release",
+            "status",
+            "service_order",
+            "observation",
+            "author",
+        )

@@ -57,7 +57,7 @@ class CATEGORY_CHOICES(models.TextChoices):
 
 class PurchasesRequests(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
-    number_request = models.IntegerField(unique=True)
+    number_request = models.IntegerField()
     date_request = models.DateTimeField(default=timezone.now)
     date_expiration = models.DateField(null=True, blank=True)
     date_completion = models.DateField(null=True, blank=True)
@@ -99,23 +99,18 @@ class PurchasesRequests(models.Model):
     requester = models.ForeignKey(
         Employees,
         on_delete=models.PROTECT,
-        related_name="purchase_requester",
+        related_name="purchases_requesters",
     )
     responsible = models.ForeignKey(
         Employees,
         on_delete=models.PROTECT,
-        related_name="purchase_responsible",
+        related_name="purchases_responsible",
         null=True,
     )
     author = models.ForeignKey(
         Employees,
         on_delete=models.CASCADE,
-        related_name="purchase_author",
-    )
-    latest_updater = models.ForeignKey(
-        Employees,
-        on_delete=models.CASCADE,
-        related_name="purchase_latest_updater",
+        related_name="purchases_authors",
     )
 
     class Meta:

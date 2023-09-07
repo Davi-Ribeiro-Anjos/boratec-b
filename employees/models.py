@@ -72,7 +72,7 @@ class Employees(models.Model):
     status = models.CharField(
         max_length=10, choices=STATUS_CHOICES.choices, default="ATIVO"
     )
-    first_access = models.BooleanField(default=True)
+    first_access = models.BooleanField(default=True, null=True)
 
     branch = models.ForeignKey(
         Branches, on_delete=models.CASCADE, related_name="employees"
@@ -113,7 +113,7 @@ class Employees(models.Model):
         app_label = "employees"
 
     def __repr__(self) -> str:
-        return f"<Employee {self.id} - {self.nome}>"
+        return f"<Employee {self.id} - {self.name}>"
 
     def __str__(self):
-        return f"<Employee {self.id} - {self.nome}>"
+        return f"<Employee {self.id} - {self.name}>"

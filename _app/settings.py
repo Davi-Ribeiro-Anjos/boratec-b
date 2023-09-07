@@ -10,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-dev = True
+dev = False
 
 if dev:
     DEBUG = True
@@ -28,6 +28,24 @@ if dev:
     CORS_ORIGIN_WHITELIST = [
         "http://localhost:3000",
     ]
+else:
+    DEBUG = False
+
+    ALLOWED_HOSTS = [
+        "www.bora.tec.br",
+        "bora.tec.br",
+    ]
+
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": os.environ.get("DB_NAME"),
+            "USER": os.environ.get("DB_USER"),
+            "PASSWORD": os.environ.get("DB_PASS"),
+            "HOST": os.environ.get("DB_HOST"),
+            "PORT": "3306",
+        }
+    }
 
 
 THIRD_PARTY_APPS = [
@@ -51,6 +69,7 @@ MY_APPS = [
     "fleets_availabilities",
     "pallets_controls",
     "pallets_movements",
+    "payments_histories",
     "pj_complements",
     "purchases_entries",
     "purchases_requests",
@@ -119,6 +138,9 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+SESSION_COOKIE_AGE = 10800
+
+
 DATETIME_FORMAT = "d/m/Y H:i"
 DATE_FORMAT = "d/m/Y"
 
@@ -136,6 +158,15 @@ STATIC_ROOT = os.environ.get("STATIC_ROOT")
 
 MEDIA_URL = os.environ.get("MEDIA_URL")
 MEDIA_ROOT = os.environ.get("MEDIA_ROOT")
+
+
+EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND")
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
+EMAIL_PORT = os.environ.get("EMAIL_PORT")
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

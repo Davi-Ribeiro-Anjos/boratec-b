@@ -25,13 +25,10 @@ def only_int(value):
 class Clients(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
     name = models.CharField(max_length=100, unique=True)
-    document = models.CharField(max_length=14, unique=True)
+    document = models.CharField(max_length=14, null=True, blank=True)
     observation = models.TextField(null=True, blank=True)
     type_registration = models.CharField(
         max_length=15, choices=TYPE_REGISTRATION_CHOICES.choices
-    )
-    author = models.ForeignKey(
-        Employees, on_delete=models.CASCADE, related_name="clients"
     )
     branches = models.ManyToManyField(
         Branches,
@@ -58,7 +55,7 @@ class ClientsBranches(models.Model):
     branch = models.ForeignKey(Branches, on_delete=models.CASCADE)
     balance = models.IntegerField(default=0)
     type_pallet = models.CharField(
-        max_length=4, choices=TYPE_PALLET_CHOICES.choices, default="PBR"
+        max_length=4, choices=TYPE_PALLET_CHOICES.choices, default="PBR", null=True
     )
 
     class Meta:

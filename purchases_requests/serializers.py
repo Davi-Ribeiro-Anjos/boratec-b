@@ -51,6 +51,7 @@ class PurchasesRequestsResponseSerializer(serializers.ModelSerializer):
     author = EmployeesSimpleSerializer()
     latest_updater = EmployeesSimpleSerializer()
     date_request = serializers.DateTimeField(format="%d/%m/%Y")
+    date_expiration = serializers.DateField(format="%d/%m/%Y")
 
     class Meta:
         model = PurchasesRequests

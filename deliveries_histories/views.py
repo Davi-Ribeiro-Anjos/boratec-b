@@ -13,12 +13,12 @@ from _service.oracle_db import connect_db, dict_fetchall
 
 # from .models import Employees
 # from .serializers import EmployeesSerializer, EmployeesResponseSerializer
-from .permissions import NFPermission
+# from .permissions import NFPermission
 
 
 class DeliveriesHistoriesQueriesNFView(APIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, NFPermission]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request: Request, nf: str) -> Response:
         if nf:
