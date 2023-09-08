@@ -10,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-dev = True
+dev = False
 
 if dev:
     DEBUG = True
@@ -24,16 +24,12 @@ if dev:
         }
     }
 
-    CORS_ORIGIN_ALLOW_ALL = True
-    CORS_ORIGIN_WHITELIST = [
-        "http://localhost:3000",
-    ]
 else:
     DEBUG = False
 
     ALLOWED_HOSTS = [
-        "www.bora.tec.br",
-        "bora.tec.br",
+        "http://www.bora.tec.br",
+        "http://bora.tec.br",
     ]
 
     DATABASES = {
@@ -46,6 +42,13 @@ else:
             "PORT": "3306",
         }
     }
+
+CORS_ALLOW_CREDENTIALS = False
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ALLOWED_ORIGINS = [
+    "http://bora.tec.br",
+    "http://www.bora.tec.br",
+]
 
 
 THIRD_PARTY_APPS = [
