@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-dev = False
+dev = True
 
 if dev:
     DEBUG = True
@@ -51,22 +51,31 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = list(default_headers) + [
     "x-xsrf-token",  # bota o token de autenticação que você usa aq
     "access-control-allow-headers",
+    "access-control-allow-origin",
+    "access-control-allow-methods",
 ]
+
 CORS_ALLOWED_ORIGINS = [
     "http://bora.tec.br",
     "http://www.bora.tec.br",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
     "http://localhost:8001",
     "http://127.0.0.1:8001",
 ]
-CORS_ORIGIN_WHITELIST = [
-    "http://bora.tec.br",
-    "http://www.bora.tec.br",
-    "http://localhost:8001",
-    "http://127.0.0.1:8001",
+
+CORS_ALLOW_METHODS = [
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
 ]
+
 CSRF_TRUSTED_ORIGINS = [
     "http://bora.tec.br",
     "http://www.bora.tec.br",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
     "http://localhost:8001",
     "http://127.0.0.1:8001",
 ]
@@ -75,7 +84,6 @@ CSRF_TRUSTED_ORIGINS = [
 THIRD_PARTY_APPS = [
     "rest_framework_simplejwt",
     "rest_framework",
-    "corsheaders",
 ]
 
 MY_APPS = [
@@ -101,6 +109,7 @@ MY_APPS = [
 ]
 
 DJANGO_APPS = [
+    "corsheaders",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -114,6 +123,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + MY_APPS
 APPEND_SLASH = False
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -121,8 +131,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
-    "django.middleware.common.CommonMiddleware",
 ]
 
 ROOT_URLCONF = "_app.urls"
