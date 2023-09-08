@@ -48,8 +48,8 @@ class PalletsMovementsResponseSerializer(serializers.ModelSerializer):
     origin = BranchesSimpleSerializer()
     destiny = BranchesSimpleSerializer()
     author = EmployeesSimpleSerializer()
-    date_request = serializers.DateTimeField(format="%d-%m-%Y")
-    date_received = serializers.DateTimeField(format="%d-%m-%Y")
+    date_request = serializers.DateTimeField(format="%d/%m/%Y")
+    date_received = serializers.DateTimeField(format="%d/%m/%Y")
 
     class Meta:
         model = PalletsMovements

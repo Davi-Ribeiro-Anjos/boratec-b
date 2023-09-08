@@ -26,7 +26,6 @@ class PurchasesRequestsSerializer(serializers.ModelSerializer):
             "requester",
             "responsible",
             "author",
-            "latest_updater",
         )
 
 
@@ -49,7 +48,6 @@ class PurchasesRequestsResponseSerializer(serializers.ModelSerializer):
     requester = EmployeesSimpleSerializer()
     responsible = EmployeesSimpleSerializer()
     author = EmployeesSimpleSerializer()
-    latest_updater = EmployeesSimpleSerializer()
     date_request = serializers.DateTimeField(format="%d/%m/%Y")
     date_expiration = serializers.DateField(format="%d/%m/%Y")
 
@@ -72,7 +70,6 @@ class PurchasesRequestsResponseSerializer(serializers.ModelSerializer):
             "requester",
             "responsible",
             "author",
-            "latest_updater",
         )
         depth = 1
 
@@ -92,5 +89,4 @@ class PurchasesRequestsEditSerializer(serializers.ModelSerializer):
             "observation",
             "attachment",
             "responsible",
-            "latest_updater",
         )
