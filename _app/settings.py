@@ -20,6 +20,10 @@ if dev:
 
     ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]"]
 
+    CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
+
+    CSRF_TRUSTED_ORIGINS = ["http://localhost:5173"]
+
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
@@ -31,8 +35,24 @@ else:
     DEBUG = False
 
     ALLOWED_HOSTS = [
-        "http://www.bora.tec.br",
-        "http://bora.tec.br",
+        "http://back.bora.tec.br",
+        "https://back.bora.tec.br",
+        "http://www.back.bora.tec.br",
+        "https://www.back.bora.tec.br",
+    ]
+
+    CORS_ALLOWED_ORIGINS = [
+        "http://back.bora.tec.br",
+        "https://back.bora.tec.br",
+        "http://www.back.bora.tec.br",
+        "https://www.back.bora.tec.br",
+    ]
+
+    CSRF_TRUSTED_ORIGINS = [
+        "http://back.bora.tec.br",
+        "https://back.bora.tec.br",
+        "http://www.back.bora.tec.br",
+        "https://www.back.bora.tec.br",
     ]
 
     DATABASES = {
@@ -46,22 +66,13 @@ else:
         }
     }
 
-CORS_ALLOW_CREDENTIALS = True
+# CORS_ALLOW_CREDENTIALS = True
 # CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_HEADERS = list(default_headers) + [
-    "x-xsrf-token",  # bota o token de autenticação que você usa aq
+    "x-xsrf-token",
     "access-control-allow-headers",
     "access-control-allow-origin",
     "access-control-allow-methods",
-]
-
-CORS_ALLOWED_ORIGINS = [
-    "http://bora.tec.br",
-    "http://www.bora.tec.br",
-    "http://localhost:8000",
-    "http://127.0.0.1:8000",
-    "http://localhost:8001",
-    "http://127.0.0.1:8001",
 ]
 
 CORS_ALLOW_METHODS = [
@@ -71,19 +82,10 @@ CORS_ALLOW_METHODS = [
     "POST",
 ]
 
-CSRF_TRUSTED_ORIGINS = [
-    "http://bora.tec.br",
-    "http://www.bora.tec.br",
-    "http://localhost:8000",
-    "http://127.0.0.1:8000",
-    "http://localhost:8001",
-    "http://127.0.0.1:8001",
-]
-
-
 THIRD_PARTY_APPS = [
-    "rest_framework_simplejwt",
+    "corsheaders",
     "rest_framework",
+    "rest_framework_simplejwt",
 ]
 
 MY_APPS = [
@@ -109,7 +111,6 @@ MY_APPS = [
 ]
 
 DJANGO_APPS = [
-    "corsheaders",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
