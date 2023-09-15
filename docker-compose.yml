@@ -6,8 +6,8 @@ services:
       context: .
     container_name: boratec
     expose:
-      - 8001
+      - 8000
     ports:
-      - '8001:8001'
+      - '8000:8000'
     stdin_open: true
     tty: true

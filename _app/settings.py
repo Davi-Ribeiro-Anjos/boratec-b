@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-dev = True
+dev = False
 
 if dev:
     DEBUG = True
@@ -32,9 +32,10 @@ if dev:
     }
 
 else:
-    DEBUG = False
+    DEBUG = True
 
     ALLOWED_HOSTS = [
+        "127.0.0.1",
         "http://back.bora.tec.br",
         "https://back.bora.tec.br",
         "http://www.back.bora.tec.br",
@@ -66,8 +67,8 @@ else:
         }
     }
 
-# CORS_ALLOW_CREDENTIALS = True
-# CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_HEADERS = list(default_headers) + [
     "x-xsrf-token",
     "access-control-allow-headers",
@@ -119,7 +120,7 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + MY_APPS
+INSTALLED_APPS = MY_APPS + DJANGO_APPS + THIRD_PARTY_APPS
 
 APPEND_SLASH = False
 
