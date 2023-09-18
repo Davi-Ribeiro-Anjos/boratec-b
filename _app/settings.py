@@ -18,7 +18,15 @@ dev = False
 if dev:
     DEBUG = True
 
-    ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]", "back.bora.tec.br"]
+    ALLOWED_HOSTS = [
+        "localhost",
+        "127.0.0.1",
+        "[::1]",
+        "back.bora.tec.br",
+        "www.back.bora.tec.br",
+        "novo.bora.tec.br",
+        "www.novo.bora.tec.br",
+    ]
 
     CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
 
@@ -38,6 +46,8 @@ else:
         "127.0.0.1",
         "back.bora.tec.br",
         "www.back.bora.tec.br",
+        "novo.bora.tec.br",
+        "www.novo.bora.tec.br",
     ]
 
     CORS_ALLOWED_ORIGINS = [
@@ -45,6 +55,10 @@ else:
         "https://back.bora.tec.br",
         "http://www.back.bora.tec.br",
         "https://www.back.bora.tec.br",
+        "http://novo.bora.tec.br",
+        "https://novo.bora.tec.br",
+        "http://www.novo.bora.tec.br",
+        "https://www.novo.bora.tec.br",
     ]
 
     CSRF_TRUSTED_ORIGINS = [
@@ -52,6 +66,10 @@ else:
         "https://back.bora.tec.br",
         "http://www.back.bora.tec.br",
         "https://www.back.bora.tec.br",
+        "http://novo.bora.tec.br",
+        "https://novo.bora.tec.br",
+        "http://www.novo.bora.tec.br",
+        "https://www.novo.bora.tec.br",
     ]
 
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
