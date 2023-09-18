@@ -18,7 +18,7 @@ dev = False
 if dev:
     DEBUG = True
 
-    ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]"]
+    ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]", "back.bora.tec.br"]
 
     CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
 
@@ -36,10 +36,8 @@ else:
 
     ALLOWED_HOSTS = [
         "127.0.0.1",
-        "http://back.bora.tec.br",
-        "https://back.bora.tec.br",
-        "http://www.back.bora.tec.br",
-        "https://www.back.bora.tec.br",
+        "back.bora.tec.br",
+        "www.back.bora.tec.br",
     ]
 
     CORS_ALLOWED_ORIGINS = [
@@ -55,6 +53,11 @@ else:
         "http://www.back.bora.tec.br",
         "https://www.back.bora.tec.br",
     ]
+
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
 
     DATABASES = {
         "default": {
