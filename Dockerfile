@@ -1,16 +1,23 @@
-FROM python:3.11
+FROM python:3.11-slim
 
-ENV PYTHONUNBUFFERED True
-ENV APPLICATION production
-
+COPY . /app
 WORKDIR /app
 
-ADD . /app
+RUN apt-get update && apt-get install -y \
+    gcc \
+    default-libmysqlclient-dev \
+    pkg-config
 
-RUN pip install --upgrade pip
+RUN python -m venv /py && \
+    /py/bin/pip install --upgrade pip && \
+    /py/bin/pip install -r requirements.txt && \
+    adduser --disabled-password --no-create-home django-user
 
-RUN pip install -r requirements.txt
+# ENV PATH="/py/bin:$PATH"
+ENV PYTHONPATH=/app:$PYTHONPATH
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-EXPOSE 8000
+USER django-user
 
-CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD exec gunicorn --bind 0.0.0.0:$PORT --workers 1 --threads 8 --timeout 0 _app.wsgi:application

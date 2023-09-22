@@ -1,13 +1,25 @@
-version: '3.5'
+version: '3.9'
 
 services:
-  boratec:
+  app:
+    container_name: django-app
     build:
       context: .
-    container_name: boratec
-    expose:
-      - 8000
     ports:
-      - '8000:8000'
-    stdin_open: true
-    tty: true
+      - 8000:8000
+    volumes:
+      - .:/app
+      - ./creds.json:/secrets/creds.json
+    env_file:
+      - ./.env
+    restart: always
+
+  cloudsqlproxy:
+    container_name: cloudsql-proxy
+    image: gcr.io/cloudsql-docker/gce-proxy:1.19.1
+    volumes:
+      - ./creds.json:/secrets/cloudsql/creds.json
+    ports:
+      - 127.0.0.1:3306:3306
+    command: /cloud_sql_proxy -instances="boratec:us-central1:backend"=tcp:0.0.0.0:3306 -credential_file=/secrets/cloudsql/creds.json
+    restart: always
