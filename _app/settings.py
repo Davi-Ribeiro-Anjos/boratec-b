@@ -11,26 +11,14 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY")
 
-dev = False
+dev = os.getenv("DEV_MODE")
 
-if dev:
+if dev == "True" or dev == "true":
     DEBUG = True
 
-    ALLOWED_HOSTS = [
-        "localhost",
-        "127.0.0.1",
-        "[::1]",
-        "back.bora.tec.br",
-        "www.back.bora.tec.br",
-        "novo.bora.tec.br",
-        "www.novo.bora.tec.br",
-    ]
-
-    CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
-
-    CSRF_TRUSTED_ORIGINS = ["http://localhost:5173"]
+    ALLOWED_HOSTS = ["*"]
 
     DATABASES = {
         "default": {
@@ -42,54 +30,29 @@ if dev:
 else:
     DEBUG = True
 
-    ALLOWED_HOSTS = [
-        "127.0.0.1",
-        "back.bora.tec.br",
-        "www.back.bora.tec.br",
-        "novo.bora.tec.br",
-        "www.novo.bora.tec.br",
-    ]
+    ALLOWED_HOSTS = ["back.bora.tec.br"]
 
     CORS_ALLOWED_ORIGINS = [
         "http://back.bora.tec.br",
         "https://back.bora.tec.br",
-        "http://www.back.bora.tec.br",
-        "https://www.back.bora.tec.br",
-        "http://novo.bora.tec.br",
-        "https://novo.bora.tec.br",
-        "http://www.novo.bora.tec.br",
-        "https://www.novo.bora.tec.br",
     ]
 
     CSRF_TRUSTED_ORIGINS = [
         "http://back.bora.tec.br",
         "https://back.bora.tec.br",
-        "http://www.back.bora.tec.br",
-        "https://www.back.bora.tec.br",
-        "http://novo.bora.tec.br",
-        "https://novo.bora.tec.br",
-        "http://www.novo.bora.tec.br",
-        "https://www.novo.bora.tec.br",
     ]
-
-    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-    SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
 
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.mysql",
-            "NAME": os.environ.get("DB_NAME"),
-            "USER": os.environ.get("DB_USER"),
-            "PASSWORD": os.environ.get("DB_PASS"),
-            "HOST": os.environ.get("DB_HOST"),
+            "NAME": os.getenv("DB_NAME"),
+            "USER": os.getenv("DB_USER"),
+            "PASSWORD": os.getenv("DB_PASS"),
+            "HOST": os.getenv("DB_HOST"),
             "PORT": "3306",
         }
     }
 
-CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_HEADERS = list(default_headers) + [
     "x-xsrf-token",
     "access-control-allow-headers",
@@ -208,20 +171,20 @@ USE_L10N = True
 USE_TZ = False
 
 
-STATIC_URL = os.environ.get("STATIC_URL")
-STATIC_ROOT = os.environ.get("STATIC_ROOT")
+STATIC_URL = os.getenv("STATIC_URL")
+STATIC_ROOT = os.getenv("STATIC_ROOT")
 
-MEDIA_URL = os.environ.get("MEDIA_URL")
-MEDIA_ROOT = os.environ.get("MEDIA_ROOT")
+MEDIA_URL = os.getenv("MEDIA_URL")
+MEDIA_ROOT = os.getenv("MEDIA_ROOT")
 
 
-EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND")
-EMAIL_HOST = os.environ.get("EMAIL_HOST")
-EMAIL_PORT = os.environ.get("EMAIL_PORT")
+EMAIL_BACKEND = os.getenv("EMAIL_BACKEND")
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_PORT = os.getenv("EMAIL_PORT")
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
