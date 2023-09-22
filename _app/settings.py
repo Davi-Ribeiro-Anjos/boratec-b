@@ -28,18 +28,22 @@ if dev == "True" or dev == "true":
     }
 
 else:
-    DEBUG = True
+    DEBUG = False
 
     ALLOWED_HOSTS = ["back.bora.tec.br"]
 
     CORS_ALLOWED_ORIGINS = [
         "http://back.bora.tec.br",
         "https://back.bora.tec.br",
+        "http://novo.bora.tec.br",
+        "https://novo.bora.tec.br",
     ]
 
     CSRF_TRUSTED_ORIGINS = [
         "http://back.bora.tec.br",
         "https://back.bora.tec.br",
+        "http://novo.bora.tec.br",
+        "https://novo.bora.tec.br",
     ]
 
     DATABASES = {
