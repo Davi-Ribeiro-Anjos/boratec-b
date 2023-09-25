@@ -18,7 +18,11 @@ dev = os.getenv("DEV_MODE")
 if dev == "True" or dev == "true":
     DEBUG = True
 
-    ALLOWED_HOSTS = ["*"]
+    ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]"]
+
+    CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
+
+    CSRF_TRUSTED_ORIGINS = ["http://localhost:5173"]
 
     DATABASES = {
         "default": {

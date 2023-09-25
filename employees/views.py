@@ -348,7 +348,7 @@ class EmployeesDocumentsView(APIView):
             pdf.add_page()
             pdf.ln()
 
-            pdf.image("_static/images/logo.png", x=160, y=10, w=35, h=17.5)
+            pdf.image("./_images/logo.png", x=160, y=10, w=35, h=17.5)
             pdf.ln()
 
             pdf.set_font("Arial", size=20)

@@ -231,7 +231,7 @@ class DocumentView(APIView):
         pdf.image(
             "./barcode.png", x=48, y=150, w=120, h=30
         )  # Posição(x, y) Tamanho(w, h)
-        pdf.image("_static/images/logo.png", x=160, y=10, w=35, h=17.5)
+        pdf.image("./_images/logo.png", x=160, y=10, w=35, h=17.5)
         pdf.ln()
         pdf.set_font("Arial", size=20)
         pdf.cell(w=190, h=25, txt="Solicitação de Transferência", border=0, align="C")
