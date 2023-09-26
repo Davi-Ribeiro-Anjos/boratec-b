@@ -24,12 +24,13 @@ class EPIsRequests(models.Model):
     status = models.CharField(
         max_length=12, choices=STATUS_CHOICES.choices, default=STATUS_CHOICES.ABERTO
     )
+    employee_provisory = models.CharField(max_length=100, null=True, blank=True)
 
     branch = models.ForeignKey(
         Branches, on_delete=models.CASCADE, related_name="epis_requests"
     )
     employee = models.ForeignKey(
-        Employees, on_delete=models.CASCADE, related_name="epis_requests"
+        Employees, on_delete=models.CASCADE, related_name="epis_requests", null=True
     )
     author_create = models.ForeignKey(
         Employees, on_delete=models.CASCADE, related_name="epis_requests_create"

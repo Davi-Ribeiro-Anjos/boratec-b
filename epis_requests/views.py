@@ -141,11 +141,10 @@ Equipe de Desenvolvimento
 """,
                             from_email=settings.EMAIL_HOST_USER,
                             recipient_list=[
-                                "davi.ribeirodosanjos@gmail.com",
-                                # "rosane.fernandes@bora.com.br",
-                                # "daniel.domingues@bora.com.br",
-                                # "marco.antonio@bora.bom.br",
-                                # "lucas.franco@bora.bom.br",
+                                "rosane.fernandes@bora.com.br",
+                                "daniel.domingues@bora.com.br",
+                                "marco.antonio@bora.bom.br",
+                                "lucas.franco@bora.bom.br",
                             ],
                         )
 
@@ -157,16 +156,35 @@ Equipe de Desenvolvimento
                     status.HTTP_400_BAD_REQUEST,
                 )
             else:
+                text = ""
+
+                for cart in req.epis_carts.all():
+                    text += f"      ITEM: {cart.size.item.description}\n"
+                    text += f"      TAMANHO: {cart.size.size}\n"
+                    text += f"      QUANTIDADE: {cart.quantity}\n\n"
+
                 send_mail(
                     subject="Envio de EPI",
                     message=f"""
-                    {request.data["driver"]}
-                    {request.data["vehicle_plate"]}
+Esse e-mail é referente ao envio do seu(s) EPI(s).
+
+Esses são os dados da entrega:
+
+    MOTORISTA: {request.data["driver"]}
+    PLACA DO VEÍCULO: {request.data["vehicle_plate"]}
+    ITEMS:
+    
+{text}
+
+    OBSERVAÇÃO: {request.data["body_email"] or "SEM REGISTRO."}
                 """,
                     from_email=settings.EMAIL_HOST_USER,
                     recipient_list=[
                         request.data["email"],
-                        # "lucas.feitosa@bora.com.br",
+                        "rosane.fernandes@bora.com.br",
+                        "daniel.domingues@bora.com.br",
+                        "marco.antonio@bora.bom.br",
+                        "lucas.franco@bora.bom.br",
                     ],
                     fail_silently=False,
                 )
