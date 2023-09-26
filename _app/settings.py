@@ -1,4 +1,5 @@
 import os
+import sentry_sdk
 from datetime import timedelta
 from pathlib import Path
 
@@ -60,6 +61,12 @@ else:
             "PORT": "3306",
         }
     }
+
+    sentry_sdk.init(
+        dsn=os.getenv("SENTRY_URL"),
+        traces_sample_rate=1.0,
+        profiles_sample_rate=1.0,
+    )
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
     "x-xsrf-token",
