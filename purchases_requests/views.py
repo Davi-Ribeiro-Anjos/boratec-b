@@ -119,15 +119,15 @@ class PurchasesRequestsDetailView(APIView):
 
         solicitation.save()
 
-        send_mail(
-            subject=f"Edição na solicitação {solicitation.number_request} de compras",
-            message="Teste",
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[
-                solicitation.author.user.email,
-            ],
-            fail_silently=False,
-        )
+        # send_mail(
+        #     subject=f"Edição na solicitação {solicitation.number_request} de compras",
+        #     message="Teste",
+        #     from_email=settings.EMAIL_HOST_USER,
+        #     recipient_list=[
+        #         solicitation.author.user.email,
+        #     ],
+        #     fail_silently=False,
+        # )
 
         serializer = PurchasesRequestsResponseSerializer(solicitation)
 

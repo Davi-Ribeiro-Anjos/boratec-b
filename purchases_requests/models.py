@@ -100,6 +100,7 @@ class PurchasesRequests(models.Model):
         Employees,
         on_delete=models.PROTECT,
         related_name="purchases_requesters",
+        null=True,
     )
     responsible = models.ForeignKey(
         Employees,
