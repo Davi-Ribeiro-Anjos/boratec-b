@@ -34,12 +34,12 @@ class FleetsAvailabilitiesView(APIView):
         serializer = FleetsAvailabilitiesSerializer(data=data)
         serializer.is_valid(raise_exception=True)
 
+        solicitation = FleetsAvailabilities.objects.create(**serializer.validated_data)
+
         vehicle = Vehicles.objects.get(id=data["vehicle"])
 
-        vehicle.last_movement = date.today()
+        vehicle.last_movement = vehicle.id
         vehicle.save()
-
-        solicitation = FleetsAvailabilities.objects.create(**serializer.validated_data)
 
         serializer = FleetsAvailabilitiesResponseSerializer(solicitation)
 

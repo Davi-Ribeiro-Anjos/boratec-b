@@ -42,7 +42,7 @@ class FleetsAvailabilities(models.Model):
         app_label = "fleets_availabilities"
 
     def __repr__(self) -> str:
-        return f"<Fleets Availabilities {self.id} - {self.vehicle_plate}>"
+        return f"<Fleets Availabilities {self.id} - {self.status}>"
 
     def __str__(self):
-        return f"<Fleets Availabilities {self.id} - {self.vehicle_plate}>"
+        return f"<Fleets Availabilities {self.id} - {self.status}>"

@@ -31,24 +31,22 @@ class VehiclesResponseSerializer(serializers.ModelSerializer):
             "id",
             "type_vehicle",
             "vehicle_plate",
-            "vehicle_mileage",
-            "renavam",
-            "model_vehicle",
-            "observation",
             "last_movement",
             "active",
             "branch",
         )
 
     def get_last_movement(self, obj):
+        from fleets_availabilities.models import FleetsAvailabilities
         from fleets_availabilities.serializers import (
-            FleetsAvailabilitiesSimplesSerializer,
+            FleetsAvailabilitiesVehiclesSerializer,
         )
 
-        fleet = obj.fleets_availabilities.all().order_by("-date_occurrence").first()
+        fleet = FleetsAvailabilities.objects.filter(vehicle=obj.id).last()
 
         if fleet:
-            serializer = FleetsAvailabilitiesSimplesSerializer(fleet)
+            print(fleet)
+            serializer = FleetsAvailabilitiesVehiclesSerializer(fleet)
 
             return serializer.data
 
@@ -70,14 +68,15 @@ class VehiclesSimpleSerializer(serializers.ModelSerializer):
         )
 
     def get_last_movement(self, obj):
+        from fleets_availabilities.models import FleetsAvailabilities
         from fleets_availabilities.serializers import (
-            FleetsAvailabilitiesSimplesSerializer,
+            FleetsAvailabilitiesVehiclesSerializer,
         )
 
-        fleet = obj.fleets_availabilities.all().order_by("-date_occurrence").first()
+        fleet = FleetsAvailabilities.objects.filter(vehicle=obj.id).last()
 
         if fleet:
-            serializer = FleetsAvailabilitiesSimplesSerializer(fleet)
+            serializer = FleetsAvailabilitiesVehiclesSerializer(fleet)
 
             return serializer.data
 

@@ -19,13 +19,12 @@ class VehiclesView(APIView):
         vehicles = Vehicles.objects.filter(**filter).order_by("vehicle_plate")
         serializer = VehiclesResponseSerializer(vehicles, many=True)
 
-        total_vehicles = vehicles.count()  # Contagem total de objetos após o filtro
+        total_vehicles = vehicles.count()
 
         # ipdb.set_trace()
 
-        serializer = VehiclesResponseSerializer(vehicles, many=True)
         response_data = {
-            "total": total_vehicles,  # Adiciona o campo 'total' ao dicionário de resposta
+            "total": total_vehicles,
             "data": serializer.data,
         }
 

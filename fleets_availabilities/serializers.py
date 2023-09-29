@@ -56,3 +56,19 @@ class FleetsAvailabilitiesSimplesSerializer(serializers.ModelSerializer):
             "observation",
             "author",
         )
+
+
+class FleetsAvailabilitiesVehiclesSerializer(serializers.ModelSerializer):
+    date_occurrence = serializers.DateTimeField(format="%Y-%m-%d")
+    date_forecast = serializers.DateTimeField(format="%Y-%m-%d")
+    date_release = serializers.DateTimeField(format="%Y-%m-%d")
+
+    class Meta:
+        model = FleetsAvailabilities
+        fields = (
+            "id",
+            "date_occurrence",
+            "date_forecast",
+            "date_release",
+            "status",
+        )
