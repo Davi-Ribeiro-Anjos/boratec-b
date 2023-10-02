@@ -45,7 +45,6 @@ class VehiclesResponseSerializer(serializers.ModelSerializer):
         fleet = FleetsAvailabilities.objects.filter(vehicle=obj.id).last()
 
         if fleet:
-            print(fleet)
             serializer = FleetsAvailabilitiesVehiclesSerializer(fleet)
 
             return serializer.data
