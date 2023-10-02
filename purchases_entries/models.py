@@ -19,7 +19,9 @@ class PurchasesEntries(models.Model):
     )
     date_creation = models.DateTimeField(default=timezone.now)
 
-    request = models.ForeignKey(PurchasesRequests, on_delete=models.CASCADE)
+    request = models.ForeignKey(
+        PurchasesRequests, on_delete=models.CASCADE, related_name="purchases_entries"
+    )
     author = models.ForeignKey(
         Employees, on_delete=models.CASCADE, related_name="purchases_entries"
     )

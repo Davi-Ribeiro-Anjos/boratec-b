@@ -119,15 +119,42 @@ class PurchasesRequestsDetailView(APIView):
 
         solicitation.save()
 
-        # send_mail(
-        #     subject=f"Edição na solicitação {solicitation.number_request} de compras",
-        #     message="Teste",
-        #     from_email=settings.EMAIL_HOST_USER,
-        #     recipient_list=[
-        #         solicitation.author.user.email,
-        #     ],
-        #     fail_silently=False,
-        # )
+        entries = solicitation.purchases_entries.all()
+        entries_string = (
+            "\n".join(
+                [f"\nID - {entry.id}: \n{entry.observation}" for entry in entries]
+            )
+            if len(entries) > 0
+            else "NÃO INFORMADO"
+        )
+
+        send_mail(
+            subject=f"Ocorreu uma edição na solicitação {solicitation.number_request}.",
+            message=f"""
+    STATUS: {solicitation.status}
+    SOLICITAÇÃO: {solicitation.number_request}
+    CATEGORIA: {solicitation.category if solicitation.category == "" else "NÃO INFORMADO"}
+    DATA: {solicitation.date_request.strftime("%d/%m/%Y")}
+    RESPONSÁVEL: {solicitation.responsible.name or "NÃO INFORMADO"}
+
+
+    ENTRADAS:
+{entries_string}
+
+
+    OBSERVAÇÃO:
+{solicitation.observation or "NÃO INFORMADO"}
+
+
+    Atenciosamente,
+    Bora Desenvolvimento.
+                """,
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[
+                solicitation.author.user.email,
+            ],
+            fail_silently=False,
+        )
 
         serializer = PurchasesRequestsResponseSerializer(solicitation)
 
