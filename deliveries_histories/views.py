@@ -190,6 +190,11 @@ ORDER BY
                     )
                     just["occurrences"] = dict_fetchall(cur)
 
+                    for occu in just["occurrences"]:
+                        occu["date_occurrence"] = occu["date_occurrence"].strftime(
+                            "%d/%m/%Y"
+                        )
+
                     just["packing_list"] = [
                         pack
                         for pack in packing_list
