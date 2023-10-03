@@ -21,7 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
 class GroupsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
-        fields = "name"
+        fields = ("name",)
 
 
 class UserLoginSerializer(serializers.ModelSerializer):
