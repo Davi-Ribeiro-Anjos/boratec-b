@@ -141,10 +141,10 @@ Equipe de Desenvolvimento
 """,
                             from_email=settings.EMAIL_HOST_USER,
                             recipient_list=[
-                                "rosane.fernandes@bora.com.br",
-                                "daniel.domingues@bora.com.br",
-                                "marco.antonio@bora.bom.br",
-                                "lucas.franco@bora.bom.br",
+                                # "rosane.fernandes@bora.com.br",
+                                # "daniel.domingues@bora.com.br",
+                                # "marco.antonio@bora.bom.br",
+                                # "lucas.franco@bora.bom.br",
                             ],
                         )
 
@@ -162,32 +162,34 @@ Equipe de Desenvolvimento
                     text += f"      ITEM: {cart.size.item.description}\n"
                     text += f"      TAMANHO: {cart.size.size}\n"
                     text += f"      QUANTIDADE: {cart.quantity}\n\n"
+                try:
+                    send_mail(
+                        subject="Envio de EPI",
+                        message=f"""
+    Esse e-mail é referente ao envio do seu(s) EPI(s).
 
-                send_mail(
-                    subject="Envio de EPI",
-                    message=f"""
-Esse e-mail é referente ao envio do seu(s) EPI(s).
+    Esses são os dados da entrega:
 
-Esses são os dados da entrega:
+        MOTORISTA: {request.data["driver"] if request.data["driver"] else "NÃO INFORMADO"}
+        PLACA DO VEÍCULO: {request.data["vehicle_plate"] if request.data["vehicle_plate"] else "NÃO INFORMADO"}
+        ITEMS:
+        
+    {text}
 
-    MOTORISTA: {request.data["driver"]}
-    PLACA DO VEÍCULO: {request.data["vehicle_plate"]}
-    ITEMS:
-    
-{text}
-
-    OBSERVAÇÃO: {request.data["body_email"] or "SEM REGISTRO."}
-                """,
-                    from_email=settings.EMAIL_HOST_USER,
-                    recipient_list=[
-                        request.data["email"],
-                        "rosane.fernandes@bora.com.br",
-                        "daniel.domingues@bora.com.br",
-                        "marco.antonio@bora.bom.br",
-                        "lucas.franco@bora.bom.br",
-                    ],
-                    fail_silently=False,
-                )
+        OBSERVAÇÃO: {request.data["body_email"] if request.data["body_email"] else "SEM REGISTRO."}
+                    """,
+                        from_email=settings.EMAIL_HOST_USER,
+                        recipient_list=[
+                            request.data["email"],
+                            # "rosane.fernandes@bora.com.br",
+                            # "daniel.domingues@bora.com.br",
+                            # "marco.antonio@bora.bom.br",
+                            # "lucas.franco@bora.bom.br",
+                        ],
+                        fail_silently=False,
+                    )
+                except Exception as e:
+                    print(e)
 
         req.save()
 
