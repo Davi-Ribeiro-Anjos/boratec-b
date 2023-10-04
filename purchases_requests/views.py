@@ -136,7 +136,7 @@ class PurchasesRequestsDetailView(APIView):
         SOLICITAÇÃO: {solicitation.number_request}
         CATEGORIA: {solicitation.category if solicitation.category == "" else "NÃO INFORMADO"}
         DATA: {solicitation.date_request.strftime("%d/%m/%Y")}
-        RESPONSÁVEL: {solicitation.responsible.name or "NÃO INFORMADO"}
+        RESPONSÁVEL: {solicitation.responsible.name if solicitation.responsible else "NÃO INFORMADO"}
 
 
         ENTRADAS:
@@ -144,7 +144,7 @@ class PurchasesRequestsDetailView(APIView):
 
 
         OBSERVAÇÃO:
-    {solicitation.observation or "NÃO INFORMADO"}
+    {solicitation.observation if solicitation.observation else "NÃO INFORMADO"}
 
 
         Atenciosamente,
