@@ -141,10 +141,10 @@ Equipe de Desenvolvimento
 """,
                             from_email=settings.EMAIL_HOST_USER,
                             recipient_list=[
-                                # "rosane.fernandes@bora.com.br",
-                                # "daniel.domingues@bora.com.br",
-                                # "marco.antonio@bora.bom.br",
-                                # "lucas.franco@bora.bom.br",
+                                "rosane.fernandes@bora.com.br",
+                                "daniel.domingues@bora.com.br",
+                                "marco.antonio@bora.bom.br",
+                                "lucas.franco@bora.bom.br",
                             ],
                         )
 
@@ -181,10 +181,10 @@ Equipe de Desenvolvimento
                         from_email=settings.EMAIL_HOST_USER,
                         recipient_list=[
                             request.data["email"],
-                            # "rosane.fernandes@bora.com.br",
-                            # "daniel.domingues@bora.com.br",
-                            # "marco.antonio@bora.bom.br",
-                            # "lucas.franco@bora.bom.br",
+                            "rosane.fernandes@bora.com.br",
+                            "daniel.domingues@bora.com.br",
+                            "marco.antonio@bora.bom.br",
+                            "lucas.franco@bora.bom.br",
                         ],
                         fail_silently=False,
                     )
