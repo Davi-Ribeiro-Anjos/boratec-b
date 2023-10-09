@@ -492,8 +492,12 @@ WHERE
 
                 emp.save()
             except Exception:
-                count_create += 1
-                Employees.objects.create(**employee)
+                try:
+                    count_create += 1
+                    Employees.objects.create(**employee)
+                except Exception as e:
+                    print(e)
+                    print(employee)
 
         return Response(
             {"message": f"{count_create} employeeionários foram adicionados"},

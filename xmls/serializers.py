@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from employees.serializers import EmployeesSimpleSerializer
+from users.serializers import UserSimpleSerializer
 
 
 from .models import Xmls
@@ -30,9 +30,9 @@ class XmlsSerializer(serializers.ModelSerializer):
 
 
 class XmlsResponseSerializer(serializers.ModelSerializer):
-    date_emission = serializers.DateField(format="%d/%m/%Y")
-    date_published = serializers.DateField(format="%d/%m/%Y")
-    author = EmployeesSimpleSerializer()
+    date_emission = serializers.DateTimeField(format="%d/%m/%Y")
+    date_published = serializers.DateTimeField(format="%d/%m/%Y")
+    author = UserSimpleSerializer()
 
     class Meta:
         model = Xmls
@@ -45,11 +45,7 @@ class XmlsResponseSerializer(serializers.ModelSerializer):
             "weight",
             "volume",
             "value_nf",
-            "district",
-            "cep",
-            "county",
             "uf",
-            "printed",
             "date_published",
             "xml_file",
             "author",
@@ -58,8 +54,9 @@ class XmlsResponseSerializer(serializers.ModelSerializer):
 
 
 class XmlsSimpleSerializer(serializers.ModelSerializer):
-    epis_sizes = serializers.SerializerMethodField()
-    validity = serializers.DateField(format="%d/%m/%Y")
+    date_emission = serializers.DateTimeField(format="%d/%m/%Y")
+    date_published = serializers.DateTimeField(format="%d/%m/%Y")
+    author = UserSimpleSerializer()
 
     class Meta:
         model = Xmls
@@ -72,11 +69,7 @@ class XmlsSimpleSerializer(serializers.ModelSerializer):
             "weight",
             "volume",
             "value_nf",
-            "district",
-            "cep",
-            "county",
             "uf",
-            "printed",
             "date_published",
             "xml_file",
             "author",

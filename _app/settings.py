@@ -73,6 +73,8 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
     "access-control-allow-headers",
     "access-control-allow-origin",
     "access-control-allow-methods",
+    "access-control-expose-headers",
+    "content-disposition",
 ]
 
 CORS_ALLOW_METHODS = [
@@ -107,7 +109,9 @@ MY_APPS = [
     "pj_complements",
     "purchases_entries",
     "purchases_requests",
+    "skus",
     "vehicles",
+    "xmls",
 ]
 
 DJANGO_APPS = [
@@ -197,7 +201,7 @@ EMAIL_BACKEND = os.getenv("EMAIL_BACKEND")
 EMAIL_HOST = os.getenv("EMAIL_HOST")
 EMAIL_PORT = os.getenv("EMAIL_PORT")
 EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
+EMAIL_USE_SSL = True
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 

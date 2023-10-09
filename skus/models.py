@@ -6,7 +6,7 @@ from xmls.models import Xmls
 class Skus(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
     code = models.CharField(max_length=30)
-    description = models.CharField(max_length=200)
+    discount_product = models.CharField(max_length=200)
     type_unity = models.CharField(max_length=10)
     quantity_unity = models.IntegerField()
     type_volume = models.CharField(max_length=10)

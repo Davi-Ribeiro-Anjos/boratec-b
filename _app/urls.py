@@ -26,6 +26,7 @@ urlpatterns = [
     path("api/", include("purchases_requests.urls")),
     path("api/", include("users.urls")),
     path("api/", include("vehicles.urls")),
+    path("api/", include("xmls.urls")),
     path(f"{settings.MEDIA_URL[1:-1]}/<path:path>", get_media, name="serve_media"),
 ]
 

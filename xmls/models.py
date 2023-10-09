@@ -15,7 +15,7 @@ class Xmls(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
     date_published = models.DateTimeField(auto_now=True)
     date_emission = models.DateTimeField()
-    nf = models.models.IntegerField()
+    nf = models.IntegerField()
     sender = models.CharField(max_length=200)  # Remetente
     recipient = models.CharField(max_length=200)
     weight = models.FloatField()

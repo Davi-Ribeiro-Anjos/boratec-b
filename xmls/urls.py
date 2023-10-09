@@ -18,4 +18,9 @@ urlpatterns = [
         views.XmlsSyncView.as_view(),
         name="xmls-sync",
     ),
+    path(
+        "xmls/download/",
+        views.XmlsDownloadView.as_view(),
+        name="xmls-download",
+    ),
 ]

@@ -35,7 +35,9 @@ jedi==0.18.2
 matplotlib-inline==0.1.6
 mypy-extensions==1.0.0
 mysqlclient==2.2.0
+numpy==1.26.0
 packaging==23.1
+pandas==2.1.1
 parso==0.8.3
 pathspec==0.11.1
 pexpect==4.8.0
@@ -52,6 +54,7 @@ pyasn1-modules==0.3.0
 Pygments==2.15.1
 PyJWT==2.8.0
 python-barcode==0.14.0
+python-dateutil==2.8.2
 python-dotenv==1.0.0
 python-environ==0.4.54
 python-magic==0.4.27
@@ -66,3 +69,4 @@ traitlets==5.9.0
 tzdata==2023.3
 urllib3==1.26.16
 wcwidth==0.2.6
+XlsxWriter==3.1.6
