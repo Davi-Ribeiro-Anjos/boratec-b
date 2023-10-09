@@ -80,7 +80,9 @@ class EmployeesPaymentsView(APIView):
     permission_classes = [IsAuthenticated, AdminPermission]
 
     def get(self, request: Request) -> Response:
-        employees = Employees.objects.filter(type_contract="PJ").order_by("name")
+        employees = Employees.objects.filter(
+            type_contract="PJ", status="ATIVO"
+        ).order_by("name")
 
         serializer = EmployeesPaymentsResponseSerializer(employees, many=True)
 
