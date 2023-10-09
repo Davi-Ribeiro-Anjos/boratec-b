@@ -1,4 +1,6 @@
 import os
+import ipdb
+
 from datetime import datetime
 from fpdf import FPDF
 
@@ -169,7 +171,7 @@ class EmployeesPaymentsEmailView(APIView):
 
 Favor enviar a NF até {data["date_limit_nf"]}.
 
-Att,
+Att, Departamento Pessoal
                 """
                 else:
                     title = "NF ADIANTAMENTO"
@@ -190,7 +192,7 @@ Att,
 
 Favor enviar a NF até {data["date_limit_nf"]}.
 
-Att,
+Att, Departamento Pessoal
                 """
 
                 send_mail(
@@ -198,7 +200,7 @@ Att,
                     message=text,
                     from_email=settings.EMAIL_HOST_USER,
                     recipient_list=[
-                        employee.user.email,
+                        employee.email,
                         "lucas.feitosa@bora.com.br",
                     ],
                     fail_silently=False,
@@ -206,6 +208,7 @@ Att,
 
                 payment = {
                     "name": employee.name,
+                    "email": employee.email,
                     "cnpj": employee.cnpj,
                     "bank": employee.bank,
                     "agency": employee.agency,
@@ -241,7 +244,8 @@ Att,
                 },
                 status.HTTP_400_BAD_REQUEST,
             )
-        except ValueError:
+        except ValueError as e:
+            print(e)
             return Response(
                 {"message": "Insira algum valor."},
                 status.HTTP_400_BAD_REQUEST,

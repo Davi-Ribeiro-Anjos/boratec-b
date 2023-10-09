@@ -11,7 +11,8 @@ def only_int(value):
 
 class PaymentsHistories(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
-    name = models.CharField(max_length=40)
+    name = models.CharField(max_length=70)
+    email = models.CharField(max_length=200, null=True, blank=True)
     cnpj = models.CharField(max_length=14, validators=[only_int], null=True)
     bank = models.CharField(max_length=20, null=True)
     agency = models.CharField(max_length=5, validators=[only_int], null=True)

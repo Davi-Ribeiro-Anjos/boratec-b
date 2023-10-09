@@ -42,6 +42,8 @@ else:
         "https://back.bora.tec.br",
         "http://novo.bora.tec.br",
         "https://novo.bora.tec.br",
+        "http://bora.tec.br",
+        "https://bora.tec.br",
     ]
 
     CSRF_TRUSTED_ORIGINS = [
@@ -49,6 +51,8 @@ else:
         "https://back.bora.tec.br",
         "http://novo.bora.tec.br",
         "https://novo.bora.tec.br",
+        "http://bora.tec.br",
+        "https://bora.tec.br",
     ]
 
     DATABASES = {
@@ -201,7 +205,7 @@ EMAIL_BACKEND = os.getenv("EMAIL_BACKEND")
 EMAIL_HOST = os.getenv("EMAIL_HOST")
 EMAIL_PORT = os.getenv("EMAIL_PORT")
 EMAIL_USE_TLS = True
-EMAIL_USE_SSL = True
+EMAIL_USE_SSL = False
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 

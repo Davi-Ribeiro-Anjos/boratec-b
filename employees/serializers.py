@@ -34,6 +34,7 @@ class EmployeesSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "name",
+            "email",
             "gender",
             "date_birth",
             "rg",
@@ -76,6 +77,7 @@ class EmployeesResponseSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "name",
+            "email",
             "date_birth",
             "rg",
             "cpf",
@@ -118,6 +120,7 @@ class EmployeesResponsePJSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "name",
+            "email",
             "cnpj",
             "type_contract",
             "role",
@@ -144,6 +147,7 @@ class EmployeesPaymentsResponseSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "name",
+            "email",
             "type_contract",
             "pj_complements",
             "user",
@@ -159,6 +163,7 @@ class EmployeesSimpleSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "name",
+            "email",
             "user",
         )
         depth = 1
@@ -173,6 +178,7 @@ class EmployeesLoginSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "name",
+            "email",
             "branch",
             "user",
         )

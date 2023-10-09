@@ -46,6 +46,7 @@ def only_int(value):
 class Employees(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
     name = models.CharField(max_length=70)
+    email = models.CharField(max_length=200, null=True, blank=True)
     gender = models.CharField(max_length=25, choices=GENDER_CHOICES.choices, null=True)
     date_birth = models.DateField(null=True)
     rg = models.CharField(max_length=15, validators=[only_int], null=True)
