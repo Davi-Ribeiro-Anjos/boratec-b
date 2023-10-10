@@ -1,4 +1,4 @@
-from django.db import IntegrityError
+from django.db import IntegrityError, DataError
 from django.shortcuts import get_object_or_404
 from django.core.mail import send_mail
 
@@ -135,9 +135,7 @@ Informamos que o seguinte item atingiu a quantidade de estoque mínimo:
     QUANTIDADE ATUAL: {size.quantity}
     QUANTIDADE MÍNIMA: {size.quantity_minimum}
                 
-Att,
-
-Equipe de Desenvolvimento
+Att, Equipe de Desenvolvimento
 """,
                             from_email=settings.EMAIL_HOST_USER,
                             recipient_list=[
@@ -146,6 +144,7 @@ Equipe de Desenvolvimento
                                 "marco.antonio@bora.bom.br",
                                 "lucas.franco@bora.bom.br",
                             ],
+                            fail_silently=False,
                         )
 
             except IntegrityError:
@@ -154,6 +153,13 @@ Equipe de Desenvolvimento
                         "message": f"Não tem a quantidade do item {size.item.description} em estoque."
                     },
                     status.HTTP_400_BAD_REQUEST,
+                )
+            except DataError:
+                return Response(
+                    {
+                        "message": f"Não tem a quantidade do item {size.item.description} em estoque."
+                    },
+                    status.HTTP_500_INTERNAL_SERVER_ERROR,
                 )
             else:
                 text = ""
@@ -166,18 +172,20 @@ Equipe de Desenvolvimento
                     send_mail(
                         subject="Envio de EPI",
                         message=f"""
-    Esse e-mail é referente ao envio do seu(s) EPI(s).
+Esse e-mail é referente ao do seu(s) EPI(s).
 
-    Esses são os dados da entrega:
+Esses são os dados da entrega:
 
-        MOTORISTA: {request.data["driver"] if request.data["driver"] else "NÃO INFORMADO"}
-        PLACA DO VEÍCULO: {request.data["vehicle_plate"] if request.data["vehicle_plate"] else "NÃO INFORMADO"}
-        ITEMS:
+    MOTORISTA: {request.data["driver"] if request.data["driver"] else "NÃO INFORMADO"}
+    PLACA DO VEÍCULO: {request.data["vehicle_plate"] if request.data["vehicle_plate"] else "NÃO INFORMADO"}
+    ITEMS:
         
-    {text}
+{text}
 
-        OBSERVAÇÃO: {request.data["body_email"] if request.data["body_email"] else "SEM REGISTRO."}
-                    """,
+OBSERVAÇÃO: {request.data["body_email"] if request.data["body_email"] else "SEM REGISTRO."}
+
+Att, Equipe de Desenvolvimento
+""",
                         from_email=settings.EMAIL_HOST_USER,
                         recipient_list=[
                             request.data["email"],
@@ -189,7 +197,7 @@ Equipe de Desenvolvimento
                         fail_silently=False,
                     )
                 except Exception as e:
-                    print(e)
+                    print("Envia email - ", e)
 
         req.save()
 
