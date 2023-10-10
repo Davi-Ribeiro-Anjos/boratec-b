@@ -167,8 +167,6 @@ class EmployeesPaymentsEmailView(APIView):
     CNPJ: {employee.cnpj}
     PIX: {employee.pix or "Não Informado"}
 
-    Observação: {complement.observation}
-
 Favor enviar a NF até {data["date_limit_nf"]}.
 
 Att, Departamento Pessoal
@@ -187,8 +185,6 @@ Att, Departamento Pessoal
         C.c.  : {employee.account}
     CNPJ: {employee.cnpj}
     PIX: {employee.pix or "Não Informado"}
-
-    Observação: {complement.observation}
 
 Favor enviar a NF até {data["date_limit_nf"]}.
 
