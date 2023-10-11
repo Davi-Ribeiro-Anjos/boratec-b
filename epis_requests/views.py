@@ -161,6 +161,9 @@ Att, Equipe de Desenvolvimento
                     },
                     status.HTTP_500_INTERNAL_SERVER_ERROR,
                 )
+            except Exception as e:
+                print(e)
+                pass
             else:
                 text = ""
 
