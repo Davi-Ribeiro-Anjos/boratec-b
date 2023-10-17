@@ -35,7 +35,7 @@ if dev == "True" or dev == "true":
 else:
     DEBUG = False
 
-    ALLOWED_HOSTS = ["back.bora.tec.br"]
+    ALLOWED_HOSTS = ["back.bora.tec.br", os.getenv("IP_SERVER_HOST")]
 
     CORS_ALLOWED_ORIGINS = [
         "http://back.bora.tec.br",
@@ -107,6 +107,7 @@ MY_APPS = [
     "epis_requests",
     "epis_sizes",
     "fleets_availabilities",
+    "occurrences",
     "pallets_controls",
     "pallets_movements",
     "payments_histories",

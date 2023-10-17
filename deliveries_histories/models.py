@@ -35,9 +35,11 @@ def only_int(value):
 
 class DeliveriesHistories(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
-    code = models.CharField(max_length=15, validators=[only_int])
+    garage = models.CharField(max_length=5)
+    id_garage = models.CharField(max_length=5)
+    cte = models.CharField(max_length=15, validators=[only_int])
     date_emission = models.DateField()
-    date_forecast = models.DateField()  # Data Previsao / Lead Time
+    lead_time = models.DateField()  # Data Previsao / Lead Time
     date_delivery = models.DateField()  # Data Entrega
     recipient = models.CharField(max_length=200)  # Destinatario
     sender = models.CharField(max_length=200)  # Remetente
@@ -55,6 +57,12 @@ class DeliveriesHistories(models.Model):
     confirmed = models.BooleanField(default=False)
     refuse = models.BooleanField(default=False)
 
+    author_responsible = models.ForeignKey(
+        Employees,
+        on_delete=models.CASCADE,
+        related_name="deliveries_histories_responsible",
+        null=True,
+    )
     author = models.ForeignKey(
         Employees,
         on_delete=models.CASCADE,
@@ -65,7 +73,7 @@ class DeliveriesHistories(models.Model):
         Branches,
         on_delete=models.CASCADE,
         related_name="deliveries_histories",
-        default=99,
+        default=999,
     )
 
     class Meta:
@@ -75,7 +83,7 @@ class DeliveriesHistories(models.Model):
         app_label = "deliveries_histories"
 
     def __repr__(self) -> str:
-        return f"<Delivery History {self.id} - {self.nome}>"
+        return f"<Delivery History {self.id} - {self.cte}>"
 
     def __str__(self):
-        return f"<Delivery History {self.id} - {self.nome}>"
+        return f"<Delivery History {self.id} - {self.cte}>"

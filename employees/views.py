@@ -11,6 +11,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.core.mail import send_mail
+from django.db.models import Q
 
 from _app import settings
 from _service.oracle_db import connect_db, dict_fetchall
@@ -82,9 +83,11 @@ class EmployeesPaymentsView(APIView):
     permission_classes = [IsAuthenticated, AdminPermission]
 
     def get(self, request: Request) -> Response:
-        employees = Employees.objects.filter(
-            type_contract="PJ", status="ATIVO"
-        ).order_by("name")
+        employees = (
+            Employees.objects.filter(type_contract="PJ", status="ATIVO")
+            .exclude(branch_id=999)
+            .order_by("name")
+        )
 
         serializer = EmployeesPaymentsResponseSerializer(employees, many=True)
 
@@ -285,6 +288,7 @@ class EmployeesChoicesView(APIView):
     def get(self, request: Request) -> Response:
         employees = (
             Employees.objects.filter(status="ATIVO")
+            .exclude(branch_id=999)
             .values("id", "name")
             .order_by("name")
         )
@@ -385,8 +389,8 @@ class EmployeesDocumentsView(APIView):
 
 
 class EmployeesOracleView(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    # authentication_classes = [JWTAuthentication]
+    # permission_classes = [IsAuthenticated, IsAdminUser]
 
     def post(self, request: Request) -> Response:
         conn = connect_db()
@@ -418,18 +422,20 @@ SELECT DISTINCT
         WHEN FL.CODIGOEMPRESA = '1' AND FL.CODIGOFL = '12' THEN 12
         WHEN FL.CODIGOEMPRESA = '1' AND FL.CODIGOFL = '13' THEN 13
         WHEN FL.CODIGOEMPRESA = '1' AND FL.CODIGOFL = '14' THEN 14
-        WHEN FL.CODIGOEMPRESA = '3' AND FL.CODIGOFL = '30' THEN 15
-        WHEN FL.CODIGOEMPRESA = '3' AND FL.CODIGOFL = '31' THEN 16
-        WHEN FL.CODIGOEMPRESA = '3' AND FL.CODIGOFL = '32' THEN 17
-        WHEN FL.CODIGOEMPRESA = '3' AND FL.CODIGOFL = '33' THEN 18
-        WHEN FL.CODIGOEMPRESA = '3' AND FL.CODIGOFL = '34' THEN 19
-        WHEN FL.CODIGOEMPRESA = '3' AND FL.CODIGOFL = '35' THEN 20
-        WHEN FL.CODIGOEMPRESA = '3' AND FL.CODIGOFL = '36' THEN 21
-        WHEN FL.CODIGOEMPRESA = '3' AND FL.CODIGOFL = '37' THEN 22
-        WHEN FL.CODIGOEMPRESA = '4' AND FL.CODIGOFL = '1' THEN 23
-        WHEN FL.CODIGOEMPRESA = '5' AND FL.CODIGOFL = '1' THEN 24
-        WHEN FL.CODIGOEMPRESA = '6' AND FL.CODIGOFL = '1' THEN 25
-        WHEN FL.CODIGOEMPRESA = '2' THEN 99
+        WHEN FL.CODIGOEMPRESA = '3' AND FL.CODIGOFL = '30' THEN 30
+        WHEN FL.CODIGOEMPRESA = '3' AND FL.CODIGOFL = '31' THEN 31
+        WHEN FL.CODIGOEMPRESA = '3' AND FL.CODIGOFL = '32' THEN 32
+        WHEN FL.CODIGOEMPRESA = '3' AND FL.CODIGOFL = '33' THEN 33
+        WHEN FL.CODIGOEMPRESA = '3' AND FL.CODIGOFL = '34' THEN 34
+        WHEN FL.CODIGOEMPRESA = '3' AND FL.CODIGOFL = '35' THEN 35
+        WHEN FL.CODIGOEMPRESA = '3' AND FL.CODIGOFL = '36' THEN 36
+        WHEN FL.CODIGOEMPRESA = '3' AND FL.CODIGOFL = '37' THEN 37
+        WHEN FL.CODIGOEMPRESA = '4' AND FL.CODIGOFL = '1' THEN 41
+        WHEN FL.CODIGOEMPRESA = '5' AND FL.CODIGOFL = '1' THEN 151
+        WHEN FL.CODIGOEMPRESA = '6' AND FL.CODIGOFL = '1' THEN 161
+        WHEN FL.CODIGOEMPRESA = '6' AND FL.CODIGOFL = '2' THEN 162
+        WHEN FL.CODIGOEMPRESA = '2' THEN 999
+        ElSE 999
     END branch_id,
     FL.NOMEFUNC name,
     TO_CHAR(FL.DTNASCTOFUNC, 'YYYY-MM-DD') date_birth,
@@ -473,6 +479,7 @@ WHERE
         cur.close()
 
         count_create = 0
+        count_att = 0
         for employee in data:
             employee["type_contract"] = "CLT"
             employee["number"] = employee["num"]
@@ -480,11 +487,11 @@ WHERE
             del employee["num"]
 
             try:
-                emp = Employees.objects.get(
+                emp = Employees.objects.filter(
                     name=employee["name"],
                     date_admission=employee["date_admission"],
                     status=employee["status"],
-                )
+                ).first()
 
                 serializer = EmployeesSerializer(data=employee, partial=True)
                 serializer.is_valid(raise_exception=False)
@@ -493,8 +500,11 @@ WHERE
                     setattr(emp, key, value)
 
                 emp.save()
-            except Exception:
+                count_att += 1
+            except Exception as e:
+                print(e)
                 try:
+                    break
                     count_create += 1
                     Employees.objects.create(**employee)
                 except Exception as e:
@@ -502,6 +512,11 @@ WHERE
                     print(employee)
 
         return Response(
-            {"message": f"{count_create} employeeionários foram adicionados"},
+            {
+                "message": {
+                    "atualizados": f"{count_att} funcionários",
+                    "criados": f"{count_create} funcionários",
+                }
+            },
             status.HTTP_200_OK,
         )
