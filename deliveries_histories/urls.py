@@ -9,6 +9,16 @@ urlpatterns = [
         name="deliveries-histories",
     ),
     path(
+        "deliveries-histories/confirmed/",
+        views.DeliveriesHistoriesConfirmedView.as_view(),
+        name="deliveries-histories-confirmed",
+    ),
+    path(
+        "deliveries-histories/<int:id>/",
+        views.DeliveriesHistoriesDetailsView.as_view(),
+        name="deliveries-histories-details",
+    ),
+    path(
         "deliveries-histories/sync/",
         views.DeliveriesHistoriesSyncView.as_view(),
         name="deliveries-histories-sync",

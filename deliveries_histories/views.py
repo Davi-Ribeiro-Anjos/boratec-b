@@ -1,5 +1,6 @@
 import os
 import asyncio
+import ipdb
 
 from datetime import datetime, date
 from fpdf import FPDF
@@ -10,18 +11,23 @@ from rest_framework.views import APIView, Response, Request, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.db.models import Q, F
 
 from _service.oracle_db import connect_db, dict_fetchall
+from _service.limit_size import file_size
 
 from branches.models import Branches
 from occurrences.models import Occurrences
 
 from .models import DeliveriesHistories
-from .serializers import DeliveriesHistoriesResponseSerializer
+from .serializers import (
+    DeliveriesHistoriesRequestSerializer,
+    DeliveriesHistoriesResponseSerializer,
+    DeliveriesHistoriesResponseConfirmedSerializer,
+)
 
 
 class DeliveriesHistoriesView(APIView):
@@ -37,9 +43,62 @@ class DeliveriesHistoriesView(APIView):
             elif filter["confirmed"] == "true":
                 filter["confirmed"] = True
 
-        deliveries = DeliveriesHistories.objects.filter(**filter)
+        if "description_justification__isnull" in filter:
+            filter["description_justification__isnull"] = True
+
+        deliveries = DeliveriesHistories.objects.filter(**filter).order_by(
+            "date_emission", "cte"
+        )
 
         serializer = DeliveriesHistoriesResponseSerializer(deliveries, many=True)
+
+        return Response(serializer.data, status.HTTP_200_OK)
+
+
+class DeliveriesHistoriesConfirmedView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request: Request) -> Response:
+        filter = {
+            "confirmed": False,
+            "description_justification__isnull": False,
+            "file__isnull": False,
+        }
+
+        deliveries = DeliveriesHistories.objects.filter(**filter).order_by(
+            "date_emission", "cte"
+        )
+
+        serializer = DeliveriesHistoriesResponseConfirmedSerializer(
+            deliveries, many=True
+        )
+
+        return Response(serializer.data, status.HTTP_200_OK)
+
+
+class DeliveriesHistoriesDetailsView(APIView):
+    def patch(self, request: Request, id: int) -> Response:
+        file = request.FILES.get("file")
+
+        try:
+            file_size(file, 5)
+        except ValidationError as e:
+            return Response({"message": e.args[0]}, status.HTTP_400_BAD_REQUEST)
+
+        justification = get_object_or_404(DeliveriesHistories, id=id)
+
+        serializer = DeliveriesHistoriesRequestSerializer(
+            data=request.data, partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+
+        for key, value in serializer.validated_data.items():
+            setattr(justification, key, value)
+
+        justification.save()
+
+        serializer = DeliveriesHistoriesResponseSerializer(justification)
 
         return Response(serializer.data, status.HTTP_200_OK)
 

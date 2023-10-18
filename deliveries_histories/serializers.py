@@ -51,18 +51,10 @@ class DeliveriesHistoriesResponseSerializer(serializers.ModelSerializer):
             "date_delivery",
             "recipient",
             "sender",
-            "delivery_location",
             "weight",
             "opened",
             "nf",
-            "document_type",
-            "description_justification",
-            "file",
-            "confirmed",
-            "refuse",
             "occurrences",
-            "author",
-            "branch",
         )
 
     def get_occurrences(self, obj):
@@ -79,3 +71,15 @@ class DeliveriesHistoriesResponseSerializer(serializers.ModelSerializer):
             return serializer.data
 
         return None
+
+
+class DeliveriesHistoriesResponseConfirmedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeliveriesHistories
+        fields = (
+            "id",
+            "cte",
+            "description_justification",
+            "file",
+            "nf",
+        )
