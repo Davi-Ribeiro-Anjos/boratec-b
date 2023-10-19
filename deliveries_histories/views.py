@@ -78,6 +78,9 @@ class DeliveriesHistoriesConfirmedView(APIView):
 
 
 class DeliveriesHistoriesDetailsView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def patch(self, request: Request, id: int) -> Response:
         file = request.FILES.get("file")
 
@@ -402,9 +405,7 @@ GROUP BY
 
     print(f"JUSTIFICATIVA: LEN({len(res)})")
 
-    print(f"JUSTIFICATIVA: INICIANDO INSERT")
     await insert_to_justificative(res)
-    print(f"JUSTIFICATIVA: CONCLUIDO")
 
 
 @sync_to_async
@@ -467,9 +468,7 @@ WHERE
 
     print(f"OCORRENCIAS: LEN({len(res)})")
 
-    print(f"OCORRENCIAS: INICIANDO INSERT")
     await insert_to_occurences(res)
-    print(f"OCORRENCIAS: CONCLUIDO")
 
 
 @sync_to_async
