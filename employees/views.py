@@ -502,9 +502,7 @@ WHERE
                 emp.save()
                 count_att += 1
             except Exception as e:
-                print(e)
                 try:
-                    break
                     count_create += 1
                     Employees.objects.create(**employee)
                 except Exception as e:
