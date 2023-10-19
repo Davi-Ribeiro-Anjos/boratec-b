@@ -1,6 +1,9 @@
+import os
+
 from django.http import FileResponse
 from django.conf import settings
-import os
+
+from rest_framework.views import APIView, Response, Request, status
 
 
 def get_media(request, path):
@@ -14,3 +17,8 @@ def get_media(request, path):
         from django.http import HttpResponseNotFound
 
         return HttpResponseNotFound()
+
+
+class GetMediaView(APIView):
+    def get(self, request: Request, path: str) -> Response:
+        return get_media(request, path)

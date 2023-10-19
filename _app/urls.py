@@ -3,7 +3,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from _service.get_media import get_media
+from _service.get_media import GetMediaView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -27,7 +27,11 @@ urlpatterns = [
     path("api/", include("users.urls")),
     path("api/", include("vehicles.urls")),
     path("api/", include("xmls.urls")),
-    path(f"{settings.MEDIA_URL[1:-1]}/<path:path>", get_media, name="serve_media"),
+    path(
+        f"{settings.MEDIA_URL[1:-1]}/<path:path>/",
+        GetMediaView.as_view(),
+        name="get_media",
+    ),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
