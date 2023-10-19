@@ -6,7 +6,7 @@ from django.db.models import Q
 class BasePermission(permissions.BasePermission):
     def has_permission(self, request: Request, view: View):
         return (
-            request.user.groups.filter(Q(name="xmls") | Q(name="xmls_admin")).exists()
+            request.user.groups.filter(Q(name="xml") | Q(name="xml_admin")).exists()
             or request.user.is_superuser
             or request.user.is_staff
         )

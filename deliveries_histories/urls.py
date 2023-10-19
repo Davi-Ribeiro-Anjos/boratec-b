@@ -9,7 +9,7 @@ urlpatterns = [
         name="deliveries-histories",
     ),
     path(
-        "deliveries-histories/confirmed/",
+        "deliveries-histories/confirm/",
         views.DeliveriesHistoriesConfirmedView.as_view(),
         name="deliveries-histories-confirmed",
     ),
