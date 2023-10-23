@@ -42,7 +42,7 @@ class VehiclesResponseSerializer(serializers.ModelSerializer):
             FleetsAvailabilitiesVehiclesSerializer,
         )
 
-        fleet = FleetsAvailabilities.objects.filter(vehicle=obj.id).last()
+        fleet = FleetsAvailabilities.objects.filter(id=obj.last_movement).first()
 
         if fleet:
             serializer = FleetsAvailabilitiesVehiclesSerializer(fleet)

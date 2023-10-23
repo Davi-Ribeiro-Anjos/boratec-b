@@ -1,6 +1,7 @@
+import datetime
+
 from django.db import models
 from django.core.exceptions import ValidationError
-
 
 from employees.models import Employees
 from vehicles.models import Vehicles
@@ -21,9 +22,9 @@ def only_int(value):
 
 class FleetsAvailabilities(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
-    date_occurrence = models.DateTimeField(auto_now=True)
-    date_forecast = models.DateTimeField(null=True)  # PREVISAO
-    date_release = models.DateTimeField(null=True)  # LIBERACAO
+    date_occurrence = models.DateField(default=datetime.date.today)
+    date_forecast = models.DateField(null=True)  # PREVISAO
+    date_release = models.DateField(null=True)  # LIBERACAO
     status = models.CharField(max_length=11, choices=STATUS_CHOICES.choices)
     service_order = models.IntegerField(null=True)
     observation = models.TextField(blank=True, null=True)
