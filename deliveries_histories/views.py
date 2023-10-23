@@ -303,8 +303,9 @@ class DeliveriesHistoriesSyncView(APIView):
         conn = connect_db()
         cur = conn.cursor()
 
+        print("ok")
         asyncio.run(get_justificifcatives(cur))
-        asyncio.run(get_occurrences(cur))
+        # asyncio.run(get_occurrences(cur))
 
         cur.close()
 
@@ -381,7 +382,7 @@ WHERE
     F1.ID_GARAGEM NOT IN (1,23,30)                         AND
     F1.DATA_CANCELADO = '01-JAN-0001'                      AND
 
-    F1.DATA_EMISSAO BETWEEN ((SYSDATE)-1) AND ((SYSDATE))
+    F1.DATA_EMISSAO BETWEEN ((SYSDATE)-85) AND ((SYSDATE)-41)
 GROUP BY
     F1.EMPRESA,
     F1.FILIAL,
@@ -458,10 +459,19 @@ SELECT DISTINCT
     A1.DATA_OCORRENCIA date_emission
 FROM 
     ACA001 A1,
-    ACA002 A2
+    ACA002 A2,
+    FTA001 F1
 WHERE
+    F1.EMPRESA = A1.EMPRESA               AND
+    F1.FILIAL = A1.FILIAL                 AND
+    F1.GARAGEM = A1.GARAGEM               AND
+    F1.SERIE = A1.SERIE_CTRC                AND
+    F1.CONHECIMENTO = A1.NUMERO_CTRC     AND
+    F1.TIPO_DOCTO = A1.TIPO_DOCTO         AND
+    
     A1.COD_OCORRENCIA = A2.CODIGO AND
-    A1.DATA_CADASTRO BETWEEN ((SYSDATE)-1) AND ((SYSDATE))
+    A1.DATA_CADASTRO BETWEEN ((SYSDATE)-40) AND ((SYSDATE)-20) AND
+    F1.ID_GARAGEM = 6
                     """
     )
     res = dict_fetchall(cur)
@@ -534,11 +544,14 @@ def update_data_not_delivered():
 
 def update_data_delivered():
     justificatives = DeliveriesHistories.objects.filter(
-        Q(opened=0), lead_time__lt=F("date_delivery"), confirmed=0
+        lead_time__lt=F("date_delivery"), confirmed=0
     )
     print(f"ATUALIZANDO {justificatives.count()} DADOS COM ENTREGAS PREENCHIDAS.")
 
     for just in justificatives:
         just.opened = (just.date_delivery - just.lead_time).days
+
+        if just.opened > 999:
+            just.opened = 999
 
         just.save()
