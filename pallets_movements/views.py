@@ -164,7 +164,7 @@ class PalletsMovementsView(APIView):
 
 class PalletsMovementsDetailView(APIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, AdminPermission]
+    permission_classes = [IsAuthenticated, BasePermission]
 
     def patch(self, request: Request, id: int) -> Response:
         movement = get_object_or_404(PalletsMovements, id=id)
