@@ -19,6 +19,7 @@ urlpatterns = [
     path("api/", include("epis_requests.urls")),
     path("api/", include("epis_sizes.urls")),
     path("api/", include("fleets_availabilities.urls")),
+    path("api/", include("manuals.urls")),
     path("api/", include("pallets_controls.urls")),
     path("api/", include("pallets_movements.urls")),
     path("api/", include("pj_complements.urls")),

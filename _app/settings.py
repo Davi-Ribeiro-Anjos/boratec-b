@@ -107,6 +107,7 @@ MY_APPS = [
     "epis_requests",
     "epis_sizes",
     "fleets_availabilities",
+    "manuals",
     "occurrences",
     "pallets_controls",
     "pallets_movements",
