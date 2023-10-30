@@ -35,7 +35,11 @@ if dev == "True" or dev == "true":
 else:
     DEBUG = False
 
-    ALLOWED_HOSTS = ["back.bora.tec.br", os.getenv("IP_SERVER_HOST")]
+    ALLOWED_HOSTS = [
+        "back.bora.tec.br",
+        "speed.cloudflare.com",
+        os.getenv("IP_SERVER_HOST"),
+    ]
 
     CORS_ALLOWED_ORIGINS = [
         "http://back.bora.tec.br",
