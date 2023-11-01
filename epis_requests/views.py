@@ -1,4 +1,5 @@
 from django.db import IntegrityError, DataError
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.core.mail import send_mail
 
@@ -26,7 +27,17 @@ class EPIsRequestsView(APIView):
     def get(self, request: Request) -> Response:
         filter = request.GET.dict()
 
-        requests = EPIsRequests.objects.filter(**filter)
+        if "employee" in filter:
+            requests = EPIsRequests.objects.filter(
+                Q(employee__name__contains=filter["employee"])
+                | Q(employee_provisory__contains=filter["employee"])
+            )
+
+            del filter["employee"]
+
+            requests.filter(**filter)
+        else:
+            requests = EPIsRequests.objects.filter(**filter)
 
         serializer = EPIsRequestsResponseSerializer(requests, many=True)
 
@@ -135,7 +146,7 @@ Informamos que o seguinte item atingiu a quantidade de estoque mínimo:
     QUANTIDADE ATUAL: {size.quantity}
     QUANTIDADE MÍNIMA: {size.quantity_minimum}
                 
-Att, Equipe de Desenvolvimento
+Att, Segurança do Trabalho
 """,
                             from_email=settings.EMAIL_HOST_USER,
                             recipient_list=[
@@ -175,25 +186,25 @@ Att, Equipe de Desenvolvimento
                     send_mail(
                         subject="Envio de EPI",
                         message=f"""
-Esse e-mail é referente ao do seu(s) EPI(s).
+Esse e-mail é referente a solicição de EPI.
+
+Realizado pelo(a) {req.author_create.name}.
 
 Esses são os dados da entrega:
 
+    COLOBORADOR: {req.employee.name if req.employee else req.employee_provisory}
     MOTORISTA: {request.data["driver"] if request.data["driver"] else "NÃO INFORMADO"}
     PLACA DO VEÍCULO: {request.data["vehicle_plate"] if request.data["vehicle_plate"] else "NÃO INFORMADO"}
-    ITEMS:
+    ITENS:
         
 {text}
-
 OBSERVAÇÃO: {request.data["body_email"] if request.data["body_email"] else "SEM REGISTRO."}
 
-Att, Equipe de Desenvolvimento
+Att, Segurança do Trabalho
 """,
                         from_email=settings.EMAIL_HOST_USER,
                         recipient_list=[
                             request.data["email"],
-                            "rosane.fernandes@bora.com.br",
-                            "daniel.domingues@bora.com.br",
                             "marco.antonio@bora.bom.br",
                             "lucas.franco@bora.bom.br",
                         ],
