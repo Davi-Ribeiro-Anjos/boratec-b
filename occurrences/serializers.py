@@ -8,8 +8,6 @@ class OccurrencesRequestSerializer(serializers.ModelSerializer):
         model = Occurrences
         fields = (
             "id",
-            "cte",
-            "garage",
             "date_emission",
             "document_type",
             "occurrence_code",
@@ -26,8 +24,6 @@ class OccurrencesResponseSerializer(serializers.ModelSerializer):
         model = Occurrences
         fields = (
             "id",
-            "cte",
-            "garage",
             "date_emission",
             "document_type",
             "occurrence_code",
