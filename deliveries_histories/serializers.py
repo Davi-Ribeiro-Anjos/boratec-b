@@ -1,12 +1,5 @@
 from rest_framework import serializers
 
-from employees.serializers import EmployeesSimpleSerializer
-from branches.serializers import BranchesSimpleSerializer
-from epis_carts.models import EPIsCarts
-from epis_carts.serializers import EPIsCartsRequestsSerializer
-
-# from epis_items.serializers import EPIsItemsResponseSerializer
-
 from .models import DeliveriesHistories
 
 

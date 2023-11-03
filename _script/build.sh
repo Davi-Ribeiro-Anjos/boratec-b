@@ -2,7 +2,7 @@
 
 git restore .
 
-git pull
+git pull origin main
 
 . venv/bin/activate
 

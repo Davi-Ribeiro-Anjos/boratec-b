@@ -23,9 +23,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "cte",
-                    models.CharField(
-                        max_length=15, validators=[occurrences.models.only_int]
-                    ),
+                    models.CharField(max_length=15),
                 ),
                 ("garage", models.CharField(max_length=5)),
                 ("date_emission", models.DateField()),
