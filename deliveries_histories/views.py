@@ -296,3 +296,264 @@ ORDER BY
             cur.close()
 
         return Response(justifications_list, status.HTTP_200_OK)
+
+
+class DeliveriesHistoriesSyncView(APIView):
+    def post(self, request: Request) -> Response:
+        conn = connect_db()
+        cur = conn.cursor()
+
+        asyncio.run(get_justificifcatives(cur))
+        asyncio.run(get_occurrences(cur))
+
+        cur.close()
+
+        update_data_not_delivered()
+        update_data_delivered()
+
+        return Response({}, status.HTTP_204_NO_CONTENT)
+
+
+async def get_justificifcatives(cur):
+    print("JUSTIFICATIVA: INICIANDO QUERY")
+
+    cur.execute(
+        f"""
+SELECT 
+    F1.GARAGEM garage,
+    F1.ID_GARAGEM id_garage, 
+    DECODE(F1.TIPO_DOCTO, 8, 'NFS', 'CTE') document_type,
+    F1.CONHECIMENTO cte,
+    F1.DATA_EMISSAO date_emission,
+    F1.DATA_ENTREGA date_delivery,
+    CASE
+        WHEN F1.TIPO_DOCTO = 8 THEN TO_CHAR(BC.NFANTASIACLI)
+        WHEN F1.TIPO_DOCTO = 57 THEN F1.REM_RZ_SOCIAL
+    END sender,
+    CASE 
+        WHEN F1.TIPO_DOCTO = 8 THEN F11.REC_RZ_SOCIAL
+        WHEN F1.TIPO_DOCTO = 57 THEN F1.DEST_RZ_SOCIAL
+    END recipient,
+    F1.PESO weight,
+    CASE
+        WHEN F11.DT_PREV_ENTREGA IS NULL THEN '01-01-0001'
+        WHEN F11.DT_PREV_ENTREGA IS NOT NULL THEN TO_CHAR(F11.DT_PREV_ENTREGA, 'DD-MM-YYYY') 
+    END lead_time,
+    CASE
+        WHEN F1.DATA_ENTREGA = '01-JAN-0001' THEN 'NAO ENTREGUE'
+        WHEN F1.DATA_ENTREGA <> '01-JAN-0001' THEN CASE
+            WHEN (F1.DATA_ENTREGA - F11.DT_PREV_ENTREGA) < 0 THEN 'ADIANTADO'
+            WHEN (F1.DATA_ENTREGA - F11.DT_PREV_ENTREGA) > 0 THEN 'ATRASADO'
+            END
+    END LEADTIME,
+    CASE 
+        WHEN (TRUNC((MIN(F11.DT_PREV_ENTREGA))-(SYSDATE))-1) >= 0 THEN (TRUNC((MIN(F11.DT_PREV_ENTREGA))-(SYSDATE))-1)
+        WHEN (TRUNC((MIN(F11.DT_PREV_ENTREGA))-(SYSDATE))*-1) < 0 THEN 0
+        WHEN F11.DT_PREV_ENTREGA IS NULL THEN 0
+    END opened,
+    E2.DESC_LOCALIDADE || '-' || E2.COD_UF delivery_location,
+    LISTAGG ((LTRIM (F4.NOTA_FISCAL,0)), ' / ') nf
+FROM 
+    FTA001 F1,
+    FTA011 F11,
+    EXA002 E2,
+    FTA004 F4,
+    BGM_CLIENTE BC               
+WHERE
+    F1.LOCALID_ENTREGA = E2.COD_LOCALIDADE AND
+    F1.CLIENTE_FAT = BC.CODCLI             AND
+    
+    F1.EMPRESA = F11.EMPRESA               AND
+    F1.FILIAL = F11.FILIAL                 AND
+    F1.GARAGEM = F11.GARAGEM               AND
+    F1.SERIE = F11.SERIE                   AND
+    F1.CONHECIMENTO = F11.CONHECIMENTO     AND
+    F1.TIPO_DOCTO = F11.TIPO_DOCTO         AND
+    
+    F1.EMPRESA = F4.EMPRESA                AND
+    F1.FILIAL = F4.FILIAL                  AND
+    F1.GARAGEM = F4.GARAGEM                AND
+    F1.CONHECIMENTO = F4.CONHECIMENTO      AND
+    F1.SERIE = F4.SERIE                    AND
+    F1.TIPO_DOCTO = F4.TIPO_DOCTO          AND
+    
+    F1.CARGA_ENCOMENDA IN ('CARGA DIRETA','RODOVIARIO')    AND
+    F1.ID_GARAGEM NOT IN (1,23,30)                         AND
+    F1.DATA_CANCELADO = '01-JAN-0001'                      AND
+    
+    F1.ID_GARAGEM IN (6,8,11) AND
+
+    F1.DATA_EMISSAO BETWEEN ((SYSDATE)-90) AND ((SYSDATE)-20)
+GROUP BY
+    F1.EMPRESA,
+    F1.FILIAL,
+    F1.GARAGEM,
+    F1.ID_GARAGEM,
+    F1.TIPO_DOCTO,
+    BC.NFANTASIACLI,
+    F11.REC_RZ_SOCIAL,
+    F1.CONHECIMENTO,
+    F1.DATA_EMISSAO,
+    F1.DATA_ENTREGA,
+    F1.REM_RZ_SOCIAL,
+    F1.DEST_RZ_SOCIAL,
+    F1.PESO,
+    F11.DT_PREV_ENTREGA,
+    E2.DESC_LOCALIDADE,
+    E2.COD_UF
+                    """
+    )
+    res = dict_fetchall(cur)
+
+    print(f"JUSTIFICATIVA: LEN({len(res)})")
+
+    await insert_to_justificative(res)
+
+
+@sync_to_async
+def insert_to_justificative(data):
+    for justificative in data:
+        try:
+            DeliveriesHistories.objects.get(
+                garage=justificative["garage"],
+                document_type=justificative["document_type"],
+                cte=justificative["cte"],
+            )
+
+        except ObjectDoesNotExist:
+            del justificative["leadtime"]
+
+            lead_time = datetime.strptime(justificative["lead_time"], "%d-%m-%Y").date()
+
+            if lead_time == date(1, 1, 1):
+                justificative["opened"] = 999
+
+            else:
+                justificative["opened"] = 0
+
+            try:
+                branch = Branches.objects.get(id_garage=justificative["id_garage"])
+                justificative["branch"] = branch
+
+            except:
+                pass
+
+            justificative["lead_time"] = lead_time
+
+            DeliveriesHistories.objects.create(**justificative)
+
+        except Exception as e:
+            print("Error:%s, error_type:%s" % (e, type(e)))
+
+
+async def get_occurrences(cur):
+    print("OCORRENCIAS: INICIANDO QUERY")
+
+    cur.execute(
+        f"""
+SELECT DISTINCT
+    A1.GARAGEM garage,
+    A1.NUMERO_CTRC cte,
+    A1.TIPO_DOCTO document_type,
+    A2.CODIGO occurrence_code,
+    A2.DESCRICAO occurrence_description,
+    A1.DATA_OCORRENCIA date_emission
+FROM 
+    ACA001 A1,
+    ACA002 A2,
+    FTA001 F1
+WHERE
+    F1.EMPRESA = A1.EMPRESA               AND
+    F1.FILIAL = A1.FILIAL                 AND
+    F1.GARAGEM = A1.GARAGEM               AND
+    F1.SERIE = A1.SERIE_CTRC                AND
+    F1.CONHECIMENTO = A1.NUMERO_CTRC     AND
+    F1.TIPO_DOCTO = A1.TIPO_DOCTO         AND
+    
+    A1.COD_OCORRENCIA = A2.CODIGO AND
+    A1.DATA_CADASTRO BETWEEN ((SYSDATE)-90) AND ((SYSDATE)-20) AND
+
+    F1.ID_GARAGEM IN (6,8,11)
+                    """
+    )
+    res = dict_fetchall(cur)
+
+    print(f"OCORRENCIAS: LEN({len(res)})")
+
+    await insert_to_occurences(res)
+
+
+@sync_to_async
+def insert_to_occurences(data):
+    for occurrence in data:
+        justificative = DeliveriesHistories.objects.filter(
+            garage=occurrence["garage"], cte=occurrence["cte"]
+        ).first()
+
+        if justificative:
+            occurrence["justification"] = justificative
+
+            try:
+                Occurrences.objects.get(**occurrence)
+
+            except ObjectDoesNotExist:
+                date_delivery_inicial = justificative.date_delivery
+                date_emission = occurrence["date_emission"].date()
+
+                if occurrence["occurrence_description"] == "Entregue":
+                    if date_delivery_inicial < date_emission:
+                        justificative.date_delivery = date_emission
+
+                        if justificative.opened != 999:
+                            if (
+                                justificative.date_delivery - justificative.lead_time
+                            ).days <= 0:
+                                justificative.opened = 0
+
+                            else:
+                                justificative.opened = (
+                                    justificative.date_delivery
+                                    - justificative.lead_time
+                                ).days
+
+                justificative.save()
+
+                try:
+                    occurrence["branch"] = justificative.branch
+
+                except:
+                    pass
+
+                Occurrences.objects.create(**occurrence)
+
+            except Exception as e:
+                print("Error:%s, error_type:%s" % (e, type(e)))
+
+
+def update_data_not_delivered():
+    justificatives = DeliveriesHistories.objects.filter(
+        ~Q(opened=999), Q(date_delivery=date(1, 1, 1)), confirmed=0
+    )
+    print(f"ATUALIZANDO {justificatives.count()} DADOS SEM ENTREGAS PREENCHIDAS.")
+    for just in justificatives:
+        just.opened = (date.today() - just.lead_time).days
+
+        if just.opened < 0:
+            just.opened = 0
+
+        just.save()
+
+
+def update_data_delivered():
+    justificatives = DeliveriesHistories.objects.filter(
+        lead_time__lt=F("date_delivery"), confirmed=0
+    )
+    print(f"ATUALIZANDO {justificatives.count()} DADOS COM ENTREGAS PREENCHIDAS.")
+
+    for just in justificatives:
+        just.opened = (just.date_delivery - just.lead_time).days
+
+        if just.opened > 999:
+            just.opened = 999
+
+        just.save()
