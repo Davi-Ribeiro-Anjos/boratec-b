@@ -1,26 +1,12 @@
-import os
-import asyncio
-import ipdb
-
-from datetime import datetime, date
-from fpdf import FPDF
-from asgiref.sync import sync_to_async
-
-from rest_framework import serializers
 from rest_framework.views import APIView, Response, Request, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponse
-from django.db.models import Q, F
 
 from _service.oracle_db import connect_db, dict_fetchall
 from _service.limit_size import file_size
-
-from branches.models import Branches
-from occurrences.models import Occurrences
 
 from .models import DeliveriesHistories
 from .serializers import (
