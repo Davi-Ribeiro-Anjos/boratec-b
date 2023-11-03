@@ -58,7 +58,7 @@ class FleetsAvailabilitiesView(APIView):
                 )
             elif fleet.date_release and today <= fleet.date_release:
                 fleets = FleetsAvailabilities.objects.filter(
-                    vehicle=vehicle.id, date_occurrence_gte=today
+                    vehicle=vehicle.id, date_occurrence__gte=today
                 )
             else:
                 fleets = None
