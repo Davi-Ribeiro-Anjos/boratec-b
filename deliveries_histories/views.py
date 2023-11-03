@@ -303,9 +303,8 @@ class DeliveriesHistoriesSyncView(APIView):
         conn = connect_db()
         cur = conn.cursor()
 
-        print("ok")
         asyncio.run(get_justificifcatives(cur))
-        # asyncio.run(get_occurrences(cur))
+        asyncio.run(get_occurrences(cur))
 
         cur.close()
 
@@ -381,8 +380,10 @@ WHERE
     F1.CARGA_ENCOMENDA IN ('CARGA DIRETA','RODOVIARIO')    AND
     F1.ID_GARAGEM NOT IN (1,23,30)                         AND
     F1.DATA_CANCELADO = '01-JAN-0001'                      AND
+    
+    F1.ID_GARAGEM IN (6,8,11) AND
 
-    F1.DATA_EMISSAO BETWEEN ((SYSDATE)-85) AND ((SYSDATE)-41)
+    F1.DATA_EMISSAO BETWEEN ((SYSDATE)-90) AND ((SYSDATE)-20)
 GROUP BY
     F1.EMPRESA,
     F1.FILIAL,
@@ -470,8 +471,9 @@ WHERE
     F1.TIPO_DOCTO = A1.TIPO_DOCTO         AND
     
     A1.COD_OCORRENCIA = A2.CODIGO AND
-    A1.DATA_CADASTRO BETWEEN ((SYSDATE)-40) AND ((SYSDATE)-20) AND
-    F1.ID_GARAGEM = 6
+    A1.DATA_CADASTRO BETWEEN ((SYSDATE)-90) AND ((SYSDATE)-20) AND
+
+    F1.ID_GARAGEM IN (6,8,11)
                     """
     )
     res = dict_fetchall(cur)
