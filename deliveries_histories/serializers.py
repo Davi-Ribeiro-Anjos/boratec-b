@@ -24,9 +24,7 @@ class DeliveriesHistoriesRequestSerializer(serializers.ModelSerializer):
             "confirmed",
             "refuse",
             "author",
-            "author_responsible",
-            "branch_issuing",
-            "branch_destination",
+            "branch",
         )
 
 

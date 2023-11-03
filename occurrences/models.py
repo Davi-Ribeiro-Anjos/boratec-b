@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 from deliveries_histories.models import DeliveriesHistories
 from branches.models import Branches
@@ -9,8 +10,17 @@ class DOCUMENT_TYPE_CHOICES(models.TextChoices):
     CTE = "CTE"
 
 
+def only_int(value):
+    try:
+        int(value)
+    except (ValueError, TypeError):
+        raise ValidationError("Valor digitado não é um número")
+
+
 class Occurrences(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
+    cte = models.CharField(max_length=15, validators=[only_int])
+    garage = models.CharField(max_length=5)
     date_emission = models.DateField()
     document_type = models.CharField(
         max_length=3, choices=DOCUMENT_TYPE_CHOICES.choices
@@ -29,6 +39,7 @@ class Occurrences(models.Model):
         DeliveriesHistories,
         related_name="occurrences",
         on_delete=models.CASCADE,
+        null=True,
     )
 
     class Meta:

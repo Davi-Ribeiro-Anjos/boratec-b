@@ -35,9 +35,11 @@ def only_int(value):
 
 class DeliveriesHistories(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
+    garage = models.CharField(max_length=5)
+    id_garage = models.CharField(max_length=5)
     cte = models.CharField(max_length=15, validators=[only_int])
     date_emission = models.DateField()
-    lead_time = models.DateField()  # Lead Time
+    lead_time = models.DateField()  # Data Previsao / Lead Time
     date_delivery = models.DateField()  # Data Entrega
     recipient = models.CharField(max_length=200)  # Destinatario
     sender = models.CharField(max_length=200)  # Remetente
@@ -67,16 +69,10 @@ class DeliveriesHistories(models.Model):
         related_name="deliveries_histories",
         null=True,
     )
-    branch_issuing = models.ForeignKey(
+    branch = models.ForeignKey(
         Branches,
         on_delete=models.CASCADE,
-        related_name="deliveries_histories_issuing",
-        default=999,
-    )
-    branch_destination = models.ForeignKey(
-        Branches,
-        on_delete=models.CASCADE,
-        related_name="deliveries_histories_destination",
+        related_name="deliveries_histories",
         default=999,
     )
 
