@@ -6,7 +6,7 @@ git pull origin main
 
 . venv/bin/activate
 
-python manage migrate
+python manage.py migrate
 
 sudo systemctl restart nginx
 
