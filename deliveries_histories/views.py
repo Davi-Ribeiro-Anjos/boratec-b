@@ -32,9 +32,7 @@ class DeliveriesHistoriesView(APIView):
         if "description_justification__isnull" in filter:
             filter["description_justification__isnull"] = True
 
-        deliveries = DeliveriesHistories.objects.filter(**filter).order_by(
-            "date_emission", "cte"
-        )
+        deliveries = DeliveriesHistories.objects.filter(**filter).order_by("-opened")
 
         serializer = DeliveriesHistoriesResponseSerializer(deliveries, many=True)
 

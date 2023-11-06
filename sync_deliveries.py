@@ -274,6 +274,11 @@ def update_data_delivered():
     for just in justifications:
         just.opened = (just.date_delivery - just.lead_time).days
 
+        if just.opened >= 999:
+            just.opened = 999
+        elif just.opened < 0:
+            just.opened = 0
+
         just.save()
 
 
