@@ -83,7 +83,7 @@ WHERE
     F1.ID_GARAGEM NOT IN (1,23,30)                         AND
     F1.DATA_CANCELADO = '01-JAN-0001'                      AND
     
-    F1.ID_GARAGEM IN (6,8,11)                              AND
+    F1.ID_GARAGEM IN (5,6,8)                               AND
 
     F1.EMPRESA = 1                                         AND
 
@@ -142,6 +142,12 @@ def insert_to_justification(data):
                 "%Y-%m-%d"
             )
 
+            if justification["date_delivery"] == "1-01-01":
+                justification["date_delivery"] = "0001-01-01"
+
+            if justification["lead_time"] == "1-01-01":
+                justification["lead_time"] = "0001-01-01"
+
             serializer = DeliveriesHistoriesRequestSerializer(data=justification)
             serializer.is_valid()
 
@@ -179,7 +185,7 @@ WHERE
     A1.COD_OCORRENCIA = A2.CODIGO         AND
 
     F1.EMPRESA = 1                        AND
-    F1.ID_GARAGEM IN (6,8,11)             AND
+    F1.ID_GARAGEM IN (5,6,8)              AND
 
     A1.DATA_CADASTRO BETWEEN ((SYSDATE)-1) AND ((SYSDATE)-0)
                     """
