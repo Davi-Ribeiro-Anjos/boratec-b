@@ -23,6 +23,7 @@ urlpatterns = [
     path("api/", include("pallets_controls.urls")),
     path("api/", include("pallets_movements.urls")),
     path("api/", include("pj_complements.urls")),
+    path("api/", include("pj_thirteenths.urls")),
     path("api/", include("purchases_entries.urls")),
     path("api/", include("purchases_requests.urls")),
     path("api/", include("users.urls")),

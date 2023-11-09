@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils import timezone
 
 
 class PJComplements(models.Model):
@@ -13,7 +12,7 @@ class PJComplements(models.Model):
     advance_money = models.FloatField(default=0)
     covenant_discount = models.FloatField(default=0)
     others_discounts = models.FloatField(default=0)
-    data_emission = models.DateTimeField(default=timezone.now)
+    subsistence_allowance = models.FloatField(default=0)
     observation = models.TextField(blank=True, null=True)
 
     class Meta:

@@ -29,7 +29,7 @@ class PaymentsHistories(models.Model):
     advance_money = models.FloatField(default=0)
     covenant_discount = models.FloatField(default=0)
     others_discounts = models.FloatField(default=0)
-    data_emission = models.DateTimeField(auto_now=True)
+    subsistence_allowance = models.FloatField(default=0)
     observation = models.TextField(blank=True, null=True)
 
     class Meta:

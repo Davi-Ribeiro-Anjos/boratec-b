@@ -1,59 +1,38 @@
 from rest_framework import serializers
 
-from .models import PJComplements
+from employees.serializers import EmployeesSimpleSerializer
+
+from .models import PJThirteenths
 
 
-class PJComplementsSerializer(serializers.ModelSerializer):
+class PJThirteenthsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = PJComplements
+        model = PJThirteenths
         fields = (
             "id",
-            "salary",
-            "allowance",
-            "college",
-            "covenant_credit",
-            "housing_allowance",
-            "others_credits",
-            "advance_money",
-            "covenant_discount",
-            "others_discounts",
-            "observation",
-            "data_emission",
+            "months",
+            "date_payment",
+            "value",
+            "send",
+            "type_payment",
+            "employee",
+            "author",
         )
 
 
-class PJComplementsResponseSerializer(serializers.ModelSerializer):
-    data_emission = serializers.DateTimeField(format="%d/%m/%Y")
-    total = serializers.SerializerMethodField()
+class PJThirteenthsResponseSerializer(serializers.ModelSerializer):
+    employee = EmployeesSimpleSerializer()
+    date_payment = serializers.DateField(format="%d/%m/%Y")
 
     class Meta:
-        model = PJComplements
+        model = PJThirteenths
         fields = (
             "id",
-            "salary",
-            "college",
-            "allowance",
-            "covenant_credit",
-            "housing_allowance",
-            "others_credits",
-            "advance_money",
-            "covenant_discount",
-            "others_discounts",
-            "data_emission",
-            "observation",
-            "total",
+            "months",
+            "date_payment",
+            "value",
+            "send",
+            "type_payment",
+            "employee",
         )
         depth = 1
-
-    def get_total(self, obj):
-        return (
-            obj.salary
-            + obj.allowance
-            + obj.college
-            + obj.covenant_credit
-            + obj.others_credits
-            + obj.housing_allowance
-            - obj.advance_money
-            - obj.covenant_discount
-            - obj.others_discounts
-        )

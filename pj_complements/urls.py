@@ -14,8 +14,13 @@ urlpatterns = [
         name="pj-complements-id",
     ),
     path(
-        "pj/complements/add/",
-        views.PJComplementsAddView.as_view(),
-        name="pj-complements-add",
+        "pj/complements/emails/",
+        views.PJComplementsEmailView.as_view(),
+        name="pj-complements-emails",
+    ),
+    path(
+        "pj/complements/export/",
+        views.PJComplementsExportView.as_view(),
+        name="pj-complements-export",
     ),
 ]

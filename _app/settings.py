@@ -117,6 +117,7 @@ MY_APPS = [
     "pallets_movements",
     "payments_histories",
     "pj_complements",
+    "pj_thirteenths",
     "purchases_entries",
     "purchases_requests",
     "skus",

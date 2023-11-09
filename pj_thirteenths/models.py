@@ -5,6 +5,11 @@ from django.core.exceptions import ValidationError
 from employees.models import Employees
 
 
+class TYPE_PAYMENT_CHOICES(models.TextChoices):
+    ADIANTAMENTO = "ADIANTAMENTO"
+    PAGAMENTO = "PAGAMENTO"
+
+
 def only_int(value):
     try:
         int(value)
@@ -15,9 +20,10 @@ def only_int(value):
 class PJThirteenths(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
     months = models.CharField(max_length=2, validators=[only_int])
-    date_advance = models.DateField(null=True)
     date_payment = models.DateField()
     value = models.FloatField()
+    send = models.BooleanField(default=False)
+    type_payment = models.CharField(max_length=12, choices=TYPE_PAYMENT_CHOICES.choices)
 
     employee = models.ForeignKey(
         Employees, on_delete=models.PROTECT, related_name="pj_thirteenths_employees"

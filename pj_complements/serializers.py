@@ -18,12 +18,11 @@ class PJComplementsSerializer(serializers.ModelSerializer):
             "covenant_discount",
             "others_discounts",
             "observation",
-            "data_emission",
+            "subsistence_allowance",
         )
 
 
 class PJComplementsResponseSerializer(serializers.ModelSerializer):
-    data_emission = serializers.DateTimeField(format="%d/%m/%Y")
     total = serializers.SerializerMethodField()
 
     class Meta:
@@ -39,7 +38,7 @@ class PJComplementsResponseSerializer(serializers.ModelSerializer):
             "advance_money",
             "covenant_discount",
             "others_discounts",
-            "data_emission",
+            "subsistence_allowance",
             "observation",
             "total",
         )

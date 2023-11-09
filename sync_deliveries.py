@@ -87,7 +87,7 @@ WHERE
 
     F1.EMPRESA = 1                                         AND
 
-    F1.DATA_EMISSAO BETWEEN ((SYSDATE)-1) AND ((SYSDATE)-0)
+    F1.DATA_EMISSAO BETWEEN ((SYSDATE)-2) AND ((SYSDATE)-0)
 GROUP BY
     F1.EMPRESA,
     F1.FILIAL,
@@ -187,7 +187,7 @@ WHERE
     F1.EMPRESA = 1                        AND
     F1.ID_GARAGEM IN (5,6,8)              AND
 
-    A1.DATA_CADASTRO BETWEEN ((SYSDATE)-1) AND ((SYSDATE)-0)
+    A1.DATA_CADASTRO BETWEEN ((SYSDATE)-2) AND ((SYSDATE)-0)
                     """
     )
     res = dict_fetchall(cur)
