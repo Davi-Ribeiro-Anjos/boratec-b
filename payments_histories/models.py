@@ -32,6 +32,8 @@ class PaymentsHistories(models.Model):
     subsistence_allowance = models.FloatField(default=0)
     observation = models.TextField(blank=True, null=True)
 
+    data_emission = models.DateField(auto_now=True)
+
     class Meta:
         verbose_name = "PaymentHistory"
         verbose_name_plural = "PaymentsHistories"

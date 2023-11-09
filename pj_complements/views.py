@@ -1,12 +1,17 @@
+import os
+import ipdb
+import csv
+import datetime
+
 from rest_framework.views import APIView, Response, Request, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from django.core.mail import send_mail
 
 from _app import settings
-from employees.serializers import EmployeesSerializer, EmployeesResponseSerializer
 from payments_histories.models import PaymentsHistories
 
 from employees.models import Employees
@@ -209,7 +214,7 @@ Att, Departamento Pessoal
 
 class PJComplementsExportView(APIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, AdminPermission]
 
     def post(self, request: Request) -> Response:
         try:
@@ -217,14 +222,81 @@ class PJComplementsExportView(APIView):
         except:
             data = request.data
 
-        serializer = EmployeesSerializer(data=data)
-        serializer.is_valid(raise_exception=True)
+        date = datetime.datetime.strptime(data["date_selected"], "%Y-%m-%d")
+        month = date.month
+        year = date.year
 
-        employee = Employees.objects.create(**serializer.validated_data)
-
-        serializer = EmployeesResponseSerializer(employee)
-
-        return Response(
-            serializer.data,
-            status=status.HTTP_201_CREATED,
+        payments = PaymentsHistories.objects.filter(
+            data_emission__year=year,
+            data_emission__month=month,
         )
+
+        with open("Relatório de PJ's.csv", "w", newline="") as csv_file:
+            fieldnames = [
+                "NOME",
+                "EMAIL",
+                "CNPJ",
+                "BANCO",
+                "AGÊNCIA",
+                "CONTA",
+                "OPERAÇÃO",
+                "PIX",
+                "SALÁRIO",
+                "AJUDA DE CUSTO",
+                "FACULDADE",
+                "AUXÍLIO MORADIA",
+                "CRÉDITO CONVÊNIO",
+                "OUTROS CRÉDITOS",
+                "ADIANTAMENTO",
+                "DESCONTO CONVÊNIO",
+                "OUTROS DESCONTOS",
+                "TOTAL",
+            ]
+
+            writer = csv.DictWriter(csv_file, fieldnames=fieldnames, delimiter=";")
+
+            writer.writeheader()
+
+            for payment in payments:
+                total = (
+                    payment.salary
+                    + payment.allowance
+                    + payment.college
+                    + payment.covenant_credit
+                    + payment.others_credits
+                    + payment.housing_allowance
+                    - payment.advance_money
+                    - payment.covenant_discount
+                    - payment.others_discounts
+                )
+                value = payment.cnpj
+
+                writer.writerow(
+                    {
+                        "NOME": payment.name,
+                        "EMAIL": payment.email,
+                        "CNPJ": f"{value[:2]}.{value[2:5]}.{value[5:8]}/{value[8:12]}-{value[12:]}",
+                        "BANCO": payment.bank,
+                        "AGÊNCIA": payment.agency,
+                        "CONTA": payment.account,
+                        "OPERAÇÃO": payment.operation,
+                        "PIX": payment.pix,
+                        "SALÁRIO": payment.salary,
+                        "AJUDA DE CUSTO": payment.allowance,
+                        "FACULDADE": payment.college,
+                        "AUXÍLIO MORADIA": payment.housing_allowance,
+                        "CRÉDITO CONVÊNIO": payment.covenant_credit,
+                        "OUTROS CRÉDITOS": payment.others_credits,
+                        "ADIANTAMENTO": payment.advance_money,
+                        "DESCONTO CONVÊNIO": payment.covenant_discount,
+                        "OUTROS DESCONTOS": payment.others_discounts,
+                        "TOTAL": total,
+                    }
+                )
+
+        file_csv = FileResponse(
+            open("Relatório de PJ's.csv", "rb"),
+            content_type="text/csv",
+        )
+
+        return file_csv
