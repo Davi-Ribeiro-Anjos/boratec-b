@@ -6,8 +6,6 @@ from .models import Vehicles
 from .serializers import VehiclesResponseSerializer
 from .permissions import BasePermission
 
-# import ipdb
-
 
 class VehiclesView(APIView):
     authentication_classes = [JWTAuthentication]
@@ -20,8 +18,6 @@ class VehiclesView(APIView):
         serializer = VehiclesResponseSerializer(vehicles, many=True)
 
         total_vehicles = vehicles.count()
-
-        # ipdb.set_trace()
 
         response_data = {
             "total": total_vehicles,
