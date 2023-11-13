@@ -28,9 +28,4 @@ urlpatterns = [
         views.EmployeesChoicesView.as_view(),
         name="employees-choices",
     ),
-    path(
-        "employees/sync/",
-        views.EmployeesOracleView.as_view(),
-        name="employees-sync",
-    ),
 ]
