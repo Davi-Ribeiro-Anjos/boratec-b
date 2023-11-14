@@ -4,10 +4,6 @@ from rest_framework.views import APIView, Response, Request, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from epis_carts.models import EPIsCarts
-from epis_carts.serializers import EPIsCartsSerializer
-from epis_sizes.models import EPIsSizes
-
 from _service.limit_size import file_size
 
 from .models import Manuals
@@ -24,7 +20,7 @@ class ManualsView(APIView):
     def get(self, request: Request) -> Response:
         filter = request.GET.dict()
 
-        manuals = Manuals.objects.filter(**filter)
+        manuals = Manuals.objects.filter(**filter).order_by("title")
         systems = Manuals.objects.all().values("system").distinct()
 
         serializer = ManualsResponseSerializer(manuals, many=True)
