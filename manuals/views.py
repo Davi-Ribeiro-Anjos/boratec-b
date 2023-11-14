@@ -26,11 +26,13 @@ class ManualsView(APIView):
 
         manuals = Manuals.objects.filter(**filter)
         systems = Manuals.objects.all().values("system").distinct()
+        modules = Manuals.objects.all().values("module").distinct()
 
         serializer = ManualsResponseSerializer(manuals, many=True)
 
         return Response(
-            {"data": serializer.data, "systems": systems}, status.HTTP_200_OK
+            {"data": serializer.data, "systems": systems, "modules": modules},
+            status.HTTP_200_OK,
         )
 
     def post(self, request: Request) -> Response:
