@@ -4,17 +4,11 @@ from datetime import datetime
 from fpdf import FPDF
 
 from rest_framework.views import APIView, Response, Request, status
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
-from django.core.mail import send_mail
-from django.db.models import Q
-
-from _app import settings
-from _service.oracle_db import connect_db, dict_fetchall
-from payments_histories.models import PaymentsHistories
 
 from .models import Employees
 from .serializers import (
@@ -74,7 +68,7 @@ class EmployeesDetailsView(APIView):
 
         serializer = EmployeesResponseSerializer(employee)
 
-        return Response(serializer.data, status.HTTP_201_CREATED)
+        return Response(serializer.data, status.HTTP_204_NO_CONTENT)
 
 
 class EmployeesPaymentsView(APIView):

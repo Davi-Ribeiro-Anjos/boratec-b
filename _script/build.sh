@@ -8,8 +8,8 @@ git pull origin main
 
 python manage.py migrate
 
-sudo systemctl restart nginx
+sudo systemctl restart gunicorn.service
 
-sudo systemctl status nginx
+sudo systemctl status gunicorn.service
 
 deactivate

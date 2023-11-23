@@ -18,4 +18,9 @@ urlpatterns = [
         views.CustomTokenRefreshView.as_view(),
         name="refresh",
     ),
+    path(
+        "forget-password/",
+        views.ForgetPasswordView.as_view(),
+        name="forget-password",
+    ),
 ]

@@ -120,9 +120,8 @@ Att, Departamento Pessoal
                     message=text,
                     from_email=settings.EMAIL_HOST_USER,
                     recipient_list=[
-                        # thirteenth.employee.email,
-                        # "lucas.feitosa@bora.com.br",
-                        "davi.bezerra@bora.com.br",
+                        thirteenth.employee.email,
+                        "lucas.feitosa@bora.com.br",
                     ],
                     fail_silently=False,
                 )

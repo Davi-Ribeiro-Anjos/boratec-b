@@ -2,6 +2,7 @@ import os
 import sentry_sdk
 from datetime import timedelta
 from pathlib import Path
+from jinja2 import FileSystemLoader, Environment
 
 from corsheaders.defaults import default_headers
 
@@ -120,7 +121,9 @@ MY_APPS = [
     "pj_thirteenths",
     "purchases_entries",
     "purchases_requests",
+    "roles",
     "skus",
+    "vacancies_controls",
     "vehicles",
     "xmls",
 ]
@@ -151,6 +154,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "_app.urls"
 
+
+TEMPLATE_ENV = Environment(loader=FileSystemLoader("_templates"))
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -164,6 +170,10 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
             ],
         },
+    },
+    {
+        "BACKEND": "django.template.backends.jinja2.Jinja2",
+        "DIRS": ["_templates"],
     },
 ]
 
