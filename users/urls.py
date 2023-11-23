@@ -23,4 +23,9 @@ urlpatterns = [
         views.ForgetPasswordView.as_view(),
         name="forget-password",
     ),
+    path(
+        "set-password/<str:email>/<str:token>/",
+        views.SetPasswordView.as_view(),
+        name="set-password",
+    ),
 ]
