@@ -1,32 +1,51 @@
-from django.shortcuts import render
-
-# Create your views here.
 from rest_framework.views import APIView, Response, Request, status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from django.shortcuts import get_object_or_404
+from django.core.mail import send_mail
 
-from employees.models import Employees
+from _app import settings
 
-from .models import PJComplements
+from .models import PJThirteenths
 from .serializers import (
-    PJComplementsSerializer,
-    PJComplementsResponseSerializer,
+    PJThirteenthsSerializer,
+    PJThirteenthsResponseSerializer,
 )
+from .permissions import AdminPermission
 
 
-class PJComplementsView(APIView):
+class PJThirteenthsView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, AdminPermission]
+
+    def get(self, request: Request) -> Response:
+        filter = request.GET.dict()
+
+        if "send" in filter:
+            if filter["send"] == "false":
+                filter["send"] = False
+            elif filter["send"] == "true":
+                filter["send"] = True
+
+        thirteenths = PJThirteenths.objects.filter(**filter).order_by("date_payment")
+
+        serializer = PJThirteenthsResponseSerializer(thirteenths, many=True)
+
+        return Response(serializer.data, status.HTTP_200_OK)
+
     def post(self, request: Request) -> Response:
         try:
             data = request.data.dict()
         except:
             data = request.data
 
-        serializer = PJComplementsSerializer(data=data)
+        serializer = PJThirteenthsSerializer(data=data)
         serializer.is_valid(raise_exception=True)
 
-        pj_complement = PJComplements.objects.create(**serializer.validated_data)
+        thirteenth = PJThirteenths.objects.create(**serializer.validated_data)
 
-        serializer = PJComplementsResponseSerializer(pj_complement)
+        serializer = PJThirteenthsResponseSerializer(thirteenth)
 
         return Response(
             serializer.data,
@@ -34,38 +53,89 @@ class PJComplementsView(APIView):
         )
 
 
-class PJComplementsDetailView(APIView):
-    def patch(self, request: Request, id: int) -> Response:
-        pj_complement = get_object_or_404(PJComplements, id=id)
+class PJThirteenthsDetailView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, AdminPermission]
 
-        serializer = PJComplementsSerializer(data=request.data, partial=True)
+    def patch(self, request: Request, id: int) -> Response:
+        thirteenth = get_object_or_404(PJThirteenths, id=id)
+
+        serializer = PJThirteenthsSerializer(data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
 
         for key, value in serializer.validated_data.items():
-            setattr(pj_complement, key, value)
+            setattr(thirteenth, key, value)
 
-        pj_complement.save()
+        thirteenth.save()
 
-        serializer = PJComplementsResponseSerializer(pj_complement)
+        serializer = PJThirteenthsResponseSerializer(thirteenth)
 
         return Response(serializer.data, status.HTTP_201_CREATED)
 
 
-class PJComplementsAddView(APIView):
+class PJThirteenthsSendView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, AdminPermission]
+
     def post(self, request: Request) -> Response:
-        employees = Employees.objects.filter(type_contract="PJ")
+        try:
+            data = request.data["ids"].dict()
+        except:
+            data = request.data["ids"]
 
-        for employee in employees:
-            if not employee.pj_complements:
-                data = {
-                    "salary": 0,
-                }
+        list_error = []
 
-                pj_complement = PJComplements.objects.create(**data)
+        for id in data:
+            thirteenth = get_object_or_404(PJThirteenths, id=id)
 
-                employee.pj_complements = pj_complement
-                employee.save()
+            cnpj = thirteenth.employee.cnpj
+            formatted_cnpj = (
+                f"{cnpj[:2]}.{cnpj[2:5]}.{cnpj[5:8]}/{cnpj[8:12]}-{cnpj[12:]}"
+            )
 
-        return Response(
-            status=status.HTTP_204_NO_CONTENT,
-        )
+            if thirteenth.type_payment == "ADIANTAMENTO":
+                title = "Adiantamento do 13º Salário."
+            else:
+                title = "Pagamento do 13º Salário."
+
+            text = f"""Informações sobre o {"Adiantamento" if thirteenth.type_payment == "ADIANTAMENTO" else "Pagamento"} do 13º Salário.
+
+    Valor do 13º: R$ {thirteenth.value:.2f}
+    Data de Pagamento: {thirteenth.date_payment.strftime("%d/%m/%Y")}
+    Serviço Prestado em: {thirteenth.employee.branch.abbreviation} - {thirteenth.employee.branch.uf}
+    Dados Bancários: 
+        Banco : {thirteenth.employee.bank}
+        Ag    : {thirteenth.employee.agency}
+        C.c.  : {thirteenth.employee.account}
+    CNPJ: {formatted_cnpj}
+    PIX: {thirteenth.employee.pix or "Não Informado"}
+
+Favor enviar a NF até {request.data["date_emission"]}.
+
+Att, Departamento Pessoal
+                    """
+            try:
+                send_mail(
+                    subject=title,
+                    message=text,
+                    from_email=settings.EMAIL_HOST_USER,
+                    recipient_list=[
+                        thirteenth.employee.email,
+                        "lucas.feitosa@bora.com.br",
+                    ],
+                    fail_silently=False,
+                )
+
+                thirteenth.send = True
+
+                thirteenth.save()
+
+            except Exception as e:
+                serializer = PJThirteenthsResponseSerializer(thirteenth)
+
+                list_error.append(serializer.data)
+
+        if len(list_error) > 0:
+            return Response(list_error, status.HTTP_400_BAD_REQUEST)
+
+        return Response({}, status.HTTP_204_NO_CONTENT)

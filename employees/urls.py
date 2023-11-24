@@ -14,16 +14,6 @@ urlpatterns = [
         name="employees-payments",
     ),
     path(
-        "employees/payments/emails/",
-        views.EmployeesPaymentsEmailView.as_view(),
-        name="employees-payments",
-    ),
-    # path(
-    #     "employees/payments/xlsx/",
-    #     views.EmployeesPaymentsXlsxView.as_view(),
-    #     name="employees-payments",
-    # ),
-    path(
         "employees/<int:id>/",
         views.EmployeesDetailsView.as_view(),
         name="employees-id",
@@ -37,10 +27,5 @@ urlpatterns = [
         "employees/choices/",
         views.EmployeesChoicesView.as_view(),
         name="employees-choices",
-    ),
-    path(
-        "employees/sync/",
-        views.EmployeesOracleView.as_view(),
-        name="employees-sync",
     ),
 ]

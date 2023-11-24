@@ -68,3 +68,14 @@ class LoginSerializer(serializers.ModelSerializer):
                 "write_only": True,
             },
         }
+
+
+class EmailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("email",)
+        extra_kwargs = {
+            "email": {
+                "write_only": True,
+            },
+        }

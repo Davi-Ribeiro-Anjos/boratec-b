@@ -7,7 +7,7 @@ class BasePermission(permissions.BasePermission):
     def has_permission(self, request: Request, view: View):
         return (
             request.user.groups.filter(
-                Q(name="stocks_epis") | Q(name="stocks_epis_admin")
+                Q(name="stock_epi") | Q(name="stock_epi_admin")
             ).exists()
             or request.user.is_superuser
             or request.user.is_staff
