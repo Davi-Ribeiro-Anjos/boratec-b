@@ -149,7 +149,10 @@ def insert_to_justification(data):
             serializer = DeliveriesHistoriesRequestSerializer(data=justification)
             serializer.is_valid()
 
-            DeliveriesHistories.objects.create(**serializer.validated_data)
+            try:
+                DeliveriesHistories.objects.create(**serializer.validated_data)
+            except Exception as e:
+                print("Error:%s, error_type:%s" % (e, type(e)))
 
         except Exception as e:
             print("Error:%s, error_type:%s" % (e, type(e)))
