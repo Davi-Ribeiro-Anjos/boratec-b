@@ -17,7 +17,7 @@ from .serializers import (
     DeliveriesHistoriesRequestSerializer,
     DeliveriesHistoriesResponseSerializer,
     DeliveriesHistoriesResponseConfirmedSerializer,
-    DeliveriesHistoriesConsultSerializer,
+    DeliveriesHistoriesPerformancesSerializer,
 )
 from .permissions import BasePermission, AdminPermission
 
@@ -67,9 +67,9 @@ class DeliveriesHistoriesConfirmedView(APIView):
         return Response(serializer.data, status.HTTP_200_OK)
 
 
-class DeliveriesHistoriesConsultView(APIView):
+class DeliveriesHistoriesPerformanceView(APIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, AdminPermission]
+    permission_classes = [IsAuthenticated, BasePermission]
 
     def get(self, request: Request) -> Response:
         filter = request.GET.dict()
@@ -78,7 +78,7 @@ class DeliveriesHistoriesConsultView(APIView):
             "-description_justification", "date_emission", "cte"
         )
 
-        serializer = DeliveriesHistoriesConsultSerializer(deliveries, many=True)
+        serializer = DeliveriesHistoriesPerformancesSerializer(deliveries, many=True)
 
         return Response(serializer.data, status.HTTP_200_OK)
 
@@ -114,7 +114,7 @@ class DeliveriesHistoriesDetailsView(APIView):
 
 class DeliveriesHistoriesExportView(APIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, AdminPermission]
+    permission_classes = [IsAuthenticated, BasePermission]
 
     def post(self, request: Request) -> Response:
         try:
@@ -132,7 +132,7 @@ class DeliveriesHistoriesExportView(APIView):
         }
 
         try:
-            filter["branch_issuing"] = data["branch"]
+            filter["branch_destination"] = data["branch"]
         except:
             pass
 
@@ -146,13 +146,15 @@ class DeliveriesHistoriesExportView(APIView):
                 "DATA DE ENTREGA",
                 "DESTINATÁRIO",
                 "REMETENTE",
-                "CIDADE",
                 "PESO",
                 "NF",
                 "TIPO DOCUMENTO",
                 "DESCRIÇÃO JUSTIFICATIVA",
-                "GARAGEM EMISSORA",
-                "GARAGEM DESTINO",
+                "CIDADE ORIGEM",
+                "UF ORIGEM",
+                "CIDADE DESTINO",
+                "UF DESTINO",
+                "STATUS",
             ]
 
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames, delimiter=";")
@@ -160,21 +162,36 @@ class DeliveriesHistoriesExportView(APIView):
             writer.writeheader()
 
             for delivery in deliveries:
+                if delivery.date_delivery and delivery.opened <= 0:
+                    status = "NO PRAZO"
+                elif delivery.opened == 999:
+                    status = "SEM LEADTIME DEFINIDO"
+                elif delivery.opened > 0:
+                    status = "FORA DO PRAZO"
+                elif not delivery.date_delivery:
+                    status = "EM ANDAMENTO"
+
                 writer.writerow(
                     {
                         "CTE": delivery.cte,
                         "DATA DE EMISSAO": delivery.date_emission,
-                        "LEAD TIME": delivery.lead_time,
-                        "DATA DE ENTREGA": delivery.date_delivery,
+                        "LEAD TIME": delivery.lead_time
+                        if not str(delivery.lead_time) == "0001-01-01"
+                        else None,
+                        "DATA DE ENTREGA": delivery.date_delivery
+                        if not str(delivery.date_delivery) == "0001-01-01"
+                        else None,
                         "DESTINATÁRIO": delivery.recipient,
                         "REMETENTE": delivery.sender,
-                        "CIDADE": delivery.delivery_location,
                         "PESO": delivery.weight,
                         "NF": delivery.nf,
                         "TIPO DOCUMENTO": delivery.document_type,
                         "DESCRIÇÃO JUSTIFICATIVA": delivery.description_justification,
-                        "GARAGEM EMISSORA": delivery.branch_issuing.abbreviation,
-                        "GARAGEM DESTINO": delivery.branch_destination.abbreviation,
+                        "CIDADE ORIGEM": delivery.branch_issuing.name,
+                        "UF ORIGEM": delivery.branch_issuing.uf,
+                        "CIDADE DESTINO": delivery.branch_destination.name,
+                        "UF DESTINO": delivery.branch_destination.uf,
+                        "STATUS": status,
                     }
                 )
 

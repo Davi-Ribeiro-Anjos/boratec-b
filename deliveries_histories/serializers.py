@@ -80,7 +80,7 @@ class DeliveriesHistoriesResponseConfirmedSerializer(serializers.ModelSerializer
         )
 
 
-class DeliveriesHistoriesConsultSerializer(serializers.ModelSerializer):
+class DeliveriesHistoriesPerformancesSerializer(serializers.ModelSerializer):
     lead_time = serializers.DateField(format="%d/%m/%Y")
     date_emission = serializers.DateField(format="%d/%m/%Y")
     date_delivery = serializers.DateField(format="%d/%m/%Y")

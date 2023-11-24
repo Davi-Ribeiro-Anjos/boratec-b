@@ -14,14 +14,14 @@ urlpatterns = [
         name="deliveries-histories-confirmed",
     ),
     path(
-        "deliveries-histories/consult/",
-        views.DeliveriesHistoriesConsultView.as_view(),
-        name="deliveries-histories-consult",
+        "deliveries-histories/performance/",
+        views.DeliveriesHistoriesPerformanceView.as_view(),
+        name="deliveries-histories-performance",
     ),
     path(
-        "deliveries-histories/consult/export/",
+        "deliveries-histories/performance/export/",
         views.DeliveriesHistoriesExportView.as_view(),
-        name="deliveries-histories-consult-export",
+        name="deliveries-histories-performance-export",
     ),
     path(
         "deliveries-histories/<int:id>/",
