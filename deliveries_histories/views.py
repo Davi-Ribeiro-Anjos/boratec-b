@@ -1,3 +1,7 @@
+import csv
+import datetime
+from django.http import FileResponse
+
 from rest_framework.views import APIView, Response, Request, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -13,12 +17,14 @@ from .serializers import (
     DeliveriesHistoriesRequestSerializer,
     DeliveriesHistoriesResponseSerializer,
     DeliveriesHistoriesResponseConfirmedSerializer,
+    DeliveriesHistoriesConsultSerializer,
 )
+from .permissions import BasePermission, AdminPermission
 
 
 class DeliveriesHistoriesView(APIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, BasePermission]
 
     def get(self, request: Request) -> Response:
         filter = request.GET.dict()
@@ -41,7 +47,7 @@ class DeliveriesHistoriesView(APIView):
 
 class DeliveriesHistoriesConfirmedView(APIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, AdminPermission]
 
     def get(self, request: Request) -> Response:
         filter = {
@@ -61,9 +67,25 @@ class DeliveriesHistoriesConfirmedView(APIView):
         return Response(serializer.data, status.HTTP_200_OK)
 
 
+class DeliveriesHistoriesConsultView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, AdminPermission]
+
+    def get(self, request: Request) -> Response:
+        filter = request.GET.dict()
+
+        deliveries = DeliveriesHistories.objects.filter(**filter).order_by(
+            "-description_justification", "date_emission", "cte"
+        )
+
+        serializer = DeliveriesHistoriesConsultSerializer(deliveries, many=True)
+
+        return Response(serializer.data, status.HTTP_200_OK)
+
+
 class DeliveriesHistoriesDetailsView(APIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, BasePermission]
 
     def patch(self, request: Request, id: int) -> Response:
         file = request.FILES.get("file")
@@ -88,6 +110,80 @@ class DeliveriesHistoriesDetailsView(APIView):
         serializer = DeliveriesHistoriesResponseSerializer(justification)
 
         return Response(serializer.data, status.HTTP_200_OK)
+
+
+class DeliveriesHistoriesExportView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, AdminPermission]
+
+    def post(self, request: Request) -> Response:
+        try:
+            data = request.data.dict()
+        except:
+            data = request.data
+
+        date = datetime.datetime.strptime(data["date_selected"], "%Y-%m-%d")
+        month = date.month
+        year = date.year
+
+        filter = {
+            "date_emission__year": year,
+            "date_emission__month": month,
+        }
+
+        try:
+            filter["branch_issuing"] = data["branch"]
+        except:
+            pass
+
+        deliveries = DeliveriesHistories.objects.filter(**filter)
+
+        with open("Relatório de Justificativas.csv", "w", newline="") as csv_file:
+            fieldnames = [
+                "CTE",
+                "DATA DE EMISSAO",
+                "LEAD TIME",
+                "DATA DE ENTREGA",
+                "DESTINATÁRIO",
+                "REMETENTE",
+                "CIDADE",
+                "PESO",
+                "NF",
+                "TIPO DOCUMENTO",
+                "DESCRIÇÃO JUSTIFICATIVA",
+                "GARAGEM EMISSORA",
+                "GARAGEM DESTINO",
+            ]
+
+            writer = csv.DictWriter(csv_file, fieldnames=fieldnames, delimiter=";")
+
+            writer.writeheader()
+
+            for delivery in deliveries:
+                writer.writerow(
+                    {
+                        "CTE": delivery.cte,
+                        "DATA DE EMISSAO": delivery.date_emission,
+                        "LEAD TIME": delivery.lead_time,
+                        "DATA DE ENTREGA": delivery.date_delivery,
+                        "DESTINATÁRIO": delivery.recipient,
+                        "REMETENTE": delivery.sender,
+                        "CIDADE": delivery.delivery_location,
+                        "PESO": delivery.weight,
+                        "NF": delivery.nf,
+                        "TIPO DOCUMENTO": delivery.document_type,
+                        "DESCRIÇÃO JUSTIFICATIVA": delivery.description_justification,
+                        "GARAGEM EMISSORA": delivery.branch_issuing.abbreviation,
+                        "GARAGEM DESTINO": delivery.branch_destination.abbreviation,
+                    }
+                )
+
+        file_csv = FileResponse(
+            open("Relatório de Justificativas.csv", "rb"),
+            content_type="text/csv",
+        )
+
+        return file_csv
 
 
 class DeliveriesHistoriesQueriesNFView(APIView):

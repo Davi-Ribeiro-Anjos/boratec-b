@@ -1,5 +1,3 @@
-import os
-import ipdb
 import csv
 import datetime
 
@@ -227,8 +225,8 @@ class PJComplementsExportView(APIView):
         year = date.year
 
         payments = PaymentsHistories.objects.filter(
-            data_emission__year=year,
-            data_emission__month=month,
+            date_emission__year=year,
+            date_emission__month=month,
         )
 
         with open("Relatório de PJ's.csv", "w", newline="") as csv_file:

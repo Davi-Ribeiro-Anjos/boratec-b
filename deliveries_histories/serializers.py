@@ -78,3 +78,30 @@ class DeliveriesHistoriesResponseConfirmedSerializer(serializers.ModelSerializer
             "file",
             "nf",
         )
+
+
+class DeliveriesHistoriesConsultSerializer(serializers.ModelSerializer):
+    lead_time = serializers.DateField(format="%d/%m/%Y")
+    date_emission = serializers.DateField(format="%d/%m/%Y")
+    date_delivery = serializers.DateField(format="%d/%m/%Y")
+
+    class Meta:
+        model = DeliveriesHistories
+        fields = (
+            "id",
+            "cte",
+            "date_emission",
+            "lead_time",
+            "date_delivery",
+            "recipient",
+            "sender",
+            "delivery_location",
+            "weight",
+            "opened",
+            "nf",
+            "document_type",
+            "description_justification",
+            "file",
+            "confirmed",
+            "refuse",
+        )
