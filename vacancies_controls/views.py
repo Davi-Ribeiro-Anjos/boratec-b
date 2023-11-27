@@ -7,6 +7,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.shortcuts import get_object_or_404
 from django.core.mail import send_mail
 
+from _service.token import create_token_email, decode_token_email
+
 from .models import VacanciesControls
 from .serializers import (
     VacanciesControlsSerializer,
@@ -60,10 +62,10 @@ class VacanciesDetailsView(APIView):
 
 
 class VacanciesEmailsView(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, MainPermission]
+    # authentication_classes = [JWTAuthentication]
+    # permission_classes = [IsAuthenticated, MainPermission]
 
-    def patch(self, request: Request) -> Response:
+    def post(self, request: Request) -> Response:
         data = request.data
 
         vacancy = get_object_or_404(VacanciesControls, id=data["id"])
@@ -71,7 +73,21 @@ class VacanciesEmailsView(APIView):
         serializer = VacanciesControlsEmailsSerializer(data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
 
-        render = settings.TEMPLATE_ENV.get_template("email/index.html").render()
+        file = open("vacancy_template.html", "w")
+
+        params = {
+            "title": vacancy.title,
+            "salary_range": vacancy.salary_range,
+            "role": vacancy.role.name,
+            "branch": vacancy.branch.abbreviation,
+        }
+
+        render = settings.TEMPLATE_ENV.get_template("email/vacancy.html").render(
+            **params
+        )
+
+        file.write(render)
+        file.close()
 
         for key, value in serializer.validated_data.items():
             key_send = key.replace("email", "email_send")
