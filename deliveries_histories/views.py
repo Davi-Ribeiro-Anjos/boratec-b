@@ -248,6 +248,7 @@ class DeliveriesHistoriesStatusExportView(APIView):
                 "CTE",
                 "DATA DE EMISSAO",
                 "LEAD TIME",
+                "DATA DE  ENTREGA",
                 "DESTINATÁRIO",
                 "REMETENTE",
                 "PESO",
@@ -272,6 +273,9 @@ class DeliveriesHistoriesStatusExportView(APIView):
                         "DATA DE EMISSAO": delivery.get("date_emission"),
                         "LEAD TIME": delivery.get("lead_time")
                         if not str(delivery.get("lead_time")) == "0001-01-01"
+                        else None,
+                        "DATA DE  ENTREGA": delivery.get("date_delivery")
+                        if not str(delivery.get("date_delivery")) == "0001-01-01"
                         else None,
                         "DESTINATÁRIO": delivery.get("recipient"),
                         "REMETENTE": delivery.get("sender"),
