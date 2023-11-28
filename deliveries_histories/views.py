@@ -1,3 +1,4 @@
+import os
 import csv
 import datetime
 from django.http import FileResponse
@@ -18,8 +19,11 @@ from .serializers import (
     DeliveriesHistoriesResponseSerializer,
     DeliveriesHistoriesResponseConfirmedSerializer,
     DeliveriesHistoriesPerformancesSerializer,
+    DHStatusSerializer,
 )
 from .permissions import BasePermission, AdminPermission
+
+import ipdb
 
 
 class DeliveriesHistoriesView(APIView):
@@ -199,6 +203,104 @@ class DeliveriesHistoriesExportView(APIView):
             open("Relatório de Justificativas.csv", "rb"),
             content_type="text/csv",
         )
+
+        os.remove("Relatório de Justificativas.csv")
+
+        return file_csv
+
+
+class DeliveriesHistoriesStatusView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, BasePermission]
+
+    def get(self, request: Request) -> Response:
+        filter = request.GET.dict()
+
+        deliveries = DeliveriesHistories.objects.filter(**filter).order_by(
+            "recipient", "date_emission"
+        )
+
+        serializer = DHStatusSerializer(deliveries, many=True)
+
+        return Response(serializer.data, status.HTTP_200_OK)
+
+
+class DeliveriesHistoriesStatusExportView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, BasePermission]
+
+    def post(self, request: Request) -> Response:
+        try:
+            data = request.data.dict()
+        except:
+            data = request.data
+
+        deliveries = DeliveriesHistories.objects.filter(**data).order_by(
+            "recipient", "date_emission"
+        )
+
+        serializer = DHStatusSerializer(deliveries, many=True)
+
+        data = serializer.data
+
+        with open("Relatório de Status de Entrega.csv", "w", newline="") as csv_file:
+            fieldnames = [
+                "CTE",
+                "DATA DE EMISSAO",
+                "LEAD TIME",
+                "DESTINATÁRIO",
+                "REMETENTE",
+                "PESO",
+                "NF",
+                "FILIAL ORIGEM",
+                "EMPRESA",
+                "CIDADE",
+                "UF",
+                "FILIAL",
+                "STATUS",
+                "DATA OCORRÊNCIA",
+            ]
+
+            writer = csv.DictWriter(csv_file, fieldnames=fieldnames, delimiter=";")
+
+            writer.writeheader()
+
+            for delivery in data:
+                writer.writerow(
+                    {
+                        "CTE": delivery.get("cte"),
+                        "DATA DE EMISSAO": delivery.get("date_emission"),
+                        "LEAD TIME": delivery.get("lead_time")
+                        if not str(delivery.get("lead_time")) == "0001-01-01"
+                        else None,
+                        "DESTINATÁRIO": delivery.get("recipient"),
+                        "REMETENTE": delivery.get("sender"),
+                        "PESO": delivery.get("weight"),
+                        "NF": delivery.get("nf"),
+                        "FILIAL ORIGEM": delivery.get("branch_issuing").get(
+                            "abbreviation"
+                        ),
+                        "EMPRESA": delivery.get("branch_destination").get("company"),
+                        "CIDADE": delivery.get("branch_destination").get("name"),
+                        "UF": delivery.get("branch_destination").get("uf"),
+                        "FILIAL": delivery.get("branch_destination").get(
+                            "abbreviation"
+                        ),
+                        "STATUS": delivery.get("last_occurrence").get(
+                            "occurrence_description"
+                        ),
+                        "DATA OCORRÊNCIA": delivery.get("last_occurrence").get(
+                            "date_emission"
+                        ),
+                    }
+                )
+
+        file_csv = FileResponse(
+            open("Relatório de Status de Entrega.csv", "rb"),
+            content_type="text/csv",
+        )
+
+        os.remove("Relatório de Status de Entrega.csv")
 
         return file_csv
 

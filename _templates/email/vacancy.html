@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+</style>
+
+<div style="max-width: 600px; margin: 0 auto;" class="email-container">
+	<table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
+		style="margin: auto;">
+		<td class="bg_white">
+			<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+				<tr>
+					<td class="bg_white email-section">
+						<div class="heading-section" style="text-align:center;">
+							<h2>SOLICITA&Ccedil;&Atilde;O DE VAGA ABERTA</h2>
+						</div>
+						<p>T&iacute;tulo da Vaga: {{title}}</p>
+						<p>Faixa S&aacute;rial: {{salary_range}}</p>
+						<p>Cargo: {{role}}</p>
+						<p>Filial: {{branch}}</p>
+						<p style="text-align:center;">
+							<a href="https://bora.tec.br"
+								style="padding: 5px 15px;display: inline-block;border-radius: 5px;background: #0d0cb5;color: #ffffff;">RESPONDER</a>
+						</p>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</table>
+</div>
+
+{% endblock %}

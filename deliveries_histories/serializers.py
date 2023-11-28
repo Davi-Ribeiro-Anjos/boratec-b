@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from branches.serializers import BStatusSerializer, BranchesSimpleSerializer
+
 from .models import DeliveriesHistories
 
 
@@ -105,3 +107,47 @@ class DeliveriesHistoriesPerformancesSerializer(serializers.ModelSerializer):
             "confirmed",
             "refuse",
         )
+
+
+class DHStatusSerializer(serializers.ModelSerializer):
+    date_emission = serializers.DateField(format="%d/%m/%Y")
+    lead_time = serializers.DateField(format="%d/%m/%Y")
+    branch_issuing = BranchesSimpleSerializer()
+    branch_destination = BStatusSerializer()
+    last_occurrence = serializers.SerializerMethodField()
+
+    class Meta:
+        model = DeliveriesHistories
+        fields = (
+            "id",
+            "cte",
+            "date_emission",
+            "lead_time",
+            "recipient",
+            "sender",
+            "delivery_location",
+            "weight",
+            "nf",
+            "branch_issuing",
+            "branch_destination",
+            "last_occurrence",
+        )
+
+    def get_last_occurrence(self, obj):
+        from occurrences.models import Occurrences
+        from occurrences.serializers import (
+            OccurrencesSimpleSerializer,
+        )
+
+        last_occurrence = (
+            Occurrences.objects.filter(justification=obj.id)
+            .order_by("date_emission")
+            .last()
+        )
+
+        if last_occurrence:
+            serializer = OccurrencesSimpleSerializer(last_occurrence)
+
+            return serializer.data
+
+        return None

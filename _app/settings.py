@@ -241,10 +241,10 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),  # ,minutes=60),
-    "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=6),
+    "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(hours=6),
     "SLIDING_TOKEN_REFRESH_EXPIRATION": True,
-    "SLIDING_TOKEN_REFRESH_DELTA": timedelta(days=1),
+    "SLIDING_TOKEN_REFRESH_DELTA": timedelta(hours=6),
     "ALGORITHM": "HS256",
     "SIGNING_KEY": SECRET_KEY,
     "AUTH_HEADER_TYPES": ("Bearer",),
