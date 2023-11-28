@@ -141,15 +141,23 @@ class DHStatusSerializer(serializers.ModelSerializer):
             OccurrencesSimpleSerializer,
         )
 
-        last_occurrence = (
-            Occurrences.objects.filter(justification=obj.id)
+        occurrence = (
+            Occurrences.objects.filter(
+                justification=obj.id, occurrence_description="Entregue"
+            )
             .order_by("date_emission")
-            .exclude(occurrence_description__in=["Faturado", "Manifestado"])
-            .last()
+            .first()
         )
 
-        if last_occurrence:
-            serializer = OccurrencesSimpleSerializer(last_occurrence)
+        if not occurrence:
+            occurrence = (
+                Occurrences.objects.filter(justification=obj.id)
+                .order_by("date_emission")
+                .last()
+            )
+
+        if occurrence:
+            serializer = OccurrencesSimpleSerializer(occurrence)
 
             return serializer.data
 
