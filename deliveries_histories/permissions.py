@@ -12,6 +12,15 @@ class NFPermission(permissions.BasePermission):
         )
 
 
+class StatusPermission(permissions.BasePermission):
+    def has_permission(self, request: Request, view: View):
+        return (
+            request.user.groups.filter(Q(name="delivery_status")).exists()
+            or request.user.is_superuser
+            or request.user.is_staff
+        )
+
+
 class BasePermission(permissions.BasePermission):
     def has_permission(self, request: Request, view: View):
         return (

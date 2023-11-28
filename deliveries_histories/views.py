@@ -21,7 +21,7 @@ from .serializers import (
     DeliveriesHistoriesPerformancesSerializer,
     DHStatusSerializer,
 )
-from .permissions import BasePermission, AdminPermission
+from .permissions import BasePermission, AdminPermission, StatusPermission
 
 import ipdb
 
@@ -211,7 +211,7 @@ class DeliveriesHistoriesExportView(APIView):
 
 class DeliveriesHistoriesStatusView(APIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, BasePermission]
+    permission_classes = [IsAuthenticated, StatusPermission]
 
     def get(self, request: Request) -> Response:
         filter = request.GET.dict()
@@ -227,7 +227,7 @@ class DeliveriesHistoriesStatusView(APIView):
 
 class DeliveriesHistoriesStatusExportView(APIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, BasePermission]
+    permission_classes = [IsAuthenticated, StatusPermission]
 
     def post(self, request: Request) -> Response:
         try:

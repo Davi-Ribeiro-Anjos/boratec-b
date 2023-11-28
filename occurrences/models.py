@@ -38,7 +38,7 @@ class Occurrences(models.Model):
         app_label = "occurrences"
 
     def __repr__(self) -> str:
-        return f"<Occurrence {self.id} - {self.cte}>"
+        return f"<Occurrence {self.id} - {self.occurrence_description}>"
 
     def __str__(self):
-        return f"<Occurrence {self.id} - {self.cte}>"
+        return f"<Occurrence {self.id} - {self.occurrence_description}>"
