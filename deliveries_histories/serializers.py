@@ -112,6 +112,7 @@ class DeliveriesHistoriesPerformancesSerializer(serializers.ModelSerializer):
 class DHStatusSerializer(serializers.ModelSerializer):
     date_emission = serializers.DateField(format="%d/%m/%Y")
     lead_time = serializers.DateField(format="%d/%m/%Y")
+    date_delivery = serializers.DateField(format="%d/%m/%Y")
     branch_issuing = BranchesSimpleSerializer()
     branch_destination = BStatusSerializer()
     last_occurrence = serializers.SerializerMethodField()
@@ -123,6 +124,7 @@ class DHStatusSerializer(serializers.ModelSerializer):
             "cte",
             "date_emission",
             "lead_time",
+            "date_delivery",
             "recipient",
             "sender",
             "delivery_location",
@@ -142,6 +144,7 @@ class DHStatusSerializer(serializers.ModelSerializer):
         last_occurrence = (
             Occurrences.objects.filter(justification=obj.id)
             .order_by("date_emission")
+            .exclude(occurrence_description__in=["Faturado", "Manifestado"])
             .last()
         )
 
