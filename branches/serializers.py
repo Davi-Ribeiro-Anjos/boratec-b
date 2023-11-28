@@ -18,6 +18,18 @@ class BranchesSerializer(serializers.ModelSerializer):
         ]
 
 
+class BStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Branches
+        fields = [
+            "id",
+            "abbreviation",
+            "name",
+            "uf",
+            "company",
+        ]
+
+
 class BranchesSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Branches

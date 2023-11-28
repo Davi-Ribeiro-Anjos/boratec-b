@@ -24,6 +24,16 @@ urlpatterns = [
         name="deliveries-histories-performance-export",
     ),
     path(
+        "deliveries-histories/status/",
+        views.DeliveriesHistoriesStatusView.as_view(),
+        name="deliveries-histories-status",
+    ),
+    path(
+        "deliveries-histories/status/export/",
+        views.DeliveriesHistoriesStatusExportView.as_view(),
+        name="deliveries-histories-status-export",
+    ),
+    path(
         "deliveries-histories/<int:id>/",
         views.DeliveriesHistoriesDetailsView.as_view(),
         name="deliveries-histories-details",
