@@ -1,3 +1,4 @@
+import os
 import csv
 import datetime
 
@@ -296,5 +297,7 @@ class PJComplementsExportView(APIView):
             open("Relatório de PJ's.csv", "rb"),
             content_type="text/csv",
         )
+        
+        os.remove("Relatório de PJ's.csv")
 
         return file_csv

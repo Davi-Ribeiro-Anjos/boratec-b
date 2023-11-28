@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from branches.serializers import BStatusSerializer
+from branches.serializers import BStatusSerializer, BranchesSimpleSerializer
 
 from .models import DeliveriesHistories
 
@@ -112,6 +112,7 @@ class DeliveriesHistoriesPerformancesSerializer(serializers.ModelSerializer):
 class DHStatusSerializer(serializers.ModelSerializer):
     date_emission = serializers.DateField(format="%d/%m/%Y")
     lead_time = serializers.DateField(format="%d/%m/%Y")
+    branch_issuing = BranchesSimpleSerializer()
     branch_destination = BStatusSerializer()
     last_occurrence = serializers.SerializerMethodField()
 
@@ -127,6 +128,7 @@ class DHStatusSerializer(serializers.ModelSerializer):
             "delivery_location",
             "weight",
             "nf",
+            "branch_issuing",
             "branch_destination",
             "last_occurrence",
         )

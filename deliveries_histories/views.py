@@ -235,21 +235,7 @@ class DeliveriesHistoriesStatusExportView(APIView):
         except:
             data = request.data
 
-        date = datetime.datetime.strptime(data["date_selected"], "%Y-%m-%d")
-        month = date.month
-        year = date.year
-
-        filter = {
-            "date_emission__year": year,
-            "date_emission__month": month,
-        }
-
-        try:
-            filter["branch_destination"] = data["branch"]
-        except:
-            pass
-
-        deliveries = DeliveriesHistories.objects.filter(**filter).order_by(
+        deliveries = DeliveriesHistories.objects.filter(**data).order_by(
             "recipient", "date_emission"
         )
 
@@ -262,17 +248,17 @@ class DeliveriesHistoriesStatusExportView(APIView):
                 "CTE",
                 "DATA DE EMISSAO",
                 "LEAD TIME",
-                "DATA DE ENTREGA",
                 "DESTINATÁRIO",
                 "REMETENTE",
                 "PESO",
                 "NF",
+                "FILIAL ORIGEM",
                 "EMPRESA",
                 "CIDADE",
                 "UF",
                 "FILIAL",
                 "STATUS",
-                "DATA ORORRÊNCIA",
+                "DATA OCORRÊNCIA",
             ]
 
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames, delimiter=";")
@@ -291,14 +277,19 @@ class DeliveriesHistoriesStatusExportView(APIView):
                         "REMETENTE": delivery.get("sender"),
                         "PESO": delivery.get("weight"),
                         "NF": delivery.get("nf"),
-                        "EMPRESA": delivery.get("company"),
-                        "CIDADE": delivery.get("name"),
-                        "UF": delivery.get("uf"),
-                        "FILIAL": delivery.get("abbreviation"),
+                        "FILIAL ORIGEM": delivery.get("branch_issuing").get(
+                            "abbreviation"
+                        ),
+                        "EMPRESA": delivery.get("branch_destination").get("company"),
+                        "CIDADE": delivery.get("branch_destination").get("name"),
+                        "UF": delivery.get("branch_destination").get("uf"),
+                        "FILIAL": delivery.get("branch_destination").get(
+                            "abbreviation"
+                        ),
                         "STATUS": delivery.get("last_occurrence").get(
                             "occurrence_description"
                         ),
-                        "DATA ORORRÊNCIA": delivery.get("last_occurrence").get(
+                        "DATA OCORRÊNCIA": delivery.get("last_occurrence").get(
                             "date_emission"
                         ),
                     }
