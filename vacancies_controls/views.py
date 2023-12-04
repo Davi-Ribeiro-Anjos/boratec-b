@@ -304,7 +304,7 @@ def verify_email_to_send(vacancy: VacanciesControls):
             "branch": vacancy.branch.abbreviation,
             "company": vacancy.company,
             "author": vacancy.author.name,
-            "link": f"http://localhost:5173/vaga/{token}/",
+            "link": f"https://bora.tec.br/vaga/{token}/",
         }
 
         render = settings.TEMPLATE_ENV.get_template("email/vacancy.html").render(
