@@ -32,15 +32,9 @@ def random_generator(size=15, chars=string.ascii_uppercase + string.digits):
     return "".join(random.choice(chars) for _ in range(size))
 
 
-def create_token_email():
-    random_string = random_generator()
-
-    salt = bcrypt.gensalt()
-
-    hash_result = bcrypt.hashpw(random_string.encode("utf-8"), salt)
-
-    return hash_result
+def create_token_email(dict_token):
+    return jwt.encode(dict_token, SECRET_KEY, algorithm="HS256")
 
 
 def decode_token_email(token):
-    return token.decode("utf-8")
+    return jwt.decode(token, SECRET_KEY, algorithms="HS256")

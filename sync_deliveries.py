@@ -83,8 +83,6 @@ WHERE
     F1.ID_GARAGEM NOT IN (1,23,30)                         AND
     F1.DATA_CANCELADO = '01-JAN-0001'                      AND
     
-    F1.EMPRESA = 1                                         AND
-
     F1.DATA_EMISSAO BETWEEN ((SYSDATE)-2) AND ((SYSDATE)-0)
 GROUP BY
     F1.EMPRESA,
@@ -184,8 +182,6 @@ WHERE
     F1.TIPO_DOCTO = A1.TIPO_DOCTO         AND
     
     A1.COD_OCORRENCIA = A2.CODIGO         AND
-
-    F1.EMPRESA = 1                        AND
 
     A1.DATA_CADASTRO BETWEEN ((SYSDATE)-2) AND ((SYSDATE)-0)
                     """

@@ -14,8 +14,18 @@ urlpatterns = [
         name="vacancies-id",
     ),
     path(
+        "vacancies/export/",
+        views.VacanciesExportView.as_view(),
+        name="vacancies-export",
+    ),
+    path(
         "vacancies/emails/",
         views.VacanciesEmailsView.as_view(),
         name="vacancies-emails",
+    ),
+    path(
+        "vacancies/emails/confirm/",
+        views.VacanciesEmailsConfirmView.as_view(),
+        name="vacancies-emails-confirm",
     ),
 ]
