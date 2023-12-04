@@ -96,12 +96,12 @@ class VacanciesExportView(APIView):
                 "SELECIONADO",
                 "STATUS",
                 "OBSERVAÇÃO",
-                "DATA DE SOLICITAÇÃO",
-                "DATA DE ADMISSÃO",
-                "DATA DE LIMITE",
+                "DATA RELATADA",
+                "PREVISÃO DE INÍCIO",
+                "DATA LIMITE DO LIMITE",
                 "DATA DO VETTA",
                 "DATA DO EXAME",
-                "DATA DE FECHAMENTO",
+                "DATA DO FECHAMENTO",
             ]
 
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames, delimiter=";")
@@ -131,12 +131,12 @@ class VacanciesExportView(APIView):
                         "SELECIONADO": vacancy.selected,
                         "STATUS": vacancy.status,
                         "OBSERVAÇÃO": vacancy.observation,
-                        "DATA DE SOLICITAÇÃO": vacancy.date_requested,
-                        "DATA DE ADMISSÃO": vacancy.date_expected_start,
-                        "DATA DE LIMITE": vacancy.date_limit,
+                        "DATA RELATADA": vacancy.date_requested,
+                        "PREVISÃO DE INÍCIO": vacancy.date_expected_start,
+                        "DATA LIMITE DO LIMITE": vacancy.date_limit,
                         "DATA DO VETTA": vacancy.date_vetta,
                         "DATA DO EXAME": vacancy.date_exam,
-                        "DATA DE FECHAMENTO": vacancy.date_closed,
+                        "DATA DO FECHAMENTO": vacancy.date_closed,
                     }
                 )
 
