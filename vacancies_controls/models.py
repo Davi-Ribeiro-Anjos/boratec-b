@@ -12,6 +12,19 @@ class PRIORITY_CHOICES(models.TextChoices):
     ALTA = "ALTA"
 
 
+class MOTIVE_CHOICES(models.TextChoices):
+    DEMANDA_FIM_DE_ANO = "DEMANDA FIM DE ANO"
+    NAO_PERFORMACE = "NÃO PERFORMACE"
+
+
+class RECRUITER_CHOICES(models.TextChoices):
+    LARYSSA_RODRIGUES = "LARYSSA RODRIGUES"
+    MELISSA_COSTA = "MELISSA COSTA"
+    PAULA_SANTOS = "PAULA SANTOS"
+    RAQUEL_SILVA = "RAQUEL SILVA"
+    THAYS_ANDRADE = "THAYS ANDRADE"
+
+
 class STATUS_EMAIL_CHOICES(models.TextChoices):
     NAO_RESPONDIDO = "NÃO RESPONDIDO"
     APROVADO = "APROVADO"
@@ -86,11 +99,17 @@ class VacanciesControls(models.Model):
     title = models.CharField(max_length=150)
     description = models.TextField(null=True)
     observation = models.TextField(null=True)
+    selected = models.CharField(max_length=255, null=True, blank=True)
     work_schedule = models.TextField(null=True)
     release_status = models.TextField(null=True)
+    quantity = models.SmallIntegerField(default=1, null=True)
+
     date_expected_start = models.DateField()  # DATA PREVISTA DE INICIO
-    date_reported = models.DateTimeField()  # DATA RELATADA
-    date_requested = models.DateField(auto_now=True)  # DATA RELATADA
+    date_requested = models.DateField(auto_now=True)  # DATA CRIADA
+    date_vetta = models.DateField(null=True)  # DATA VETTA
+    date_exam = models.DateField(null=True)  # DATA EXAME
+    date_closed = models.DateField(null=True)  # DATA FECHAMENTO
+    date_limit = models.DateField(null=True)  # DATA LIMITE
 
     priority = models.CharField(max_length=6, choices=PRIORITY_CHOICES.choices)
     status = models.CharField(
@@ -101,57 +120,54 @@ class VacanciesControls(models.Model):
     )
     department = models.CharField(max_length=21, choices=DEPARTMENT_CHOICES.choices)
     type_vacancy = models.CharField(max_length=17, choices=TYPE_VACANCY_CHOICES.choices)
-    company = models.CharField(max_length=17, choices=COMPANY_CHOICES.choices)
+    company = models.CharField(max_length=4, choices=COMPANY_CHOICES.choices)
     initiative = models.CharField(
         max_length=10, choices=INITIATIVE_CHOICES.choices, null=True
     )
+    recruiter = models.CharField(
+        max_length=50,
+        choices=RECRUITER_CHOICES.choices,
+        null=True,
+    )
+    motive = models.CharField(max_length=25, choices=MOTIVE_CHOICES.choices, null=True)
 
     approval_manager = models.CharField(
         max_length=14,
         choices=STATUS_EMAIL_CHOICES.choices,
         default=STATUS_EMAIL_CHOICES.NAO_RESPONDIDO,
     )
-    comment_manager = models.TextField(null=True)
-    email_manager = models.CharField(max_length=100, null=True)
+    comment_manager = models.TextField(null=True, blank=True)
+    email_manager = models.CharField(max_length=100, null=True, blank=True)
     email_send_manager = models.BooleanField(default=False)
-
     approval_regional_manager = models.CharField(
         max_length=14,
         choices=STATUS_EMAIL_CHOICES.choices,
         default=STATUS_EMAIL_CHOICES.NAO_RESPONDIDO,
     )
-    comment_regional_manager = models.TextField(null=True)
-    email_regional_manager = models.CharField(max_length=100, null=True)
+    comment_regional_manager = models.TextField(null=True, blank=True)
+    email_regional_manager = models.CharField(max_length=100, null=True, blank=True)
     email_send_regional_manager = models.BooleanField(default=False)
-
     approval_rh = models.CharField(
         max_length=14,
         choices=STATUS_EMAIL_CHOICES.choices,
         default=STATUS_EMAIL_CHOICES.NAO_RESPONDIDO,
     )
-    comment_rh = models.TextField(null=True)
-    email_rh = models.CharField(max_length=100, null=True)
+    comment_rh = models.TextField(null=True, blank=True)
+    email_rh = models.CharField(max_length=100, null=True, blank=True)
     email_send_rh = models.BooleanField(default=False)
-
     approval_director = models.CharField(
         max_length=14,
         choices=STATUS_EMAIL_CHOICES.choices,
         default=STATUS_EMAIL_CHOICES.NAO_RESPONDIDO,
     )
-    comment_director = models.TextField(null=True)
-    email_director = models.CharField(max_length=100, null=True)
+    comment_director = models.TextField(null=True, blank=True)
+    email_director = models.CharField(max_length=100, null=True, blank=True)
     email_send_director = models.BooleanField(default=False)
 
     author = models.ForeignKey(
         Employees,
         on_delete=models.CASCADE,
         related_name="vacancies_controls_author",
-    )
-    recruiter = models.ForeignKey(
-        Employees,
-        on_delete=models.CASCADE,
-        related_name="vacancies_controls_recruiter",
-        null=True,
     )
     role = models.ForeignKey(
         Roles, on_delete=models.PROTECT, related_name="vacancies_controls"

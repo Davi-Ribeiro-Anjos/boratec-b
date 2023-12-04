@@ -20,14 +20,20 @@ class VacanciesControlsSerializer(serializers.ModelSerializer):
             "work_schedule",
             "release_status",
             "date_expected_start",
-            "date_reported",
             "date_requested",
+            "date_vetta",
+            "date_exam",
+            "date_closed",
+            "date_limit",
             "priority",
+            "quantity",
             "status",
             "contract_mode",
             "department",
             "type_vacancy",
             "company",
+            "motive",
+            "selected",
             "initiative",
             "approval_manager",
             "comment_manager",
@@ -54,12 +60,14 @@ class VacanciesControlsSerializer(serializers.ModelSerializer):
 
 class VacanciesControlsResponseSerializer(serializers.ModelSerializer):
     author = EmployeesSimpleSerializer()
-    recruiter = EmployeesSimpleSerializer()
     branch = BranchesSimpleSerializer()
     role = RolesSimpleSerializer()
     date_expected_start = serializers.DateField(format="%d/%m/%Y")
-    date_reported = serializers.DateTimeField(format="%d/%m/%Y")
     date_requested = serializers.DateField(format="%d/%m/%Y")
+    date_vetta = serializers.DateField(format="%d/%m/%Y")
+    date_exam = serializers.DateField(format="%d/%m/%Y")
+    date_closed = serializers.DateField(format="%d/%m/%Y")
+    date_limit = serializers.DateField(format="%d/%m/%Y")
 
     class Meta:
         model = VacanciesControls
@@ -73,14 +81,20 @@ class VacanciesControlsResponseSerializer(serializers.ModelSerializer):
             "work_schedule",
             "release_status",
             "date_expected_start",
-            "date_reported",
             "date_requested",
+            "date_vetta",
+            "date_exam",
+            "date_closed",
+            "date_limit",
             "priority",
+            "quantity",
             "status",
             "contract_mode",
             "department",
             "type_vacancy",
             "company",
+            "motive",
+            "selected",
             "initiative",
             "approval_manager",
             "comment_manager",

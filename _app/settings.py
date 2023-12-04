@@ -123,6 +123,7 @@ MY_APPS = [
     "purchases_requests",
     "roles",
     "skus",
+    "tokens_emails",
     "vacancies_controls",
     "vehicles",
     "xmls",
@@ -241,10 +242,10 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(hours=6),
-    "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(hours=6),
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=25),
+    "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(hours=25),
     "SLIDING_TOKEN_REFRESH_EXPIRATION": True,
-    "SLIDING_TOKEN_REFRESH_DELTA": timedelta(hours=6),
+    "SLIDING_TOKEN_REFRESH_DELTA": timedelta(hours=25),
     "ALGORITHM": "HS256",
     "SIGNING_KEY": SECRET_KEY,
     "AUTH_HEADER_TYPES": ("Bearer",),

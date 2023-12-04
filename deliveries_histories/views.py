@@ -142,7 +142,9 @@ class DeliveriesHistoriesExportView(APIView):
 
         deliveries = DeliveriesHistories.objects.filter(**filter)
 
-        with open("Relatório de Justificativas.csv", "w", newline="") as csv_file:
+        with open(
+            "Relatório de Justificativas.csv", "w", newline="", encoding="latin-1"
+        ) as csv_file:
             fieldnames = [
                 "CTE",
                 "DATA DE EMISSAO",
@@ -204,8 +206,6 @@ class DeliveriesHistoriesExportView(APIView):
             content_type="text/csv",
         )
 
-        os.remove("Relatório de Justificativas.csv")
-
         return file_csv
 
 
@@ -243,7 +243,9 @@ class DeliveriesHistoriesStatusExportView(APIView):
 
         data = serializer.data
 
-        with open("Relatório de Status de Entrega.csv", "w", newline="") as csv_file:
+        with open(
+            "Relatório de Status de Entrega.csv", "w", newline="", encoding="latin-1"
+        ) as csv_file:
             fieldnames = [
                 "CTE",
                 "DATA DE EMISSAO",
@@ -303,8 +305,6 @@ class DeliveriesHistoriesStatusExportView(APIView):
             open("Relatório de Status de Entrega.csv", "rb"),
             content_type="text/csv",
         )
-
-        os.remove("Relatório de Status de Entrega.csv")
 
         return file_csv
 
