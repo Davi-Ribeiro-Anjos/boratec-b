@@ -7,7 +7,7 @@ class Branches(models.Model):
     id_branch = models.IntegerField()
     id_garage = models.IntegerField(unique=True)
     abbreviation = models.CharField(max_length=3, unique=True)
-    name = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=50)
     uf = models.CharField(max_length=2)
     cnpj = models.CharField(max_length=14, unique=True)
     company = models.CharField(max_length=20)

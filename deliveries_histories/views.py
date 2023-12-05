@@ -195,7 +195,7 @@ class DeliveriesHistoriesExportView(APIView):
                         "DESCRIÇÃO JUSTIFICATIVA": delivery.description_justification,
                         "CIDADE ORIGEM": delivery.branch_issuing.name,
                         "UF ORIGEM": delivery.branch_issuing.uf,
-                        "CIDADE DESTINO": delivery.branch_destination.name,
+                        "CIDADE DESTINO": delivery.delivery_location[:-3],
                         "UF DESTINO": delivery.branch_destination.uf,
                         "STATUS": status,
                     }
