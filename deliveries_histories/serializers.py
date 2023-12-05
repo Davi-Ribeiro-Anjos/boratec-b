@@ -71,6 +71,10 @@ class DeliveriesHistoriesResponseSerializer(serializers.ModelSerializer):
 
 
 class DeliveriesHistoriesResponseConfirmedSerializer(serializers.ModelSerializer):
+    date_emission = serializers.DateField(format="%d/%m/%Y")
+    lead_time = serializers.DateField(format="%d/%m/%Y")
+    date_delivery = serializers.DateField(format="%d/%m/%Y")
+
     class Meta:
         model = DeliveriesHistories
         fields = (
@@ -79,6 +83,9 @@ class DeliveriesHistoriesResponseConfirmedSerializer(serializers.ModelSerializer
             "description_justification",
             "file",
             "nf",
+            "date_emission",
+            "lead_time",
+            "date_delivery",
         )
 
 
