@@ -294,9 +294,11 @@ class DeliveriesHistoriesStatusExportView(APIView):
                         ),
                         "STATUS": delivery.get("last_occurrence").get(
                             "occurrence_description"
+                            if delivery.get("last_occurrence")
+                            else None
                         ),
                         "DATA OCORRÊNCIA": delivery.get("last_occurrence").get(
-                            "date_emission"
+                            "date_emission" if delivery.get("last_occurrence") else None
                         ),
                     }
                 )
