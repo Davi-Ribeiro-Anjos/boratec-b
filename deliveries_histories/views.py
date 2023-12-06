@@ -269,6 +269,20 @@ class DeliveriesHistoriesStatusExportView(APIView):
             writer.writeheader()
 
             for delivery in data:
+                try:
+                    delivery_occurrence_description = delivery.get(
+                        "last_occurrence"
+                    ).get("occurrence_description")
+                except Exception:
+                    delivery_occurrence_description = None
+
+                try:
+                    delivery_date_emission = delivery.get("last_occurrence").get(
+                        "date_emission"
+                    )
+                except Exception:
+                    delivery_date_emission = None
+
                 writer.writerow(
                     {
                         "CTE": delivery.get("cte"),
@@ -292,14 +306,8 @@ class DeliveriesHistoriesStatusExportView(APIView):
                         "FILIAL": delivery.get("branch_destination").get(
                             "abbreviation"
                         ),
-                        "STATUS": delivery.get("last_occurrence").get(
-                            "occurrence_description"
-                            if delivery.get("last_occurrence")
-                            else None
-                        ),
-                        "DATA OCORRÊNCIA": delivery.get("last_occurrence").get(
-                            "date_emission" if delivery.get("last_occurrence") else None
-                        ),
+                        "STATUS": delivery_occurrence_description,
+                        "DATA OCORRÊNCIA": delivery_date_emission,
                     }
                 )
 
