@@ -53,23 +53,6 @@ class UserSimpleSerializer(serializers.ModelSerializer):
         )
 
 
-class LoginSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = (
-            "username",
-            "password",
-        )
-        extra_kwargs = {
-            "username": {
-                "write_only": True,
-            },
-            "password": {
-                "write_only": True,
-            },
-        }
-
-
 class EmailSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

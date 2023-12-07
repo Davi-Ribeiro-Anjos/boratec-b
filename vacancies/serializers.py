@@ -4,12 +4,12 @@ from branches.serializers import BranchesSimpleSerializer
 from employees.serializers import EmployeesSimpleSerializer
 from roles.serializers import RolesSimpleSerializer
 
-from .models import VacanciesControls
+from .models import Vacancies
 
 
-class VacanciesControlsSerializer(serializers.ModelSerializer):
+class VacanciesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = VacanciesControls
+        model = Vacancies
         fields = (
             "id",
             "replacement",
@@ -58,7 +58,7 @@ class VacanciesControlsSerializer(serializers.ModelSerializer):
         )
 
 
-class VacanciesControlsResponseSerializer(serializers.ModelSerializer):
+class VacanciesResponseSerializer(serializers.ModelSerializer):
     author = EmployeesSimpleSerializer()
     branch = BranchesSimpleSerializer()
     role = RolesSimpleSerializer()
@@ -70,7 +70,7 @@ class VacanciesControlsResponseSerializer(serializers.ModelSerializer):
     date_limit = serializers.DateField(format="%d/%m/%Y")
 
     class Meta:
-        model = VacanciesControls
+        model = Vacancies
         fields = (
             "id",
             "replacement",
@@ -119,9 +119,9 @@ class VacanciesControlsResponseSerializer(serializers.ModelSerializer):
         )
 
 
-class VacanciesControlsEmailsSerializer(serializers.ModelSerializer):
+class VacanciesEmailsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = VacanciesControls
+        model = Vacancies
         fields = (
             "email_manager",
             "email_regional_manager",

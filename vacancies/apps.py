@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class VacanciesControlsConfig(AppConfig):
+class VacanciesConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "vacancies_controls"
+    name = "vacancies"

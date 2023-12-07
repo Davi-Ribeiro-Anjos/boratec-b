@@ -13,36 +13,36 @@ from django.shortcuts import get_object_or_404
 from django.core.mail import send_mail
 from django.http import FileResponse
 
-from tokens_emails.models import TokensEmails
+from authentications.models import TokensEmails
 
-from .models import VacanciesControls
+from .models import Vacancies
 from .serializers import (
-    VacanciesControlsSerializer,
-    VacanciesControlsResponseSerializer,
-    VacanciesControlsEmailsSerializer,
+    VacanciesSerializer,
+    VacanciesResponseSerializer,
+    VacanciesEmailsSerializer,
 )
 from .permissions import MainPermission, AdminPermission
 
 
-class VacanciesControlsView(APIView):
+class VacanciesView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, MainPermission]
 
     def get(self, request: Request) -> Response:
         filter = request.GET.dict()
 
-        vehicles = VacanciesControls.objects.filter(**filter)
-        serializer = VacanciesControlsResponseSerializer(vehicles, many=True)
+        vehicles = Vacancies.objects.filter(**filter)
+        serializer = VacanciesResponseSerializer(vehicles, many=True)
 
         return Response(serializer.data, status.HTTP_200_OK)
 
     def post(self, request: Request) -> Response:
-        serializer = VacanciesControlsSerializer(data=request.data)
+        serializer = VacanciesSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        vacancy = VacanciesControls.objects.create(**serializer.validated_data)
+        vacancy = Vacancies.objects.create(**serializer.validated_data)
 
-        serializer = VacanciesControlsResponseSerializer(vacancy)
+        serializer = VacanciesResponseSerializer(vacancy)
 
         return Response(serializer.data, status.HTTP_201_CREATED)
 
@@ -52,9 +52,9 @@ class VacanciesDetailsView(APIView):
     permission_classes = [IsAuthenticated, MainPermission]
 
     def patch(self, request: Request, id: int) -> Response:
-        vacancy = get_object_or_404(VacanciesControls, id=id)
+        vacancy = get_object_or_404(Vacancies, id=id)
 
-        serializer = VacanciesControlsSerializer(data=request.data, partial=True)
+        serializer = VacanciesSerializer(data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
 
         for key, value in serializer.validated_data.items():
@@ -62,7 +62,7 @@ class VacanciesDetailsView(APIView):
 
         vacancy.save()
 
-        serializer = VacanciesControlsResponseSerializer(vacancy)
+        serializer = VacanciesResponseSerializer(vacancy)
 
         return Response(serializer.data, status.HTTP_204_NO_CONTENT)
 
@@ -77,7 +77,7 @@ class VacanciesExportView(APIView):
         except:
             data = request.data
 
-        vacancies = VacanciesControls.objects.filter(**data)
+        vacancies = Vacancies.objects.filter(**data)
 
         with open(
             "Relatório de Vagas.csv", "w", newline="", encoding="latin-1"
@@ -155,9 +155,9 @@ class VacanciesEmailsView(APIView):
     def post(self, request: Request) -> Response:
         data = request.data
 
-        vacancy = get_object_or_404(VacanciesControls, id=data["id"])
+        vacancy = get_object_or_404(Vacancies, id=data["id"])
 
-        serializer = VacanciesControlsEmailsSerializer(data=data, partial=True)
+        serializer = VacanciesEmailsSerializer(data=data, partial=True)
         serializer.is_valid(raise_exception=True)
 
         for key, value in serializer.validated_data.items():
@@ -195,7 +195,7 @@ class VacanciesEmailsConfirmView(APIView):
 
                     break
 
-            vacancy = get_object_or_404(VacanciesControls, id=dict_token["identifier"])
+            vacancy = get_object_or_404(Vacancies, id=dict_token["identifier"])
 
             if bool(data["approval"]):
                 vacancy.__setattr__(f"approval_{role}", "APROVADO")
@@ -222,7 +222,7 @@ class VacanciesEmailsConfirmView(APIView):
             )
 
 
-def verify_email_to_send(vacancy: VacanciesControls):
+def verify_email_to_send(vacancy: Vacancies):
     send = True
     if not vacancy.approval_manager == "APROVADO" and vacancy.email_manager:
         vacancy.email_send_manager = True
