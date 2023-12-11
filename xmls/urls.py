@@ -4,22 +4,22 @@ from . import views
 
 urlpatterns = [
     path(
-        "xmls/",
+        "",
         views.XmlsView.as_view(),
         name="xmls",
     ),
     path(
-        "xmls/send/",
+        "send/",
         views.XmlsSendView.as_view(),
         name="xmls-send",
     ),
     path(
-        "xmls/sync/",
+        "sync/",
         views.XmlsSyncView.as_view(),
         name="xmls-sync",
     ),
     path(
-        "xmls/download/",
+        "download/",
         views.XmlsDownloadView.as_view(),
         name="xmls-download",
     ),

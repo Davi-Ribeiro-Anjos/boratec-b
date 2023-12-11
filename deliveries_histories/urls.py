@@ -4,42 +4,42 @@ from . import views
 
 urlpatterns = [
     path(
-        "deliveries-histories/",
+        "",
         views.DeliveriesHistoriesView.as_view(),
         name="deliveries-histories",
     ),
     path(
-        "deliveries-histories/confirm/",
+        "confirm/",
         views.DeliveriesHistoriesConfirmedView.as_view(),
         name="deliveries-histories-confirmed",
     ),
     path(
-        "deliveries-histories/performance/",
+        "performance/",
         views.DeliveriesHistoriesPerformanceView.as_view(),
         name="deliveries-histories-performance",
     ),
     path(
-        "deliveries-histories/performance/export/",
+        "performance/export/",
         views.DeliveriesHistoriesExportView.as_view(),
         name="deliveries-histories-performance-export",
     ),
     path(
-        "deliveries-histories/status/",
+        "status/",
         views.DeliveriesHistoriesStatusView.as_view(),
         name="deliveries-histories-status",
     ),
     path(
-        "deliveries-histories/status/export/",
+        "status/export/",
         views.DeliveriesHistoriesStatusExportView.as_view(),
         name="deliveries-histories-status-export",
     ),
     path(
-        "deliveries-histories/<int:id>/",
+        "<int:id>/",
         views.DeliveriesHistoriesDetailsView.as_view(),
         name="deliveries-histories-details",
     ),
     path(
-        "deliveries-histories/nf/<str:nf>/",
+        "nf/<str:nf>/",
         views.DeliveriesHistoriesQueriesNFView.as_view(),
         name="deliveries-histories-nf",
     ),

@@ -92,7 +92,7 @@ def only_int(value):
         raise ValidationError("Valor digitado não é um número")
 
 
-class VacanciesControls(models.Model):
+class Vacancies(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
     replacement = models.CharField(max_length=50, null=True)
     salary_range = models.CharField(max_length=200, null=True)
@@ -167,25 +167,23 @@ class VacanciesControls(models.Model):
     author = models.ForeignKey(
         Employees,
         on_delete=models.CASCADE,
-        related_name="vacancies_controls_author",
+        related_name="vacancies_author",
     )
-    role = models.ForeignKey(
-        Roles, on_delete=models.PROTECT, related_name="vacancies_controls"
-    )
+    role = models.ForeignKey(Roles, on_delete=models.PROTECT, related_name="vacancies")
     branch = models.ForeignKey(
         Branches,
         on_delete=models.PROTECT,
-        related_name="vacancies_controls",
+        related_name="vacancies",
     )
 
     class Meta:
-        verbose_name = "VacancyControl"
-        verbose_name_plural = "VacanciesControls"
-        db_table = "vacancies_controls"
-        app_label = "vacancies_controls"
+        verbose_name = "Vacancy"
+        verbose_name_plural = "Vacancies"
+        db_table = "vacancies"
+        app_label = "vacancies"
 
     def __repr__(self) -> str:
-        return f"<Vacancy Control {self.id} - {self.title}>"
+        return f"<Vacancy {self.id} - {self.title}>"
 
     def __str__(self):
-        return f"<Vacancy Control {self.id} - {self.title}>"
+        return f"<Vacancy {self.id} - {self.title}>"

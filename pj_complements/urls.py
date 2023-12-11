@@ -4,22 +4,22 @@ from . import views
 
 urlpatterns = [
     path(
-        "pj/complements/",
+        "",
         views.PJComplementsView.as_view(),
         name="pj-complements",
     ),
     path(
-        "pj/complements/<int:id>/",
+        "<int:id>/",
         views.PJComplementsDetailView.as_view(),
         name="pj-complements-id",
     ),
     path(
-        "pj/complements/emails/",
+        "emails/",
         views.PJComplementsEmailView.as_view(),
         name="pj-complements-emails",
     ),
     path(
-        "pj/complements/export/",
+        "export/",
         views.PJComplementsExportView.as_view(),
         name="pj-complements-export",
     ),

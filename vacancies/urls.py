@@ -4,27 +4,27 @@ from . import views
 
 urlpatterns = [
     path(
-        "vacancies/",
-        views.VacanciesControlsView.as_view(),
+        "",
+        views.VacanciesView.as_view(),
         name="vacancies",
     ),
     path(
-        "vacancies/<int:id>/",
+        "<int:id>/",
         views.VacanciesDetailsView.as_view(),
         name="vacancies-id",
     ),
     path(
-        "vacancies/export/",
+        "export/",
         views.VacanciesExportView.as_view(),
         name="vacancies-export",
     ),
     path(
-        "vacancies/emails/",
+        "emails/",
         views.VacanciesEmailsView.as_view(),
         name="vacancies-emails",
     ),
     path(
-        "vacancies/emails/confirm/",
+        "emails/confirm/",
         views.VacanciesEmailsConfirmView.as_view(),
         name="vacancies-emails-confirm",
     ),
